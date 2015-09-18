@@ -1,0 +1,61 @@
+.panel .panel-heading {
+	background-color: #fff;
+	border: none;
+}
+.panel .panel-heading h4 a {
+	color: inherit;
+}
+.panel .panel-heading .meta dl {
+	margin: 0;
+}
+.panel .panel-heading .meta dl a {
+	color: inherit;
+}
+.tab-content #differences.active + .tab-pane,
+.tab-content #differences.active + .tab-pane + .result-views .card.equal,
+.tab-content #differences.active + .tab-pane + .result-views .card-row-attr.equal,
+.tab-content #differences.active + .tab-pane + .result-views .card-row-attr.empty,
+.tab-content #differences.active + .tab-pane + .result-views .card-row-attr.ignored {
+	display: none;
+}
+
+.results-view.updating {
+	opacity: .3;
+	pointer-events: none;
+}
+.card-row {
+}
+.card-row-actions-all {
+	float: right;
+}
+.card-row-attr {
+	padding: 10px 15px;
+	border-top: 1px solid #ddd;
+}
+.card-row-attr-child {
+	border-top: 1px dashed #ddd;
+	padding-left: 60px;
+}
+.card-row-meta {
+	font-size: 12px;
+	color: #aaa;
+}
+.card-row-content {
+	margin-top: 5px;
+	font-size: 16px;
+}
+.card-row-content-current {
+	color: #aaa;
+}
+.card-row-content-none {
+	text-transform: uppercase;
+	color: #aaa;
+}
+.status-error,
+.card-row-content-error {
+	color: red;
+}
+.card-row-content-scraped .btn {
+	float: right;
+	margin-right: 6px;
+}
