@@ -12,8 +12,9 @@ Fetch data, feed to Zotonic pages.
 
 ## Requirements
 
-The templates work with recent modifications to the admin interface. For this you'll need 
-[Zotonic 0.13.4](https://github.com/zotonic/zotonic/tree/release-0.13.4) or newer.
+* Erlang 17 or higher
+* [Zotonic 0.13.4](https://github.com/zotonic/zotonic/tree/release-0.13.4) or newer, because the templates work with recent modifications to the admin interface.
+
 
 ## Installation
 

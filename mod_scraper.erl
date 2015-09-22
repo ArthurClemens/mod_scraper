@@ -22,6 +22,7 @@
     observe_admin_menu/3,
     observe_postback_notify/2,
     get_results/2,
+    currency_values/2,
     
     % test:
     copy_value/4
@@ -125,7 +126,7 @@ event(#postback{message={ignore, Args}}, Context) ->
 	Url = proplists:get_value(url, Args),
 	RuleId = proplists:get_value(rule_id, Args),
 	Action = proplists:get_value(action, Args, []),
-	scraper_cache:store_ignored_for_attribute(ScraperId, Url, RuleId, Context),
+	scraper_cache:set_ignored(ScraperId, Url, RuleId, Context),
 	case Action of
 		[] -> Context;
 		_ -> z_render:wire(Action, Context)
@@ -163,12 +164,11 @@ currency_values(Value, Property) ->
         {price_whole, Whole},
         {price_cents, Cents}
     ],
-    Props1 = case Property of
+    case Property of
     	undefined -> Props;
     	<<>> -> Props;
     	_ -> [{Property, Value}|Props]
-    end,
-    Props1.
+    end.
 
 
 run(Id, Context) ->
@@ -191,7 +191,6 @@ fetch_url(Id, Url, ConnectedRscId, RuleIds, Context) ->
         [{z_convert:to_atom(RuleId), z_html:unescape(m_rsc:p(RuleId, rule, Context))}]
     end, RuleIds)),
     Result = scraper_fetch:fetch(Url, [], Rules),
-	lager:info("fetch_url, Result=~p", [Result]),
     [Status|StoreResult] = case Result of
         {error, {Reason, _Details}} -> 
             [{error, Reason}|[]];
@@ -202,6 +201,7 @@ fetch_url(Id, Url, ConnectedRscId, RuleIds, Context) ->
         _ -> 
         	[{error, unknown_error}|[]]
     end,
+    lager:info("StoreResult=~p", [StoreResult]),
     scraper_cache:put(Id, Url, ConnectedRscId, Status, StoreResult, Context),
     Context.
 
@@ -209,167 +209,10 @@ fetch_url(Id, Url, ConnectedRscId, RuleIds, Context) ->
     ScraperId :: integer(),
     Context:: #context{}.
 get_results(ScraperId, Context) ->
-    %Query = io_lib:format("SELECT distinct on (url) \
-    Query = io_lib:format("SELECT \
-        * \
-        FROM mod_scraper \
-        WHERE scraper_id = ~p \
-        ORDER BY url, date desc", [ScraperId]),
-    %Query1 = re:replace(Query, "\\n", " ", [global, {return,list}]),
-    %lager:info("Query1=~p", [lists:flatten(Query1)]),
-    Rows = z_db:assoc(Query, Context),
-    process_differences(ScraperId, Rows, Context).
-    
+    z_db:assoc("SELECT id FROM mod_scraper WHERE scraper_id=$1 ORDER BY url, date desc", [ScraperId], Context).
+    	
+    	
 
-process_differences(ScraperId, Rows, Context) ->
-	% sort data by order of connected rules
-	RuleIds = m_edge:objects(ScraperId, hasscraperrule, Context),	
-	SortedRows = lists:map(fun(Row) ->
-		Scraped = proplists:get_value(scraped, Row),
-		Data = proplists:get_value(data, Scraped, []),
-		OrderedData = lists:map(fun(RuleId) ->
-			RuleIdAt = z_convert:to_atom(RuleId),
-			{RuleIdAt, proplists:get_value(RuleIdAt, Data)}
-		end, RuleIds),
-		Scraped1 = lists:keyreplace(data, 1, Scraped, {data, OrderedData}),
-		lists:keyreplace(scraped, 1, Row, {scraped, Scraped1})
-	end, Rows),
-	lists:map(fun(Row) ->
-		ConnectedRscId = proplists:get_value(connected_rsc_id, Row),
-		Data = proplists:get_value(data, proplists:get_value(scraped, Row)),
-		StatusIgnored = proplists:get_value(status_ignored, Row),
-		Comparison = case Data of
-			undefined -> [];
-			_ ->
-				lists:map(fun({Key, Value}) ->
-					comparison_data(Key, Value, ConnectedRscId, StatusIgnored, Context)
-				end, Data)
-		end,
-		AllComparisonEqual = lists:foldl(fun(C, Acc) ->
-			lists:foldl(fun({_, V}, Acc1) ->
-            	Acc1 and V
-            end, Acc, proplists:get_value(is_equal, C))
-        end, true, Comparison),
-        Row1 = [{all_equal, AllComparisonEqual}|Row],
-        AllComparisonEmpty = lists:foldl(fun(C, Acc) ->
-			lists:foldl(fun({_, V}, Acc1) ->
-            	Acc1 and not V
-            end, Acc, proplists:get_value(has_data, C))
-        end, true, Comparison),
-        Row2 = [{all_empty, AllComparisonEmpty}|Row1],
-        AllComparisonIgnored = lists:foldl(fun(C, Acc) ->
-			Acc and proplists:get_value(is_ignored, C)
-        end, true, Comparison),
-        Row3 = [{all_ignored, AllComparisonIgnored}|Row2],
-		[{comparison, Comparison}|Row3]
-	end, SortedRows).
-
-comparison_data(Key, Value, ConnectedRscId, StatusIgnored, Context) ->
-	Language = z_context:language(Context),
-	SafeString = fun(Id, Mapping) ->
-    	unescape_value(value_for_language(m_rsc:p(Id, Mapping, Context), Language))
-	end,
-	RuleId = z_convert:to_integer(Key),
-	Ignored = proplists:get_value(Key, StatusIgnored, false),
-	Property = m_rsc:p(RuleId, mapping, Context),
-	Mapping = case Property of
-		undefined -> m_rsc:p(RuleId, title, Context);
-		P -> z_convert:to_atom(P)
-	end,
-	Type = z_convert:to_atom(m_rsc:p(RuleId, type, Context)),
-	{Status, ScrapedValue} = case Value of
-		[xpath_parse_error, Reason] -> {error, [Reason]};
-		undefined -> {not_found, []};
-		[] -> {empty, []};
-		V when is_list(V) -> {ok, V};
-		_ -> {empty, []}
-	end,
-	[ScrapedValues, CurrentValues] = case Type of
-		currency ->
-			CalculatedScraped = currency_values(Value, Mapping),
-			[
-				CalculatedScraped,
-				lists:map(fun({K, _}) ->
-					{K, SafeString(ConnectedRscId, K)}
-				end, CalculatedScraped)
-			];
-		boolean_true ->
-			ScrapedBoolean = define_boolean(ScrapedValue),
-			CurrentBoolean = define_boolean(SafeString(ConnectedRscId, Mapping)),
-			[
-				[{Mapping, ScrapedBoolean}],
-				[{Mapping, CurrentBoolean}]
-			];
-		boolean_false ->
-			ScrapedBoolean = define_boolean(ScrapedValue),
-			CurrentBoolean = define_boolean(SafeString(ConnectedRscId, Mapping)),
-			[
-				[{Mapping, not ScrapedBoolean}],
-				[{Mapping, CurrentBoolean}]
-			];
-		_ ->
-			[
-				[{Mapping, ScrapedValue}],
-				[{Mapping, SafeString(ConnectedRscId, Mapping)}]
-			]
-	end,
-	Zipped = lists:zipwith(fun({K1, V1}, {K1, V2}) ->
-		[K1, [V1, V2]]
-	end, CurrentValues, ScrapedValues),
-	IsEqual = lists:foldl(fun([K, [V1, V2]], Acc) ->
-		case K of
-			undefined -> Acc;
-			_ -> [{K, (z_convert:to_binary(V1) =:= z_convert:to_binary(V2)) and not (Status == error)}|Acc]
-		end
-	end, [], Zipped),
-	HasData = lists:foldl(fun([K, [_, V2]], Acc) ->
-		case K of
-			undefined -> Acc;
-			_ -> [{K, not z_utils:is_empty(V2) and not (Status == error)}|Acc]
-		end
-	end, [], Zipped),
-	AllIsEqual = lists:foldl(fun({_, V}, Acc) ->
-		Acc and V
-	end, true, IsEqual),
-	AllIsEmpty = lists:foldl(fun({_, V}, Acc) ->
-		Acc and not V
-	end, true, HasData),
-	[
-		{rule_id, RuleId},
-		{type, Type},
-		{values, ScrapedValues},
-		{has_data, HasData},
-		{is_equal, IsEqual},
-		{all_is_equal, AllIsEqual},
-		{all_is_empty, AllIsEmpty},
-		{status, Status},
-		{is_ignored, Ignored}
-	].
-	
-	
-value_for_language(Value, Language) ->
-    case Value of
-        <<>> -> <<>>;
-        {trans, Trans} ->
-            proplists:get_value(Language, Trans,
-                proplists:get_value(en, Trans)
-            );
-        V -> V
-    end.
-
-unescape_value(Value) ->
-	case Value of
-		undefined -> <<>>;
-		CV -> z_html:unescape(CV)
-	end.
-
-define_boolean(Value) ->
-	case Value of
-		undefined -> false;
-		<<>> -> false;
-		L when is_list(L) -> z_convert:to_bool(length(L));
-		C -> z_convert:to_bool(C)
-	end.
 
 -record(state, {
     context,
@@ -463,7 +306,7 @@ do_fetch_urls_process(URLs, Id, Context) ->
     lager:info("do_fetch_urls_process:~p", [URLs]),
     timer:sleep(1500),
     % emptying should actually be done when new data is received
-    scraper_cache:empty_scraper_data(Id, Context),
+    scraper_cache:delete(Id, Context),
     RuleIds = m_edge:objects(Id, hasscraperrule, Context),
     lists:map(fun({ConnectedRscId, URL}) ->
     	timer:sleep(1000),

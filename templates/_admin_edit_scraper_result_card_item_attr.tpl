@@ -7,7 +7,6 @@ Params:
 - scraped
 - row_id
 - is_child
-- is_ignored
 #}
 {% with row_id ++ key,
 		connected_rsc_id[key]
@@ -17,15 +16,13 @@ Params:
 %}
 {% with comparison.is_equal[key],
 		comparison.has_data[key],
-		is_ignored|if_undefined:comparison.is_ignored,
-		is_equal|if_undefined:(scraped|stringify == current|stringify)
+		comparison.is_ignored
    as
-   		comparison_is_equal,
-   		comparison_has_data,
-   		is_ignored,
-   		is_equal
+   		is_equal,
+   		has_data,
+   		is_ignored
 %}
-<div class="card-row-attr{% if is_child %} card-row-attr-child{% endif %}{% if comparison_is_equal %} equal{% endif %}{% if not comparison_has_data %} empty{% endif %}{% if is_ignored %} ignored{% endif %}" id="{{ attr_id }}">
+<div class="card-row-attr{% if is_child %} card-row-attr-child{% endif %}{% if is_equal %} equal{% endif %}{% if not has_data %} empty{% endif %}{% if is_ignored %} ignored{% endif %}" id="{{ attr_id }}">
 	<div class="card-row-meta">
 		{% with key|default:comparison.type|default:(comparison.rule_id.title) as property %}
 			{{ property }}
@@ -54,17 +51,17 @@ Params:
 						connected_rsc_id=connected_rsc_id
 						value=scraped
 						action={replace
-							target=row_id
-							template="_admin_edit_scraper_result_card_item.tpl"
-							comparison=comparison
-							connected_rsc_id=connected_rsc_id
+							target=card_id
+							template="_admin_edit_scraper_result_card.tpl"
+							index=index
+							data=0
 							id=id
 						}
 					}
 				}
 			%}
 			<button id="{{ #copy.attr_id }}" type="button" class="btn btn-primary btn-xs">{_ Copy _}</button>
-
+{#
 			{% if is_ignored == false %}
 				{% wire
 					id=#ignore.attr_id
@@ -75,19 +72,18 @@ Params:
 							url=data.url
 							rule_id=comparison.rule_id
 							action={replace
-								target=row_id
-								template="_admin_edit_scraper_result_card_item.tpl"
-								comparison=comparison
-								connected_rsc_id=connected_rsc_id
+								target=card_id
+								template="_admin_edit_scraper_result_card.tpl"
+								index=index
+								data=0
 								id=id
-								is_ignored=1
 							}
 						}
 					}
 				%}
 				<button id="{{ #ignore.attr_id }}" type="button" class="btn btn-default btn-xs">{_ Ignore _}</button>
 			{% endif %}
-
+#}
 		{% endif %}
 		{% if comparison.status == `error` %}
 			<span class="card-row-content-error">{_ Parse error _}</span>

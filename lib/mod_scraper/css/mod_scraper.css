@@ -1,6 +1,5 @@
 .panel .panel-heading {
 	background-color: #fff;
-	border: none;
 }
 .panel .panel-heading h4 a {
 	color: inherit;
@@ -19,18 +18,20 @@
 	display: none;
 }
 
-.results-view.updating {
+#scraper_data.updating {
 	opacity: .3;
 	pointer-events: none;
 }
-.card-row {
-}
+
 .card-row-actions-all {
 	float: right;
 }
 .card-row-attr {
 	padding: 10px 15px;
 	border-top: 1px solid #ddd;
+}
+.card-row-attr:first-child {
+	border: none;
 }
 .card-row-attr-child {
 	border-top: 1px dashed #ddd;

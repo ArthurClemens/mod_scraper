@@ -2,10 +2,18 @@
 Params:
 - id
 - data
+- index
 #}
-{% with data.comparison as comparisons %}
-{% with data.connected_rsc_id as connected_rsc_id %}
-<div class="panel panel-default{% if data.all_empty %} empty{% endif %}{% if data.all_equal %} equal{% endif %}">
+{% with data|default:m.scraper[id].digests[index] as data %}
+{% with data.comparison,
+		data.connected_rsc_id,
+		#card.index
+		as
+		comparisons,
+		connected_rsc_id,
+		card_id
+%}
+<div id="{{ card_id }}" class="panel panel-default{% if data.all_empty %} empty{% endif %}{% if data.all_equal %} equal{% endif %}">
 	<div class="panel-heading">
 		{% if id != data.connected_rsc_id %}
 			<h4>

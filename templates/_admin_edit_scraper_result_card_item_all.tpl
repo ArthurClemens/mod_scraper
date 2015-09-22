@@ -64,6 +64,7 @@ Params:
 			%}
 			<button id="{{ #copy.attr_id }}" type="button" class="btn btn-primary btn-xs">{_ Copy all _}</button>
 		{% endif %}
+{#
 		{% if is_ignored == "false" %}
 			{% wire
 				id=#ignore.attr_id
@@ -86,7 +87,7 @@ Params:
 			%}
 			<button id="{{ #ignore.attr_id }}" type="button" class="btn btn-default btn-xs">{_ Ignore _}</button>
 		{% endif %}
-			
+#}
 			
 		{% for attr in values %}
 			{% with attr[2]
