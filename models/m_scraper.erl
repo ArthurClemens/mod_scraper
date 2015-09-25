@@ -14,22 +14,29 @@ m_find_value(Id, #m{value=undefined} = M, _Context) ->
     M#m{value=Id};
 
 m_find_value(digests, #m{value=ScraperId} = _M, Context) when is_integer(ScraperId) ->
-	lists:map(fun(R) -> digest(R, Context) end, scraper_cache:get(ScraperId, Context));
+	digest(scraper_cache:get(ScraperId, Context), Context);
 
 m_find_value(urls, #m{value=Id} = _M, Context) when is_integer(Id) ->
     UrlData = mod_scraper:urls(Id, Context),
-    urls_from_data(UrlData);
+    mod_scraper:urls_from_data(UrlData);
 
-m_find_value(status_ready, #m{value=Id} = _M, Context) when is_integer(Id) ->
-    HasUrls = has_urls(Id, Context),
-    HasRules = has_rules(Id, Context),
-    case HasUrls of
-        true -> 
-            case HasRules of
-                true -> [{true, "ok"}];
-                false -> [{false, "no_rules"}]
-            end;
-        false -> [{false, "no_urls"}]
+m_find_value(last_run_data, #m{value=Id} = _M, Context) when is_integer(Id) ->
+    scraper_cache:get_last_run_data(Id, Context);
+    
+m_find_value(status, #m{value=Id} = _M, Context) when is_integer(Id) ->
+    case mod_scraper:scraper_in_progress(Id, Context) of
+        true -> [{true, "in_progress"}];
+        false -> 
+            HasUrls = mod_scraper:has_urls(Id, Context),
+            HasRules = mod_scraper:has_rules(Id, Context),
+            case HasUrls of
+                true -> 
+                    case HasRules of
+                        true -> [{true, "ok"}];
+                        false -> [{false, "no_rules"}]
+                    end;
+                false -> [{false, "no_urls"}]
+            end
     end;
 
 m_find_value(title, #m{value=Id} = _M, Context) when is_integer(Id) ->
@@ -68,147 +75,95 @@ m_value(#m{value=undefined}, _Context) ->
     undefined.
 
 
-urls_from_data(UrlData) ->
-    lists:map(fun({_, Url}) ->
-        Url
-    end, UrlData).
-
-has_urls(Id, Context) ->
-    UrlData = mod_scraper:urls(Id, Context),
-    Urls = urls_from_data(UrlData),
-    case Urls of
-        [] -> false;
-        [[]] -> false;
-        _ -> true
-    end.
-
-has_rules(Id, Context) ->
-    Rules = m_edge:objects(Id, hasscraperrule, Context),
-    length(Rules) > 0.
-
 -spec digest(Result, Context) -> list() when
 	Result:: list(),
 	Context:: #context{}.
 digest(Result, Context) ->
-	ScraperId = proplists:get_value(scraper_id, Result),
-	RuleIds = m_edge:objects(ScraperId, hasscraperrule, Context),
-	ConnectedRscId = proplists:get_value(connected_rsc_id, Result),
-	StatusIgnored = proplists:get_value(status_ignored, Result),
-	Scraped = proplists:get_value(scraped, Result, []),
-	Data0 = proplists:get_value(data, Scraped, []),
-	Data = sort_data(Data0, RuleIds),
-	Comparison = lists:map(fun({Key, Value}) ->
-		comparison_data(Key, Value, ConnectedRscId, StatusIgnored, Context)
-	end, Data),
-	Digest = [{comparison, Comparison}|Result],
-	AllComparisonEqual = lists:foldl(fun(C, Acc) ->
-		lists:foldl(fun({_, V}, Acc1) ->
-			Acc1 and V
-		end, Acc, proplists:get_value(is_equal, C))
-	end, true, Comparison),
-	Digest1 = [{all_equal, AllComparisonEqual}|Digest],
-	AllComparisonEmpty = lists:foldl(fun(C, Acc) ->
-		lists:foldl(fun({_, V}, Acc1) ->
-			Acc1 and not V
-		end, Acc, proplists:get_value(has_data, C))
-	end, true, Comparison),
-	Digest2 = [{all_empty, AllComparisonEmpty}|Digest1],
-	AllComparisonIgnored = lists:foldl(fun(C, Acc) ->
-		Acc and proplists:get_value(is_ignored, C)
-	end, true, Comparison),
-	Digest3 = [{all_ignored, AllComparisonIgnored}|Digest2],
-	Digest3.
-	
-	
-% sort data by order of connected rules
-sort_data(Data, RuleIds) ->
-	lists:map(fun(RuleId) ->
-		RuleIdAt = z_convert:to_atom(RuleId),
-		{RuleIdAt, proplists:get_value(RuleIdAt, Data)}
-	end, RuleIds).
+    DataByUrl = lists:foldr(fun(R, Acc) ->
+        Url = proplists:get_value(url, R),
+        UrlAt = z_convert:to_atom(Url),
+        case proplists:get_value(UrlAt, Acc) of
+            undefined -> 
+                [{UrlAt, [
+                    {scraper_id, proplists:get_value(scraper_id, R)},
+                    {date, proplists:get_value(date, R)},
+                    {error, proplists:get_value(error, R)},
+                    {rule_id, proplists:get_value(rule_id, R)},
+                    {connected_rsc_id, proplists:get_value(connected_rsc_id, R)},
+                    {values, [R]}
+                ]}|Acc];
+            UrlData ->
+                Values = proplists:get_value(values, UrlData),
+                NewUrlData = lists:keyreplace(values, 1, UrlData, {values, [R|Values]}),
+                lists:keyreplace(UrlAt, 1, Acc, {UrlAt, NewUrlData})
+        end
+    end, [], Result),
+    Digest = lists:map(fun({_UrlAt, Data}) ->
+        Values = proplists:get_value(values, Data),
+        WithComparison = lists:map(fun(UrlData) -> 
+            [{comparison, comparison(UrlData, Context)}|UrlData]
+        end, Values),
+        Data1 = lists:keyreplace(values, 1, Data, {values, WithComparison}),
+        AllEqual = lists:foldl(fun(WC, Acc) ->
+            Comparison = proplists:get_value(comparison, WC),
+            case Comparison of
+                [] -> Acc;
+                _ -> Acc and proplists:get_value(is_equal, Comparison)
+            end
+        end, true, WithComparison),
+        [{all_equal, AllEqual}|Data1]
+    end, DataByUrl),
+    Digest.
 
-comparison_data(Key, Value, ConnectedRscId, StatusIgnored, Context) ->
-	Language = z_context:language(Context),
-	SafeString = fun(Id, Mapping) ->
-    	unescape_value(value_for_language(m_rsc:p(Id, Mapping, Context), Language))
-	end,
-	RuleId = z_convert:to_integer(Key),
-	Ignored = proplists:get_value(Key, StatusIgnored, false),
-	Property = m_rsc:p(RuleId, mapping, Context),
-	Mapping = case Property of
-		undefined -> m_rsc:p(RuleId, title, Context);
-		P -> z_convert:to_atom(P)
-	end,
-	Type = z_convert:to_atom(m_rsc:p(RuleId, type, Context)),
-	{Status, ScrapedValue} = case Value of
-		[xpath_parse_error, Reason] -> {error, [Reason]};
-		undefined -> {not_found, []};
-		[] -> {empty, []};
-		V when is_list(V) -> {ok, V};
-		_ -> {empty, []}
-	end,
-	[ScrapedValues, CurrentValues] = case Type of
-		currency ->
-			CalculatedScraped = mod_scraper:currency_values(Value, Mapping),
-			[
-				CalculatedScraped,
-				lists:map(fun({K, _}) ->
-					{K, SafeString(ConnectedRscId, K)}
-				end, CalculatedScraped)
-			];
-		boolean_true ->
-			ScrapedBoolean = define_boolean(ScrapedValue),
-			CurrentBoolean = define_boolean(SafeString(ConnectedRscId, Mapping)),
-			[
-				[{Mapping, ScrapedBoolean}],
-				[{Mapping, CurrentBoolean}]
-			];
-		boolean_false ->
-			ScrapedBoolean = define_boolean(ScrapedValue),
-			CurrentBoolean = define_boolean(SafeString(ConnectedRscId, Mapping)),
-			[
-				[{Mapping, not ScrapedBoolean}],
-				[{Mapping, CurrentBoolean}]
-			];
-		_ ->
-			[
-				[{Mapping, ScrapedValue}],
-				[{Mapping, SafeString(ConnectedRscId, Mapping)}]
-			]
-	end,
-	Zipped = lists:zipwith(fun({K1, V1}, {K1, V2}) ->
-		[K1, [V1, V2]]
-	end, CurrentValues, ScrapedValues),
-	IsEqual = lists:foldl(fun([K, [V1, V2]], Acc) ->
-		case K of
-			undefined -> Acc;
-			_ -> [{K, (z_convert:to_binary(V1) =:= z_convert:to_binary(V2)) and not (Status == error)}|Acc]
-		end
-	end, [], Zipped),
-	HasData = lists:foldl(fun([K, [_, V2]], Acc) ->
-		case K of
-			undefined -> Acc;
-			_ -> [{K, not z_utils:is_empty(V2) and not (Status == error)}|Acc]
-		end
-	end, [], Zipped),
-	AllIsEqual = lists:foldl(fun({_, V}, Acc) ->
-		Acc and V
-	end, true, IsEqual),
-	AllIsEmpty = lists:foldl(fun({_, V}, Acc) ->
-		Acc and not V
-	end, true, HasData),
-	[
-		{rule_id, RuleId},
-		{type, Type},
-		{values, ScrapedValues},
-		{has_data, HasData},
-		{is_equal, IsEqual},
-		{all_is_equal, AllIsEqual},
-		{all_is_empty, AllIsEmpty},
-		{status, Status},
-		{is_ignored, Ignored}
-	].
-	
+
+comparison(UrlData, Context) ->
+    case proplists:get_value(error, UrlData) of
+        undefined -> comparison1(UrlData, Context);
+        _ -> []
+    end.
+        
+comparison1(UrlData, Context) ->
+    Id = proplists:get_value(connected_rsc_id, UrlData),
+    Fetched = proplists:get_value(data, UrlData),
+    Fetched1 = case Fetched of
+        [] -> <<>>;
+        [F] ->
+            case proplists:get_keys(Fetched) of
+                [] ->
+                    % list
+                    F;
+                _ -> 
+                    % tuple
+                    io_lib:format("~p", [Fetched])
+            end;
+        F -> F
+    end,
+    Fetched2 = z_convert:to_binary(Fetched1),
+    RuleId = proplists:get_value(rule_id, UrlData),
+    Property = z_convert:to_atom(proplists:get_value(property, UrlData)),
+    Current = unescape_value(value_for_language(m_rsc:p(Id, Property, Context), z_context:language(Context))),
+    Type = z_convert:to_atom(m_rsc:p(RuleId, type, Context)),
+    IsEqual = is_equal(Fetched2, Current, Type),
+    [
+        {fetched, Fetched2},
+        {current, Current},
+        {type, Type},
+        {property, Property},
+        {is_equal, IsEqual}
+    ].
+
+
+is_equal(Fetched, Current, Type) ->
+    case Type of
+        boolean_true ->
+            define_boolean(Fetched) =:= define_boolean(Current);
+        boolean_false ->
+            define_boolean(Fetched) =:= define_boolean(Current);
+        _ ->
+            Fetched =:= Current
+    end.
+
+
 value_for_language(Value, Language) ->
     case Value of
         <<>> -> <<>>;
@@ -219,16 +174,25 @@ value_for_language(Value, Language) ->
         V -> V
     end.
 
+
 unescape_value(Value) ->
 	case Value of
 		undefined -> <<>>;
 		CV -> z_html:unescape(CV)
 	end.
 
+
 define_boolean(Value) ->
-	case Value of
+	Bool = case Value of
 		undefined -> false;
 		<<>> -> false;
+		<<"false">> -> false;
 		L when is_list(L) -> z_convert:to_bool(length(L));
 		C -> z_convert:to_bool(C)
+	end,
+	case Bool of
+	    false -> 0;
+	    _ -> 1
 	end.
+	
+	

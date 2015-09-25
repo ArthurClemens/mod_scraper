@@ -3,20 +3,18 @@ Params:
 - id
 #}
 <div class="form-group">
-    {% for is_ready, reason in m.scraper[id].status_ready %}
+    {% for is_ready, reason in m.scraper[id].status %}
         <button id="run_scraper" type="button" class="btn btn-primary"{% if not is_ready %} disabled="disabled"{% endif %}>{_ Fetch data _}</button>
         {% if is_ready %}
             {% wire
                 id="run_scraper"
                 action={script
-                    script="modScraper.prepareForUpdate();"
+                    script="modScraper.prepareForUpdate('" ++ id  ++ "');"
                 }
                 action={postback
                     delegate="mod_scraper"
                     postback={run
                         id=id
-                        target="run_results"
-                        template="_admin_edit_scraper_data_results.tpl"
                     }
                 }
             %}

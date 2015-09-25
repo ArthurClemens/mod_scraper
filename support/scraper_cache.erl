@@ -8,37 +8,54 @@
 -include_lib("zotonic.hrl").
 
 -export([
-    init/1,
+    list/1,
     get/2,
-    put/6,
-    delete/2
+    get_last_run_data/2,
+    put/10,
+    delete/2,
+    init/1
 %    set_ignored/5
 ]).
 
 
+list(Context) ->
+	z_db:assoc("SELECT * FROM mod_scraper_cache ORDER BY url, date desc", Context).
+
+
 get(ScraperId, Context) ->
-	z_db:assoc("SELECT * FROM mod_scraper WHERE scraper_id=$1 ORDER BY url, date desc", [ScraperId], Context).
+	z_db:assoc("SELECT * FROM mod_scraper_cache WHERE scraper_id=$1 ORDER BY url, date desc", [ScraperId], Context).
 
 
-put(ScraperId, Url, ConnectedRscId, Status, Results, Context) ->
+get_last_run_data(ScraperId, Context) ->
+	Result = z_db:assoc("SELECT date,error FROM mod_scraper_cache WHERE scraper_id=$1 GROUP BY date, error ORDER BY date desc", [ScraperId], Context),
+	case Result of 
+	    [] -> [];
+	    [R|_] -> R
+	end.
+
+
+put(ScraperId, RuleId, ConnectedRscId, Url, Order, Error, Date, Data, Property, Context) ->
     Columns = [
         {scraper_id, ScraperId},
+        {rule_id, RuleId},
         {connected_rsc_id, ConnectedRscId},
         {url, Url},
-        {date, calendar:universal_time()},
-        {status, ?DB_PROPS(Status)},
-        {status_ignored, ?DB_PROPS([])},
-        {scraped, ?DB_PROPS(Results)}
+        {order, Order},
+        {error, Error},
+        {done, 0},
+        {date, Date},
+        {data, ?DB_PROPS(Data)},
+        {property, Property}
     ],
-    z_db:insert(mod_scraper, Columns, Context).
+    z_db:insert(mod_scraper_cache, Columns, Context).
 
 
 delete(ScraperId, Context) ->
-    z_db:q("DELETE FROM mod_scraper WHERE scraper_id=$1", [ScraperId], Context).
+    z_db:q("DELETE FROM mod_scraper_cache WHERE scraper_id=$1", [ScraperId], Context).
 
 
 %set_ignored(Id, Url, RuleId, Attr, Context) ->
-%	case z_db:q("SELECT status_ignored FROM mod_scraper WHERE scraper_id=$1 and url=$2", [Id, Url], Context) of
+%	case z_db:q("SELECT status_ignored FROM mod_scraper_cache WHERE scraper_id=$1 and url=$2", [Id, Url], Context) of
 %		[] -> false;
 %		[{StatusIgnored}] -> 
 %			lager:info("Id=~p, Url=~p, StatusIgnored=~p", [Id, Url, StatusIgnored]),
@@ -46,16 +63,16 @@ delete(ScraperId, Context) ->
 %			StatusIgnored1 = lists:keydelete(RuleIdAt, 1, StatusIgnored),
 %			StatusIgnored2 = [{RuleIdAt, true}|StatusIgnored1],
 %			lager:info("StatusIgnored2=~p", [StatusIgnored2]),
-%			z_db:q("UPDATE mod_scraper SET status_ignored=$1 WHERE scraper_id=$2 AND url=$3", [?DB_PROPS(StatusIgnored2), Id, Url], Context) == 1
+%			z_db:q("UPDATE mod_scraper_cache SET status_ignored=$1 WHERE scraper_id=$2 AND url=$3", [?DB_PROPS(StatusIgnored2), Id, Url], Context) == 1
 %	end.
 
 
 -spec init(Context) -> atom() when
     Context:: #context{}.
 init(Context) ->
-    case z_db:table_exists(mod_scraper, Context) of
+    case z_db:table_exists(mod_scraper_cache, Context) of
         false ->
-            z_db:create_table(mod_scraper, [
+            z_db:create_table(mod_scraper_cache, [
                 #column_def{
                     name=id,
                     type="serial",
@@ -63,6 +80,11 @@ init(Context) ->
                 },
                 #column_def{
                     name=scraper_id,
+                    type="integer",
+                    is_nullable=false
+                },
+                #column_def{
+                    name=rule_id,
                     type="integer",
                     is_nullable=false
                 },
@@ -77,36 +99,50 @@ init(Context) ->
                     is_nullable=true
                 },
                 #column_def{
-                    name=status,
-                    type="bytea",
+                    name=order,
+                    type="integer",
                     is_nullable=true
                 },
                 #column_def{
-                    name=status_ignored,
-                    type="bytea",
+                    name=error,
+                    type="text",
+                    is_nullable=true
+                },
+                #column_def{
+                    name=done,
+                    type="integer",
                     is_nullable=true
                 },
                 #column_def{
                     name=date,
-                    type="timestamp",
+                    type="timestamptz",
                     is_nullable=false
                 },
                 #column_def{
-                    name=scraped,
+                    name=data,
                     type="bytea",
+                    is_nullable=true
+                },
+                #column_def{
+                    name=property,
+                    type="text",
                     is_nullable=true
                 }
             ], Context),
             
             % Add some indices and foreign keys, ignore errors
-            z_db:equery("create index fki_mod_scraper_scraper_id on mod_scraper(scraper_id)", Context),
+            z_db:equery("create index fki_mod_scraper_scraper_id on mod_scraper_cache(scraper_id)", Context),
             % Delete row when scraper is deleted
-            z_db:equery("alter table mod_scraper add 
+            z_db:equery("alter table mod_scraper_cache add 
                         constraint fk_mod_scraper_scraper_id foreign key (scraper_id) references rsc(id) 
                         on update cascade on delete cascade", Context),
             % Delete row when connected page is deleted
-            z_db:equery("alter table mod_scraper add 
+            z_db:equery("alter table mod_scraper_cache add 
                         constraint fk_mod_scraper_connected_page_id foreign key (connected_rsc_id) references rsc(id) 
+                        on update cascade on delete cascade", Context),
+            % Delete row when rule is deleted
+            z_db:equery("alter table mod_scraper_cache add 
+                        constraint fk_mod_scraper_rule_id foreign key (rule_id) references rsc(id) 
                         on update cascade on delete cascade", Context);
         true -> ok
     end.

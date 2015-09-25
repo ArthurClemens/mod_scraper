@@ -1,50 +1,82 @@
 {#
 Params:
-- data
-- id
+- card_id
 - comparison
 - connected_rsc_id
-- is_equal (after update all)
-- is_ignored (after ignore)
+- row_id
 #}
-{% with
-	#row.connected_rsc_id,
-	comparison.values
-	as
-	row_id,
-	values
+{% with card_id ++ "-" ++ comparison.property, 
+        comparison.fetched,
+        comparison.current,
+        comparison.type,
+        comparison.property,
+        comparison.rule_id,
+        comparison.error,
+        comparison.is_equal
+   as
+   		attr_id,
+   		fetched,
+   		current,
+   		type,
+   		property,
+   		rule_id,
+   		error,
+   		is_equal
 %}
-<div id="{{ row_id }}" class="card">
-	<div class="card-row">
-		{% if values|length > 1 %}
-			{% include "_admin_edit_scraper_result_card_item_all.tpl" 
-			   id=id
-			   row_id=row_id
-			   comparison=comparison
-			   connected_rsc_id=connected_rsc_id
-			   values=values
-			   is_equal=is_equal
-			   is_ignored=is_ignored
-			%}
+<div class="card-row-attr{% if comparison.is_equal %} equal{% endif %}" id="{{ attr_id }}">
+	<div class="card-row-meta">
+		{% with property|default:type|default:(rule_id.title) as property %}
+			{{ property }}
+		{% endwith %}
+	</div>
+	<div class="card-row-content card-row-content-current">
+		{% if (type == 'boolean_true') or (type == 'boolean_false') %}
+			{{ current|stringify|yesno:"true,false" }}
+		{% else %}
+			{% if current %}
+				{{ current }}
+			{% else %}
+				<span class="card-row-content-none">&mdash;</span>
+			{% endif %}
 		{% endif %}
-		{% for attr in values %}
-			{% with attr[1],
-					attr[2]
-				as
-				key,
-				scraped
+	</div>
+	<div class="card-row-content card-row-content-scraped clearfix">
+		{% if not is_equal and not error %}
+			{% wire
+				id=#copy.attr_id
+				action={postback
+					delegate="mod_scraper"
+					postback={copy
+						property=property
+						connected_rsc_id=connected_rsc_id
+						value=fetched
+						action={replace
+							target=card_id
+							template="_admin_edit_scraper_result_card.tpl"
+							index=index
+							data=0
+							id=id
+						}
+					}
+				}
 			%}
-				{% include "_admin_edit_scraper_result_card_item_attr.tpl" 
-				   comparison=comparison
-				   connected_rsc_id=connected_rsc_id
-				   key=key
-				   scraped=scraped
-				   row_id=row_id
-				   is_child=values|length > 1
-				   is_ignored=is_ignored
-				%}
-			{% endwith %}
-		{% endfor %}
+			<button id="{{ #copy.attr_id }}" type="button" class="btn btn-primary btn-xs">{_ Copy _}</button>
+		{% endif %}
+		{% if error %}
+			<span class="form-field-error">{_ Parse error _}</span>
+		{% else %}
+			{% if fetched != undefined %}
+				<span style="word-break: break-all">
+				    {% if (type == 'boolean_true') or (type == 'boolean_false') %}
+                        {{ fetched|yesno:"true,false" }}
+                    {% else %}
+				        {{ fetched }}
+				    {% endif %}
+                </span>
+			{% else %}
+				<span class="card-row-content-none">&mdash;</span>
+			{% endif %}
+		{% endif %}
 	</div>
 </div>
 {% endwith %}

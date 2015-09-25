@@ -61,9 +61,9 @@
                 <label class="control-label col-md-3">{_ Property mapping _}</label>
                 <div class="col-md-9">
                     <input type="text"
-                        name="mapping" 
+                        name="property" 
                         class="form-control"
-                        value="{{ r.mapping }}"
+                        value="{{ r.property }}"
                         {% if not is_editable %}disabled="disabled"{% endif %}
                     />
                 </div>

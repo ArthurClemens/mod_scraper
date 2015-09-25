@@ -5,11 +5,11 @@ Params:
 - index
 #}
 {% with data|default:m.scraper[id].digests[index] as data %}
-{% with data.comparison,
+{% with data.values,
 		data.connected_rsc_id,
 		#card.index
 		as
-		comparisons,
+		values,
 		connected_rsc_id,
 		card_id
 %}
@@ -27,33 +27,24 @@ Params:
 			</dl>
 		</div>
 	</div>
-	{% with data.status as status %}
-		{% with status[1],
-				status[2]
-			as
-				type,
-				message
-		%}
-			{% if type == "error" %}
-				<div class="panel-body status-error">
-					{% if message == "failed_connect" %}
-						{_ Failed to Connect _}
-					{% elif message == "404" %}
-						{_ 404 Page Not Found _}
-					{% endif %}
-				</div>
-			{% else %}
-				{% if data.all_equal %}
-					<div class="panel-body">
-						{_ No differences _}
-					</div>
-				{% endif %}
-				{% for comparison in comparisons %}
-					{% include "_admin_edit_scraper_result_card_item.tpl" connected_rsc_id=connected_rsc_id comparison=comparison %}
-				{% endfor %}
-			{% endif %}
-		{% endwith %}
-	{% endwith %}
+	{% if data.error %}
+	    <div class="panel-body form-field-error">
+	        {{ data.error }}
+	    </div>
+	{% elif data.all_equal %}
+        <div class="panel-body">
+            {_ Nothing to update. _}
+        </div>
+    {% endif %}
+    {% for value in values %}
+        {% with value.comparison as comparison %}
+            {% include "_admin_edit_scraper_result_card_item.tpl"
+                connected_rsc_id=connected_rsc_id
+                comparison=comparison
+                card_id=card_id
+            %}
+        {% endwith %}
+    {% endfor %}
 </div>
 {% endwith %}
 {% endwith %}

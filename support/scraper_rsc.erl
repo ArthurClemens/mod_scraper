@@ -12,7 +12,7 @@
 ]).
 
 event(#postback{message={source, [{id, Id}]}}, Context) ->
-    Source = z_convert:to_atom(z_context:get_q("triggervalue", Context)),
+    Source = z_context:get_q("triggervalue", Context),
     m_rsc:update(Id, [{source, Source}], Context),
     Context1 = update_data_action(Id, Context),
     z_render:growl(?__("Source saved", Context1), Context1);
@@ -24,24 +24,30 @@ event(#postback{message={url_source_url, [{id, Id}]}}, Context) ->
     z_render:growl(?__("URL saved", Context1), Context1);
 
 event(#postback{message={page_connections_predicate, [{id, Id}]}}, Context) ->
-    PredicateName = z_convert:to_atom(z_context:get_q("triggervalue", Context)),
+    PredicateName = z_context:get_q("triggervalue", Context),
     m_rsc:update(Id, [{page_connections_predicate, PredicateName}], Context),
     Context1 = update_data_action(Id, Context),
     z_render:growl(?__("Connection saved", Context1), Context1);
 
-event(#postback_notify{message="admin-connect-select"}, Context) ->
+event(#postback{message={admin_connect_select, Args}}, Context) ->
+    SelectId = z_context:get_q("select_id", Context),
+    SubjectId0 = proplists:get_value(subject_id, Args),
+    ObjectId0 = proplists:get_value(object_id, Args),
+    Callback = proplists:get_value(callback, Args),
+
     {SubjectId, ObjectId} =
-        case z_utils:is_empty(z_context:get_q("object_id", Context)) of
+        case z_utils:is_empty(ObjectId0) of
             true ->
-                {z_convert:to_integer(z_context:get_q("subject_id", Context)),
-                 z_convert:to_integer(z_context:get_q("select_id", Context))};
+                {z_convert:to_integer(SubjectId0),
+                 z_convert:to_integer(SelectId)};
             false ->
-                {z_convert:to_integer(z_context:get_q("select_id", Context)),
-                 z_convert:to_integer(z_context:get_q("object_id", Context))}
+                {z_convert:to_integer(SelectId),
+                 z_convert:to_integer(ObjectId0)}
         end,
+        
     Id = SubjectId,
     % misuse callback name to distinguish postback_notify events
-    Callback = z_convert:to_list(z_context:get_q("callback", Context)),
+
     Context1 = case Callback of
     	"page_prop_source" -> 
     		m_rsc:update(Id, [{page_prop_source, ObjectId}], Context),
@@ -56,11 +62,9 @@ event(#postback_notify{message="admin-connect-select"}, Context) ->
     z_render:dialog_close(Context2);
 
 event(#postback{message={connections_updated, [{id, Id}]}}, Context) ->
-    lager:info("connections_updated"),
     update_data_action(Id, Context).
 
 update_data_action(Id, Context) ->
-    lager:info("update scraper_data_action"),
     z_render:update(
         "#" ++ "scraper_data_action",
         z_template:render("_admin_edit_scraper_data_action.tpl", [{id, Id}], Context),

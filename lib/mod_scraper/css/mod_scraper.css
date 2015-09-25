@@ -1,5 +1,9 @@
+
+/* Scraper edit page */
+
 .panel .panel-heading {
 	background-color: #fff;
+	border-bottom: none;
 }
 .panel .panel-heading h4 a {
 	color: inherit;
@@ -12,9 +16,7 @@
 }
 .tab-content #differences.active + .tab-pane,
 .tab-content #differences.active + .tab-pane + .result-views .card.equal,
-.tab-content #differences.active + .tab-pane + .result-views .card-row-attr.equal,
-.tab-content #differences.active + .tab-pane + .result-views .card-row-attr.empty,
-.tab-content #differences.active + .tab-pane + .result-views .card-row-attr.ignored {
+.tab-content #differences.active + .tab-pane + .result-views .card-row-attr.equal {
 	display: none;
 }
 
@@ -26,9 +28,12 @@
 .card-row-actions-all {
 	float: right;
 }
+.panel .panel-body,
 .card-row-attr {
-	padding: 10px 15px;
 	border-top: 1px solid #ddd;
+}
+.card-row-attr {
+    padding: 10px 15px;
 }
 .card-row-attr:first-child {
 	border: none;
@@ -51,10 +56,6 @@
 .card-row-content-none {
 	text-transform: uppercase;
 	color: #aaa;
-}
-.status-error,
-.card-row-content-error {
-	color: red;
 }
 .card-row-content-scraped .btn {
 	float: right;

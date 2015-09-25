@@ -11,6 +11,7 @@
                 tabs_enabled=["find"]
                 delegate=`scraper_rsc`
                 callback="page_connections_source"
+                center=0
             }
         %}
         <a id="{{ #page_connections_source }}" href="" class="form-control">{{ id.page_connections_source.title|default:_"Select..." }}</a>

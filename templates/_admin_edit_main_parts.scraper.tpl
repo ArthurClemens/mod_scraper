@@ -10,5 +10,5 @@
 	"mod_scraper/js/mod_scraper.js"
 %}
 {% javascript %}
-	modScraper.init("{{id}}");
+	modScraper.init("{{id}}", "scraper_data", ["fetch_completed"], "update_run_results");
 {% endjavascript %}

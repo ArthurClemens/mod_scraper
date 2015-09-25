@@ -56,15 +56,20 @@ fetch(Url0, Options, Rules) ->
     UrlContext = url_context(Url),
     case get_page_body(Url) of
         {Length, Body} when is_integer(Length) ->
+            Fetched = fetch_page_parts(Body, Rules, Options),
             [
                 {url, Url},
                 {size, Length},
                 {url_context, UrlContext},
                 {date, calendar:universal_time()},
-                {data, fetch_page_parts(Body, Rules, Options)}
+                {data, Fetched}
             ];
         {error, Reason} ->
-        	{error, Reason}
+            [
+                {url, Url},
+                {date, calendar:universal_time()},
+                {error, Reason}
+            ]
     end.
 
 fetch_from_string(Body, Options, Rules) -> 
@@ -129,8 +134,7 @@ get_page_body(Url) ->
 							{Length, Body}
 					end
 			end;
-        Error -> 
-            Error
+        Error -> Error
     end.
 
 -spec fetch_page_parts(Body, Rules, Options) -> list() when
@@ -140,27 +144,33 @@ get_page_body(Url) ->
 fetch_page_parts(Body, Rules, Options) ->
     Tree = mochiweb_html:parse(Body),
     lists:foldl(fun({Name, Rule}, Acc) ->
-	    Rule1 = binary_to_list(Rule),
-        try mochiweb_xpath:execute(Rule1, Tree) of
-            Found when is_list(Found) -> 
-                FoundProcessed = lists:reverse(lists:foldl(fun(Opt, Acc1) ->
-                    case proplists:get_value(Opt, ?OPT_RULES) of
-                        undefined -> Acc1;
-                        F -> F(Acc1)
-                    end
-                end, Found, Options)),
-                [{Name, FoundProcessed}|Acc];
-            _ -> [{Name, [xpath_parse_error, unknown_error]}|Acc]
-        catch
-        	error:Reason ->
-				io:fwrite("Error reason: ~p~n", [Reason]),
-				[{Name, [xpath_parse_error, Reason]}|Acc];
-			throw:Reason ->
-				io:fwrite("Throw reason: ~p~n", [Reason]),
-				[{Name, [xpath_parse_error, Reason]}|Acc];
-			exit:Reason ->
-				io:fwrite("Exit reason: ~p~n", [Reason]),
-				[{Name, [xpath_parse_error, Reason]}|Acc]
+        case Rule of
+            undefined -> [{Name, [xpath_parse_error, no_rule]}|Acc];
+            [] -> [{Name, [xpath_parse_error, no_rule]}|Acc];
+            <<>> -> [{Name, [xpath_parse_error, no_rule]}|Acc];
+            _ -> 
+                Rule1 = binary_to_list(Rule),
+                try mochiweb_xpath:execute(Rule1, Tree) of
+                    Found when is_list(Found) -> 
+                        FoundProcessed = lists:reverse(lists:foldl(fun(Opt, Acc1) ->
+                            case proplists:get_value(Opt, ?OPT_RULES) of
+                                undefined -> Acc1;
+                                F -> F(Acc1)
+                            end
+                        end, Found, Options)),
+                        [{Name, FoundProcessed}|Acc];
+                    _ -> [{Name, [xpath_parse_error, unknown_error]}|Acc]
+                catch
+                    error:Reason ->
+                        io:fwrite("Error reason: ~p~n", [Reason]),
+                        [{Name, [xpath_parse_error, Reason]}|Acc];
+                    throw:Reason ->
+                        io:fwrite("Throw reason: ~p~n", [Reason]),
+                        [{Name, [xpath_parse_error, Reason]}|Acc];
+                    exit:Reason ->
+                        io:fwrite("Exit reason: ~p~n", [Reason]),
+                        [{Name, [xpath_parse_error, Reason]}|Acc]
+                end
         end
     end, [], Rules).
 

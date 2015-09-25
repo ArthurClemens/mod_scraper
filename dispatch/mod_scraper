@@ -1,0 +1,4 @@
+%% -*- mode: erlang -*-
+[
+ {admin_scraper, [ "admin", "scraper" ], controller_admin_scraper, [{ssl, true}]}
+].
