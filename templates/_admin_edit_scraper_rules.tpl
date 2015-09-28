@@ -10,7 +10,6 @@
 
 {% block widget_content %}
     {% with m.rsc[id] as r %}
-    {% with m.rsc[id].is_editable as is_editable %}
 {% javascript %}
 window.test = function() {
     console.log("Test")
@@ -25,6 +24,5 @@ window.test = function() {
             </div>
         </div>
     </fieldset>
-    {% endwith %}
     {% endwith %}
 {% endblock %}

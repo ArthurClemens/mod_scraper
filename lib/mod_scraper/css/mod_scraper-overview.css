@@ -1,3 +1,8 @@
+.table > tbody > tr.updating,
+.table-striped > tbody > tr.updating {
+    background-color: #E8F5E9;
+}
+
 dl.scraper-status {
     margin: 0;
 }

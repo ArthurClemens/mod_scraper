@@ -1,0 +1,16 @@
+{
+  "name": "mod_scraper-js",
+  "version": "0.0.1",
+  "description": "",
+  "main": "mod_scraper.js",
+  "scripts": {
+    "lint": "jshint *.js",
+    "watch": "watch 'npm run lint' ."
+  },
+  "author": "Arthur Clemens <arthurclemens@gmail.com> (arthurclemens@gmail.com)",
+  "license": "MIT",
+  "devDependencies": {
+    "jshint": "^2.8.0",
+    "watch": "^0.16.0"
+  }
+}

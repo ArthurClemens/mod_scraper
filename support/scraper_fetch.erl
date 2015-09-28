@@ -162,13 +162,13 @@ fetch_page_parts(Body, Rules, Options) ->
                     _ -> [{Name, [xpath_parse_error, unknown_error]}|Acc]
                 catch
                     error:Reason ->
-                        io:fwrite("Error reason: ~p~n", [Reason]),
+                        %io:fwrite("Error reason: ~p~n", [Reason]),
                         [{Name, [xpath_parse_error, Reason]}|Acc];
                     throw:Reason ->
-                        io:fwrite("Throw reason: ~p~n", [Reason]),
+                        %io:fwrite("Throw reason: ~p~n", [Reason]),
                         [{Name, [xpath_parse_error, Reason]}|Acc];
                     exit:Reason ->
-                        io:fwrite("Exit reason: ~p~n", [Reason]),
+                        %io:fwrite("Exit reason: ~p~n", [Reason]),
                         [{Name, [xpath_parse_error, Reason]}|Acc]
                 end
         end

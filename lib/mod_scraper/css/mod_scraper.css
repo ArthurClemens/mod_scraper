@@ -16,7 +16,9 @@
 }
 .tab-content #differences.active + .tab-pane,
 .tab-content #differences.active + .tab-pane + .result-views .card.equal,
-.tab-content #differences.active + .tab-pane + .result-views .card-row-attr.equal {
+.tab-content #differences.active + .tab-pane + .result-views .card.empty,
+.tab-content #differences.active + .tab-pane + .result-views .card-item.equal,
+.tab-content #differences.active + .tab-pane + .result-views .card-item.empty {
 	display: none;
 }
 
@@ -25,20 +27,17 @@
 	pointer-events: none;
 }
 
-.card-row-actions-all {
-	float: right;
-}
 .panel .panel-body,
-.card-row-attr {
+.card-item {
 	border-top: 1px solid #ddd;
 }
-.card-row-attr {
+.card-item {
     padding: 10px 15px;
 }
-.card-row-attr:first-child {
+.card-item:first-child {
 	border: none;
 }
-.card-row-attr-child {
+.card-item-child {
 	border-top: 1px dashed #ddd;
 	padding-left: 60px;
 }
@@ -57,7 +56,24 @@
 	text-transform: uppercase;
 	color: #aaa;
 }
-.card-row-content-scraped .btn {
+
+.card-row-content-scraped .action {
 	float: right;
 	margin-right: 6px;
+}
+.card-row-content-scraped .action span {
+    color: #aaa;
+    font-size: 12px; 
+}
+.card-row-content-scraped .action .btn {
+    margin-top: -2px;
+}
+
+.rule-list-item-automatic {
+    color: #00C853;
+    float: right;
+}
+.rule-list-item-label {
+    color: #999;
+    float: right;
 }

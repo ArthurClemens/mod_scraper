@@ -9,7 +9,6 @@
 
 {% block widget_content %}
     {% with m.rsc[id] as r %}
-    {% with m.rsc[id].is_editable as is_editable %}
     	<div id="scraper_data">
 			<div id="scraper_data_action">
 				{% include "_admin_edit_scraper_data_action.tpl" id=id %}
@@ -25,7 +24,6 @@
 				}
 			%}
 		</div>
-    {% endwith %}
     {% endwith %}
 {% endblock %}
 

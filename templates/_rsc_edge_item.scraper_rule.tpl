@@ -1,4 +1,5 @@
-{% with m.rsc[id].title as title %}
-{{ title|truncate:30|default:"<i>untitled</i>" }}
-<span class="category">{% if id.property %}property: {{ id.property }} / type: {% endif %}{{ id.type }}</span>
-{% endwith %}
+{% if id.category.name == 'automatic_scraper_rule' %}
+<span class="label rule-list-item-automatic">{_ automatic _}</span>
+{% endif %}
+<span class="label rule-list-item-label">{% if id.property %}{{ id.property }}{% else %}{_ type= _}{{ id.type }}{% endif %}</span>
+{{ id.title|truncate:60|default:"<i>untitled</i>" }}

@@ -1,4 +1,3 @@
-
 {% include "_admin_edit_content_page_connections_list.tpl"
     id=id
     predicate=`hasscraperrule`

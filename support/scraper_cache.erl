@@ -11,6 +11,7 @@
     list/1,
     get/2,
     get_last_run_data/2,
+    get_raw/2,
     put/10,
     delete/2,
     init/1
@@ -26,6 +27,10 @@ get(ScraperId, Context) ->
 	z_db:assoc("SELECT * FROM mod_scraper_cache WHERE scraper_id=$1 ORDER BY url, date desc", [ScraperId], Context).
 
 
+get_raw(ScraperId, Context) ->
+	z_db:assoc("SELECT * FROM mod_scraper_cache WHERE scraper_id=$1 AND raw=1 ORDER BY url, date desc", [ScraperId], Context).
+	
+
 get_last_run_data(ScraperId, Context) ->
 	Result = z_db:assoc("SELECT date,error FROM mod_scraper_cache WHERE scraper_id=$1 GROUP BY date, error ORDER BY date desc", [ScraperId], Context),
 	case Result of 
@@ -34,15 +39,16 @@ get_last_run_data(ScraperId, Context) ->
 	end.
 
 
-put(ScraperId, RuleId, ConnectedRscId, Url, Order, Error, Date, Data, Property, Context) ->
+put(ScraperId, RuleId, ConnectedId, Url, Raw, Error, Date, Data, Property, Context) ->
+    % ensure that we are storing an integer
+    {ok, RId} = m_rsc:name_to_id(ConnectedId, Context),
     Columns = [
         {scraper_id, ScraperId},
         {rule_id, RuleId},
-        {connected_rsc_id, ConnectedRscId},
+        {connected_rsc_id, RId},
         {url, Url},
-        {order, Order},
+        {raw, Raw},
         {error, Error},
-        {done, 0},
         {date, Date},
         {data, ?DB_PROPS(Data)},
         {property, Property}
@@ -99,18 +105,13 @@ init(Context) ->
                     is_nullable=true
                 },
                 #column_def{
-                    name=order,
+                    name=raw,
                     type="integer",
                     is_nullable=true
                 },
                 #column_def{
                     name=error,
                     type="text",
-                    is_nullable=true
-                },
-                #column_def{
-                    name=done,
-                    type="integer",
                     is_nullable=true
                 },
                 #column_def{

@@ -4,7 +4,7 @@ Params:
 #}
 <div class="form-group">
     {% for is_ready, reason in m.scraper[id].status %}
-        <button id="run_scraper" type="button" class="btn btn-primary"{% if not is_ready %} disabled="disabled"{% endif %}>{_ Fetch data _}</button>
+        <button id="run_scraper" type="button" class="btn btn-primary"{% if not is_ready %} disabled="disabled"{% endif %}>{_ Scrape data _}</button>
         {% if is_ready %}
             {% wire
                 id="run_scraper"

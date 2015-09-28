@@ -9,7 +9,6 @@
 
 {% block widget_content %}
     {% with m.rsc[id] as r %}
-    {% with m.rsc[id].is_editable as is_editable %}
     <fieldset class="form-horizontal">
         <div class="form-group row">
             <label class="control-label col-md-3">{_ URL data source _}</label>
@@ -40,7 +39,6 @@
             {% include "_admin_edit_scraper_source_details.tpl" id=id %}
         </div>
     </fieldset>
-    {% endwith %}
     {% endwith %}
 {% endblock %}
 

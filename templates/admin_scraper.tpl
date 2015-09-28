@@ -17,7 +17,7 @@
         <div class="well">
             {% button
                 class="btn btn-primary"
-                text=_"Make new scraper"
+                text=_"New scraper"
                 action={dialog_new_rsc
                     cat="scraper"
                     nocatselect
@@ -26,7 +26,7 @@
             %}
             {% button
                 class="btn btn-default"
-                text=_"Run all scrapers"
+                text=_"Run all"
                 action={postback
                     delegate="mod_scraper"
                     postback={run_all}

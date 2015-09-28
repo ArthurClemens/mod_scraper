@@ -10,8 +10,14 @@
 
     {% block widget_content %}
         {% with m.rsc[id] as r %}
-        {% with m.rsc[id].is_editable as is_editable %}
         <fieldset class="form-horizontal">
+            {% if id.category.name == "automatic_scraper_rule" %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="alert alert-info" role="alert">{_ This is an automatic rule: the scraped value will be used to directly update the linked page. _}</div>
+                    </div>
+                </div>
+            {% endif %}
             <div class="form-group row">
                 <label class="control-label col-md-3">{_ Title _}</label>
                 <div class="col-md-9">
@@ -46,7 +52,7 @@
 					%}
                     <select class="form-control" id="type" name="type">
                         <option value="text">{_ Text _}</option>
-                        <option value="currency"{% if id.type=="currency" %} selected="selected"{% endif %}>{_ Currency _}</option>
+                        <option value="price"{% if id.type=="price" %} selected="selected"{% endif %}>{_ Price _}</option>
                         <option value="boolean_true"{% if id.type=="boolean_true" %} selected="selected"{% endif %}>{_ True when a value is found _}</option>
                         <option value="boolean_false"{% if id.type=="boolean_false" %} selected="selected"{% endif %}>{_ False when a value is found _}</option>
                         <option value="image"{% if id.type=="image" %} selected="selected"{% endif %}>{_ Image (not implemented) _}</option>
@@ -60,7 +66,16 @@
             <div class="form-group row">
                 <label class="control-label col-md-3">{_ Property mapping _}</label>
                 <div class="col-md-9">
+                    {% wire id="property"
+                		type="keyup"
+                		action={update
+							target="property_automatic"
+							template="_scraper_rule_property_automatic.tpl"
+							id=id
+						}
+					%}
                     <input type="text"
+                        id="property"
                         name="property" 
                         class="form-control"
                         value="{{ r.property }}"
@@ -68,7 +83,9 @@
                     />
                 </div>
             </div>
+            <div id="property_automatic">
+                {% include "_scraper_rule_property_automatic.tpl" id=id first_time=1 %}
+            </div>
         </fieldset>
-        {% endwith %}
         {% endwith %}
     {% endblock %}

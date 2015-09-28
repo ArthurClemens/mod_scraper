@@ -23,7 +23,7 @@ Params:
 		<div class="text-muted meta">
 			<dl>
 				<dd><small><a href="{{ data.url }}">{{ data.url }}</a></small></dd>
-				<dd><small>{_ Fetched: _} {{ data.date|timesince }}</small></dd>
+				<dd><small>{_ Scraped _} {{ data.date|timesince }}</small></dd>
 			</dl>
 		</div>
 	</div>
@@ -31,20 +31,30 @@ Params:
 	    <div class="panel-body form-field-error">
 	        {{ data.error }}
 	    </div>
+	{% elif data.all_empty %}
+	    <div class="panel-body">
+            {_ No data found. _}
+        </div>
 	{% elif data.all_equal %}
         <div class="panel-body">
-            {_ Nothing to update. _}
+            {_ No updates. _}
+        </div>
+    {% elif data.all_inactive %}
+        <div class="panel-body">
+            {_ No updates. _}
         </div>
     {% endif %}
-    {% for value in values %}
-        {% with value.comparison as comparison %}
-            {% include "_admin_edit_scraper_result_card_item.tpl"
-                connected_rsc_id=connected_rsc_id
-                comparison=comparison
-                card_id=card_id
-            %}
-        {% endwith %}
-    {% endfor %}
+    {% if not data.all_empty %}
+        {% for value in values %}
+            {% with value.comparison as comparison %}
+                {% include "_admin_edit_scraper_result_card_item.tpl"
+                    connected_rsc_id=connected_rsc_id
+                    comparison=comparison
+                    card_id=card_id
+                %}
+            {% endwith %}
+        {% endfor %}
+    {% endif %}
 </div>
 {% endwith %}
 {% endwith %}
