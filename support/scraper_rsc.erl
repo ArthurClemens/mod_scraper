@@ -66,8 +66,8 @@ event(#postback{message={connections_updated, [{id, Id}]}}, Context) ->
 
 update_data_action(Id, Context) ->
     z_render:update(
-        "#" ++ "scraper_data_action",
-        z_template:render("_admin_edit_scraper_data_action.tpl", [{id, Id}], Context),
+        "#" ++ "admin_edit_scraper_data",
+        z_template:render("_admin_edit_scraper_data.tpl", [{id, Id}], Context),
         Context).
 
 update_page_prop_source(Id, Context) ->
