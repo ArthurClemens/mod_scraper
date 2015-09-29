@@ -83,7 +83,7 @@ observe_admin_menu(admin_menu, Acc, Context) ->
 
 event(#postback{message={run, Args}}, Context) ->
     ScraperId = proplists:get_value(id, Args),
-    RuleIds = m_edge:objects(ScraperId, hasscraperrule, Context),
+    RuleIds = rule_ids(ScraperId, Context),
     case length(RuleIds) of
         0 ->
             z_render:growl_error(?__("No rules to run. Add one or more rules.", Context), Context);
@@ -328,7 +328,7 @@ do_next_url(UrlData, State) ->
 do_next_url_process(UrlData, State) ->
     {ScraperId, ConnectedId, URL} = UrlData,
     Context = State#state.context,
-    RuleIds = m_edge:objects(ScraperId, hasscraperrule, Context),
+    RuleIds = rule_ids(ScraperId, Context),
     fetch_url(ScraperId, URL, ConnectedId, RuleIds, Context).
 
 
@@ -348,7 +348,6 @@ fetch_url(ScraperId, Url, ConnectedId, RuleIds, Context) ->
             store_result(ScraperId, ConnectedId, Url, undefined, Date, Scraped, RuleIds, Context);
         _ ->
             ErrorMsg = humanize_error_message(Error),
-            lager:info("ErrorMsg=~p", [ErrorMsg]),
             PutError(ErrorMsg)
     end.
 
@@ -445,3 +444,7 @@ ensure_db_exists(Context) ->
         true ->
             ok
     end.
+    
+rule_ids(ScraperId, Context) ->
+    Ids = m_edge:objects(ScraperId, hasscraperrule, Context),
+    [Id || Id <- Ids, m_rsc:p(Id, is_published, Context)].

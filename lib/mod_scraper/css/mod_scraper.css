@@ -69,11 +69,17 @@
     margin-top: -2px;
 }
 
-.rule-list-item-automatic {
+.scraper-rule-not-published {
+    opacity: .3;
+}
+.scraper-rule-automatic {
     color: #00C853;
     float: right;
 }
-.rule-list-item-label {
+.scraper-rule.scraper-rule-not-published .scraper-rule-automatic {
+    color: #999;
+}
+.scraper-rule-label {
     color: #999;
     float: right;
 }
