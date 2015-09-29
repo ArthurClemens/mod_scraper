@@ -7,11 +7,13 @@ Params:
 {% with data|default:m.scraper[id].digests[index] as data %}
 {% with data.values,
 		data.connected_rsc_id,
-		#card.index
+		#card.index,
+		#card.index ++ "-since"
 		as
 		values,
 		connected_rsc_id,
-		card_id
+		card_id,
+		time_since_id
 %}
 <div id="{{ card_id }}" class="panel panel-default{% if data.all_empty %} empty{% endif %}{% if data.all_equal %} equal{% endif %}">
 	<div class="panel-heading">
@@ -22,8 +24,8 @@ Params:
 		{% endif %}
 		<div class="text-muted meta">
 			<dl>
-				<dd><small><a href="{{ data.url }}">{{ data.url }}</a></small></dd>
-				<dd><small>{_ Scraped _} {{ data.date|timesince }}</small></dd>
+				<dd><a href="{{ data.url }}">{{ data.url }}</a></dd>
+				<dd>{_ Scraped _} <span id="{{ time_since_id }}"></span></dd>
 			</dl>
 		</div>
 	</div>
@@ -56,5 +58,13 @@ Params:
         {% endfor %}
     {% endif %}
 </div>
+{% javascript %}
+    modScraper.initTimeSince({
+        id: "{{card_id}}",
+        timeSinceEl: "{{ time_since_id }}",
+        start: "{{ data.date|date:"U" }}",
+        dateFormat: "X"
+    });
+{% endjavascript %}
 {% endwith %}
 {% endwith %}

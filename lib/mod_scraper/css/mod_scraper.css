@@ -22,7 +22,7 @@
 	display: none;
 }
 
-#scraper_data.updating {
+#scraper_data.scheduled {
 	opacity: .3;
 	pointer-events: none;
 }

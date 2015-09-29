@@ -9,6 +9,9 @@
   },
   "author": "Arthur Clemens <arthurclemens@gmail.com> (arthurclemens@gmail.com)",
   "license": "MIT",
+  "dependencies": {
+    "moment": ""
+  },
   "devDependencies": {
     "jshint": "^2.8.0",
     "watch": "^0.16.0"

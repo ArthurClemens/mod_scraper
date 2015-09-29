@@ -5,6 +5,7 @@
 {% block content %}
 {% lib 
 	"mod_scraper/css/mod_scraper-overview.css"
+	"mod_scraper/css/mod_scraper-spinner.css"
 %}
 {% with m.acl.is_allowed.use.mod_scraper as is_editable %}
     <div class="admin-header">
@@ -70,6 +71,7 @@
     {% endwith %}
 {% endwith %}
 {% lib 
+    "mod_scraper/js/node_modules/moment/min/moment-with-locales.min.js"
 	"mod_scraper/js/mod_scraper.js"
 %}
 {% endblock %}
