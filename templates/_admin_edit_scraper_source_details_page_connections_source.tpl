@@ -14,12 +14,14 @@
                 center=0
             }
         %}
-        <a id="{{ #page_connections_source }}" href="" class="form-control">{{ id.page_connections_source.title|default:_"Select..." }}</a>
-        {% if id.page_connections_source %}
-			<div class="help-block">
-				<a href="{% url admin_edit_rsc id=id.page_connections_source %}" target="_blank">{_ View page _}</a>
-			</div>
-		{% endif %}
+        <div class="input-group">
+            <input id="{{ #page_connections_source }}" type="text" class="form-control scraper-dialog-input" placeholder="{{ id.page_connections_source.title|default:_"Select..." }}" />
+            {% if id.page_connections_source %}
+                <span class="input-group-btn">
+                    <a class="btn btn-default" href="{% url admin_edit_rsc id=id.page_connections_source %}" target="_blank">{_ Go to page _}</a>
+                </span>
+            {% endif %}
+        </div>
     </div>
 </div>
 

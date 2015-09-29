@@ -15,7 +15,7 @@
                 center=0
             }
         %}
-        <a id="{{ #page_prop_source }}" href="" class="form-control">{{ s.title|default:_"Select..." }}</a>
+        <input id="{{ #page_prop_source }}" type="text" class="form-control scraper-dialog-input" placeholder="{{ s.title|default:_"Select..." }}" />
     </div>
 </div>
 

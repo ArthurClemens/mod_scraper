@@ -69,6 +69,15 @@
     margin-top: -2px;
 }
 
+.scraper-dialog-input {
+    cursor: pointer;
+}
+.scraper-dialog-input:focus {
+    color: inherit;
+    box-shadow: none;
+    border-color: #aaa;
+}
+
 .scraper-rule-not-published {
     opacity: .3;
 }
