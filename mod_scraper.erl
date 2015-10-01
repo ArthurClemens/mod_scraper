@@ -231,7 +231,7 @@ handle_cast({#m_config_update{module="mod_scraper", key="interval", value=Interv
         Ref ->
             timer:cancel(Ref)
     end,
-    TimerRef = case IntervalInt of
+    TimerRef = case IntervalNumber of
         0 -> undefined;
         _ -> 
             {ok, TRef} = timer:send_interval(periodic_interval_to_ms(IntervalNumber), periodic_scrape),
