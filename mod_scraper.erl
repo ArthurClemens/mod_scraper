@@ -81,6 +81,7 @@ observe_admin_menu(admin_menu, Acc, Context) ->
                 visiblecheck={acl, use, mod_scraper}}
      |Acc].
 
+
 event(#postback{message={run, Args}}, Context) ->
     ScraperId = proplists:get_value(id, Args),
     RuleIds = rule_ids(ScraperId, Context),
@@ -119,7 +120,6 @@ observe_postback_notify(#postback_notify{message="mod_scraper_set_rules"}, Conte
     scraper_rsc:save_rules(Id, Rules, Context);
 observe_postback_notify(_, _Context) ->
     undefined.
-
 
 
 %%====================================================================
@@ -167,7 +167,14 @@ init(Args) ->
     process_flag(trap_exit, true),
     {context, Context} = proplists:lookup(context, Args),
     ensure_db_exists(Context),
-    {ok, TimerRef} = timer:send_interval(?PERIODIC_FETCH_INTERVAL, periodic_scrape),
+    z_notifier:observe(m_config_update, self(), Context),
+    TimerRef = case m_config:get_value(?MODULE, interval, Context) of
+        undefined -> undefined;
+        Interval ->
+            IntervalNumber = z_convert:to_float(Interval),
+            {ok, TRef} = timer:send_interval(periodic_interval_to_ms(IntervalNumber), periodic_scrape),
+            TRef
+    end,
     State = #state{
         context = Context,
         scraper_queue = queue:new(),
@@ -215,7 +222,25 @@ handle_call({scraper_scheduled, ScraperId}, _From, State) ->
 %% @doc Trap unknown calls
 handle_call(Message, _From, State) ->
     {stop, {unknown_call, Message}, State}.
-
+   
+handle_cast({#m_config_update{module="mod_scraper", key="interval", value=Interval}, _Ctx}, State) ->
+    IntervalNumber = z_convert:to_float(Interval),
+    CurrentInterval = State#state.periodic_scrape_timer_ref,
+    case CurrentInterval of
+        undefined -> undefined;
+        Ref ->
+            timer:cancel(Ref)
+    end,
+    TimerRef = case IntervalInt of
+        0 -> undefined;
+        _ -> 
+            {ok, TRef} = timer:send_interval(periodic_interval_to_ms(IntervalNumber), periodic_scrape),
+            TRef
+    end,
+	{noreply, State#state{
+	    periodic_scrape_timer_ref = TimerRef
+	}};
+	
 handle_cast(Message, State) ->
     {stop, {unknown_cast, Message}, State}.
 
@@ -448,3 +473,7 @@ ensure_db_exists(Context) ->
 rule_ids(ScraperId, Context) ->
     Ids = m_edge:objects(ScraperId, hasscraperrule, Context),
     [Id || Id <- Ids, m_rsc:p(Id, is_published, Context)].
+
+
+periodic_interval_to_ms(IntervalHrs) ->
+    1000 * 3600 * IntervalHrs.
