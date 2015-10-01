@@ -476,4 +476,4 @@ rule_ids(ScraperId, Context) ->
 
 
 periodic_interval_to_ms(IntervalHrs) ->
-    1000 * 3600 * IntervalHrs.
+    z_convert:to_integer(1000 * 3600 * IntervalHrs).
