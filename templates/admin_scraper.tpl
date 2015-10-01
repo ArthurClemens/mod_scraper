@@ -27,6 +27,14 @@
             %}
             {% button
                 class="btn btn-default"
+                text=_"Settings"
+                action={dialog_open
+                    title=_"Scraper settings"
+                    template="_scraper_settings.tpl"
+                }
+            %}
+            {% button
+                class="btn btn-default"
                 text=_"Run all"
                 action={postback
                     delegate="mod_scraper"
