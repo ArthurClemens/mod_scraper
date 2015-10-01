@@ -140,6 +140,8 @@ When a rule has the category `automatic_scraper_rule`, the scraped data will be 
 
 And when you let the scrapers run automatically, scraping data is a completely automated job.
 
+Set the interval for automatically running scrapers in Admin > Modules > Scraper, button "Configure".
+
 
 #### Regular scraper rules
 
@@ -211,6 +213,7 @@ Selecting a nested element:
 * Importing images
 * Parsing dates
 * Creating new Zotonic pages based on hits from overview pages (and support paging to other overview pages)
+* More itemprop rules
 * Determining the language of the page
 
 
