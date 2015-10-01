@@ -30,7 +30,7 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label class="control-label col-md-3">{_ XPath Rule _}</label>
+                <label class="control-label col-md-3">{_ XPath rule _}</label>
                 <div class="col-md-9">
                     <input type="text"
                         name="rule" 
@@ -41,7 +41,7 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label class="control-label col-md-3">{_ Data Type _}</label>
+                <label class="control-label col-md-3">{_ Data type _}</label>
                 <div class="col-md-9">
                 	{% wire id="type"
                 		type="change"
@@ -55,8 +55,10 @@
                         <option value="price"{% if id.type=="price" %} selected="selected"{% endif %}>{_ Price _}</option>
                         <option value="boolean_true"{% if id.type=="boolean_true" %} selected="selected"{% endif %}>{_ True when a value is found _}</option>
                         <option value="boolean_false"{% if id.type=="boolean_false" %} selected="selected"{% endif %}>{_ False when a value is found _}</option>
+{#
                         <option value="image"{% if id.type=="image" %} selected="selected"{% endif %}>{_ Image (not implemented) _}</option>
                         <option value="date"{% if id.type=="date" %} selected="selected"{% endif %}>{_ Date (not implemented) _}</option>
+#}
                     </select>
                     <div id="type_help">
                     	{% include "_scraper_rule_type_help.tpl" id=id %}

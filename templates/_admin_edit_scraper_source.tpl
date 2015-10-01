@@ -30,8 +30,8 @@
                 <select class="form-control" id="source" name="source">
                     <option value=""></option>
                     <option value="url"{% if id.source=="url" %} selected="selected"{% endif %}>{_ URL text _}</option>
-                    <option value="page_prop"{% if id.source=="page_prop" %} selected="selected"{% endif %}>{_ Page that contains a property 'url' _}</option>
-                    <option value="page_connections"{% if id.source=="page_connections" %} selected="selected"{% endif %}>{_ Page with connections to other pages, each with a property 'url' _}</option>
+                    <option value="page_prop"{% if id.source=="page_prop" %} selected="selected"{% endif %}>{_ Another page that contains a property 'url' _}</option>
+                    <option value="page_connections"{% if id.source=="page_connections" %} selected="selected"{% endif %}>{_ Another page with connections to other pages, each with a property 'url' _}</option>
                 </select>
             </div>
         </div>
