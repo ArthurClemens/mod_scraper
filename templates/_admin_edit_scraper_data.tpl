@@ -14,7 +14,7 @@
     status
 %}
 {% with
-    (status|element:1|stringify == "true") and (id.is_published),
+    (status|element:1|stringify == "true"),
     status|element:2|stringify
     as
     is_ready,
