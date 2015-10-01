@@ -43,7 +43,7 @@ Params:
         </div>
     {% elif data.all_inactive %}
         <div class="panel-body">
-            {_ No updates. _}
+            {_ No changes. _}
         </div>
     {% endif %}
     {% if not data.all_empty %}

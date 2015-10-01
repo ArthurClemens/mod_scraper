@@ -58,7 +58,7 @@ msgid ""
 "Brand"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_configure_module.tpl:39 
+#: ./user/modules/mod_scraper/templates/_scraper_settings.tpl:39 
 msgid ""
 "Close"
 msgstr ""
@@ -83,7 +83,7 @@ msgid ""
 "Copy"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/admin_scraper.tpl:52 
+#: ./user/modules/mod_scraper/templates/admin_scraper.tpl:60 
 msgid ""
 "Created on"
 msgstr ""
@@ -133,12 +133,12 @@ msgid ""
 "In progress"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/admin_scraper.tpl:58 
+#: ./user/modules/mod_scraper/templates/admin_scraper.tpl:66 
 msgid ""
 "Modified by"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/admin_scraper.tpl:55 
+#: ./user/modules/mod_scraper/templates/admin_scraper.tpl:63 
 msgid ""
 "Modified on"
 msgstr ""
@@ -153,7 +153,7 @@ msgid ""
 "No URLs found"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_result_card.tpl:42 
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_result_card.tpl:42 ./user/modules/mod_scraper/templates/_admin_edit_scraper_result_card.tpl:46 
 msgid ""
 "No changes."
 msgstr ""
@@ -188,14 +188,9 @@ msgid ""
 "No rules to run. Add one or more rules."
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/admin_scraper.tpl:69 
+#: ./user/modules/mod_scraper/templates/admin_scraper.tpl:77 
 msgid ""
 "No scrapers found."
-msgstr ""
-
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_result_card.tpl:46 
-msgid ""
-"No updates."
 msgstr ""
 
 #: ./user/modules/mod_scraper/templates/_admin_edit_scraper_result_card_item.tpl:80 
@@ -263,12 +258,12 @@ msgid ""
 "Run"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/admin_scraper.tpl:30 
+#: ./user/modules/mod_scraper/templates/admin_scraper.tpl:38 
 msgid ""
 "Run all"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_configure_module.tpl:7 
+#: ./user/modules/mod_scraper/templates/_scraper_settings.tpl:7 
 msgid ""
 "Run scrapers"
 msgstr ""
@@ -308,12 +303,17 @@ msgid ""
 "Scraper Target Properties"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/admin_scraper.tpl:39 
+#: ./user/modules/mod_scraper/templates/admin_scraper.tpl:32 
+msgid ""
+"Scraper settings"
+msgstr ""
+
+#: ./user/modules/mod_scraper/templates/admin_scraper.tpl:47 
 msgid ""
 "Scrapers"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_configure_module.tpl:5 
+#: ./user/modules/mod_scraper/templates/_scraper_settings.tpl:5 
 msgid ""
 "Scrapers can be run automatically. Scrapers that contain \"automatic scraper "
 "rules\" will update connected pages with the scraped data."
@@ -324,12 +324,17 @@ msgid ""
 "Select..."
 msgstr ""
 
+#: ./user/modules/mod_scraper/templates/admin_scraper.tpl:30 
+msgid ""
+"Settings"
+msgstr ""
+
 #: ./user/modules/mod_scraper/support/scraper_rsc.erl:18 
 msgid ""
 "Source saved"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/admin_scraper.tpl:49 
+#: ./user/modules/mod_scraper/templates/admin_scraper.tpl:57 
 msgid ""
 "Status"
 msgstr ""
@@ -355,7 +360,7 @@ msgid ""
 "This rule is not used by any scraper."
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_properties.tpl:15 ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:22 ./user/modules/mod_scraper/templates/admin_scraper.tpl:46 
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_properties.tpl:15 ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:22 ./user/modules/mod_scraper/templates/admin_scraper.tpl:54 
 msgid ""
 "Title"
 msgstr ""
@@ -440,27 +445,27 @@ msgid ""
 "edit"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_configure_module.tpl:14 
+#: ./user/modules/mod_scraper/templates/_scraper_settings.tpl:14 
 msgid ""
 "every 12 hours"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_configure_module.tpl:15 
+#: ./user/modules/mod_scraper/templates/_scraper_settings.tpl:15 
 msgid ""
 "every 24 hours"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_configure_module.tpl:12 
+#: ./user/modules/mod_scraper/templates/_scraper_settings.tpl:12 
 msgid ""
 "every 3 hours"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_configure_module.tpl:13 
+#: ./user/modules/mod_scraper/templates/_scraper_settings.tpl:13 
 msgid ""
 "every 6 hours"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_configure_module.tpl:11 
+#: ./user/modules/mod_scraper/templates/_scraper_settings.tpl:11 
 msgid ""
 "every hour"
 msgstr ""
@@ -470,7 +475,7 @@ msgid ""
 "mapped property:"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_configure_module.tpl:10 
+#: ./user/modules/mod_scraper/templates/_scraper_settings.tpl:10 
 msgid ""
 "never"
 msgstr ""
