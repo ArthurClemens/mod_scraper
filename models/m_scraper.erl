@@ -11,7 +11,7 @@
     urls_from_data/1,
     has_urls/2,
     has_rules/2,
-    map_value_to_type/3,
+    map_value_to_type/5,
     cleanup_value/1
 ]).
 
@@ -26,20 +26,23 @@ m_find_value(urls, #m{value=Id} = _M, Context) when is_integer(Id) ->
     UrlData = urls(Id, Context),
     urls_from_data(UrlData);
 
+m_find_value(urls_data, #m{value=Id} = _M, Context) when is_integer(Id) ->
+    urls(Id, Context);
+
 m_find_value(last_run_data, #m{value=Id} = _M, Context) when is_integer(Id) ->
     scraper_cache:get_last_run_data(Id, Context);
-    
+
 m_find_value(status, #m{value=Id} = _M, Context) when is_integer(Id) ->
     case mod_scraper:scraper_in_progress(Id, Context) of
         true -> [{true, "in_progress"}];
-        false -> 
+        false ->
             case mod_scraper:scraper_scheduled(Id, Context) of
                 true -> [{true, "is_scheduled"}];
-                false ->             
+                false ->
                     HasUrls = has_urls(Id, Context),
                     HasRules = has_rules(Id, Context),
                     case HasUrls of
-                        true -> 
+                        true ->
                             case HasRules of
                                 true -> [{true, "ok"}];
                                 false -> [{false, "no_rules"}]
@@ -51,8 +54,8 @@ m_find_value(status, #m{value=Id} = _M, Context) when is_integer(Id) ->
 
 m_find_value(title, #m{value=Id} = _M, Context) when is_integer(Id) ->
     Source = m_rsc:p(Id, source, Context),
-    RId = case Source of 
-        url -> 
+    RId = case Source of
+        url ->
             Id;
         page_prop ->
             m_rsc:p(Id, page_prop_source, Context);
@@ -60,9 +63,9 @@ m_find_value(title, #m{value=Id} = _M, Context) when is_integer(Id) ->
             SourceId = m_rsc:p(Id, page_connections_source, Context),
             PredicateName = m_rsc:p(Id, page_connections_predicate, Context),
             Pages = m_edge:objects(SourceId, PredicateName, Context),
-            lists:sort(lists:foldl(fun(P, Acc) -> 
+            lists:sort(lists:foldl(fun(P, Acc) ->
                 U = m_rsc:p(P, url, Context),
-                case U of 
+                case U of
                     undefined -> Acc;
                     U1 -> [U1|Acc]
                 end
@@ -74,7 +77,7 @@ m_find_value(title, #m{value=Id} = _M, Context) when is_integer(Id) ->
 
 % Other values won't be processed
 m_find_value(_, _, _Context) ->
-    undefined. 
+    undefined.
 
 %% @spec m_to_list(Source, Context) -> List
 m_to_list(#m{}, _Context) ->
@@ -90,8 +93,8 @@ m_value(#m{value=undefined}, _Context) ->
     Context:: #context{}.
 urls(Id, Context) ->
     Source = m_rsc:p(Id, source, Context),
-    UrlData = case Source of 
-        <<"url">> -> 
+    UrlData = case Source of
+        <<"url">> ->
             {Id, m_rsc:p(Id, url_source_url, Context)};
         <<"page_prop">> ->
             PagePropId = m_rsc:p(Id, page_prop_source, Context),
@@ -100,9 +103,13 @@ urls(Id, Context) ->
             SourceId = m_rsc:p(Id, page_connections_source, Context),
             PredicateName = m_rsc:p(Id, page_connections_predicate, Context),
             Pages = m_edge:objects(SourceId, PredicateName, Context),
+            Pages1 = case Pages of
+                [] -> m_edge:subjects(SourceId, PredicateName, Context);
+                _ -> Pages
+            end,
             lists:map(fun(P) ->
                 {P, m_rsc:p(P, url, Context)}
-            end, Pages);
+            end, Pages1);
         _ ->
             undefined
     end,
@@ -114,13 +121,13 @@ urls(Id, Context) ->
             [{LId, LUrl} || {LId, LUrl} <- List, LUrl /= undefined];
         {_, _} -> [UrlData]
     end.
-	
+
 
 urls_from_data(UrlData) ->
     lists:map(fun({_, Url}) ->
         Url
     end, UrlData).
-    
+
 
 has_urls(Id, Context) ->
     UrlData = urls(Id, Context),
@@ -135,13 +142,15 @@ has_urls(Id, Context) ->
 has_rules(Id, Context) ->
     Rules = m_edge:objects(Id, hasscraperrule, Context),
     length(Rules) > 0.
-    
 
--spec map_value_to_type(Value, Type, Property) -> [{'property','undefined' | binary()} | {'value','undefined' | binary()}] when
+
+-spec map_value_to_type(Value, Type, Property, RuleId, Context) -> [{'property','undefined' | binary()} | {'value','undefined' | binary()}] when
     Value:: binary() | 'undefined',
     Type:: binary() | 'undefined',
-    Property:: binary() | 'undefined'.
-map_value_to_type(Value, Type, Property) ->
+    Property:: binary() | 'undefined',
+    RuleId:: integer() | 'undefined',
+    Context:: #context{}.
+map_value_to_type(Value, Type, Property, RuleId, Context) ->
     case Type of
         <<"price">> ->
             %% parse value to separate fields
@@ -158,6 +167,16 @@ map_value_to_type(Value, Type, Property) ->
             lists:map(fun({P, V}) ->
                 [{property, P}, {value, V}]
             end, PriceData1);
+        <<"boolean_contains">> ->
+            case Value of
+                undefined -> [[{property, Property}, {value, false}]];
+                _ ->
+                    ToMatch = m_rsc:p(RuleId, boolean_contains, Context),
+                    case re:run(Value, ToMatch) of
+                        {match, _Captured} -> [[{property, Property}, {value, true}]];
+                        nomatch -> [[{property, Property}, {value, false}]]
+                    end
+            end;
         <<"boolean_true">> ->
             [[{property, Property}, {value, convert_to_bool_int(Value)}]];
         <<"boolean_false">> ->
@@ -173,7 +192,7 @@ map_value_to_type(Value, Type, Property) ->
 cleanup_value(ValueList) ->
     case ValueList of
         [] -> <<>>;
-        _ -> 
+        _ ->
             List = [V || V <- ValueList, V =/= <<>>],
             case List of
                 [] -> <<>>;
@@ -190,7 +209,7 @@ digest(Result, Context) ->
     % group data per url so that we can show everything regarding the url on one card
     DataByUrl = lists:foldr(fun(Row, Acc) ->
         Url = proplists:get_value(url, Row),
-        UrlAt = z_convert:to_atom(Url),        
+        UrlAt = z_convert:to_atom(Url),
         case proplists:get_value(UrlAt, Acc) of
             undefined ->
                 % url not yet used as key
@@ -209,7 +228,7 @@ digest(Result, Context) ->
                 lists:keyreplace(UrlAt, 1, Acc, {UrlAt, NewRow})
         end
     end, [], Result),
-    
+
     % map raw data to current rules
     MappedData = lists:map(fun({UrlAt, Data}) ->
         Rows = proplists:get_value(values, Data),
@@ -219,7 +238,7 @@ digest(Result, Context) ->
             % use current property; if not found use stored property
             Property = m_rsc:p(RuleId, property, proplists:get_value(property, R), Context),
             D = proplists:get_value(data, R),
-            MappedValues = map_value_to_type(D, Type, Property),
+            MappedValues = map_value_to_type(D, Type, Property, RuleId, Context),
             lists:foldl(fun([{property,P},{value,V}], Acc1) ->
                 MappedRow1 = lists:keyreplace(data, 1, R, {data, V}),
                 MappedRow2 = lists:keyreplace(property, 1, MappedRow1, {property, P}),
@@ -233,10 +252,10 @@ digest(Result, Context) ->
         NewData = lists:keyreplace(values, 1, Data, {values, MappedRows}),
         {UrlAt, NewData}
     end, DataByUrl),
-    
+
     Digest = lists:map(fun({_UrlAt, Data}) ->
         Values = proplists:get_value(values, Data),
-        WithComparison = lists:map(fun(UrlData) -> 
+        WithComparison = lists:map(fun(UrlData) ->
             [{comparison, comparison(UrlData, Context)}|UrlData]
         end, Values),
         Data1 = lists:keyreplace(values, 1, Data, {values, WithComparison}),
@@ -256,7 +275,7 @@ digest(Result, Context) ->
             end
         end, true, WithComparison),
         Data3 = [{all_empty, AllEmpty}|Data2],
-        
+
         % all empty or equal
         AllInactive = lists:foldl(fun(WC, Acc) ->
             Comparison = proplists:get_value(comparison, WC),
@@ -276,7 +295,7 @@ comparison(UrlData, Context) ->
         undefined -> comparison1(UrlData, Context);
         _ -> []
     end.
-        
+
 comparison1(UrlData, Context) ->
     Id = proplists:get_value(connected_rsc_id, UrlData),
     Fetched = proplists:get_value(data, UrlData),
@@ -288,7 +307,7 @@ comparison1(UrlData, Context) ->
                 [] ->
                     % list
                     F;
-                _ -> 
+                _ ->
                     % stringify tuple
                     io_lib:format("~p", [Fetched])
             end;
@@ -298,7 +317,14 @@ comparison1(UrlData, Context) ->
     RuleId = proplists:get_value(rule_id, UrlData),
     Property = proplists:get_value(property, UrlData),
     IsMapped = proplists:get_value(is_mapped, UrlData),
-    Current = z_convert:to_binary(unescape_value(value_for_language(m_rsc:p(Id, Property, Context), z_context:language(Context)))),
+    CurrentValue = m_rsc:p(Id, Property, Context),
+    Current = case CurrentValue of
+        undefined -> <<"">>;
+        _ ->
+            Language = z_context:language(Context),
+            ValueForLanguage = value_for_language(CurrentValue, Language),
+            z_convert:to_binary(unescape_value(ValueForLanguage))
+    end,
     Type = z_convert:to_atom(m_rsc:p(RuleId, type, Context)),
     IsEqual = is_equal(Fetched2, Current, Type),
     IsEmpty = is_empty(Fetched2),
@@ -332,8 +358,8 @@ is_empty(Fetched) ->
         <<>> -> true;
         _ -> false
     end.
-    
-    
+
+
 value_for_language(Value, Language) ->
     case Value of
         <<>> -> <<>>;
@@ -348,6 +374,8 @@ value_for_language(Value, Language) ->
 unescape_value(Value) ->
 	case Value of
 		undefined -> <<>>;
+        true -> true;
+        false -> false;
 		N when is_integer(N) -> N;
 		V -> z_html:unescape(V)
 	end.
@@ -367,8 +395,13 @@ define_boolean(Value) ->
 	end.
 
 convert_to_bool_int(Value) ->
-    Bool = z_convert:to_bool(length(Value)),
-    case Bool of
-        false -> 0;
-         _ -> 1
+    case Value of
+        <<>> -> 0;
+        undefined -> 0;
+        _ ->
+            Bool = z_convert:to_bool(length(z_convert:to_list(Value))),
+            case Bool of
+                false -> 0;
+                 _ -> 1
+            end
     end.

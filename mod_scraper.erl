@@ -35,7 +35,7 @@
 list_archives(Context) ->
     scraper_cache:list(Context).
 
-    
+
 -spec scraping_in_progress(Context) -> boolean() when
     Context:: #context{}.
 scraping_in_progress(Context) ->
@@ -61,13 +61,13 @@ scraper_scheduled(ScraperId, Context) ->
 
 run_all(Context) ->
     {ok, CatScraper} = m_rsc:name_to_id("scraper", Context),
-    Results = z_db:q("SELECT id FROM rsc WHERE category_id=$1", [CatScraper], Context), 
+    Results = z_db:q("SELECT id FROM rsc WHERE category_id=$1", [CatScraper], Context),
     Ids = [Id || {Id} <- Results, m_rsc:p(Id, is_published, Context), m_scraper:has_rules(Id, Context), m_scraper:has_urls(Id, Context)],
     lists:map(fun(ScraperId) ->
         gen_server:call(z_utils:name_for_host(?MODULE, z_context:site(Context)), {run_scraper, ScraperId, Context})
     end, Ids).
-     
-    
+
+
 manage_schema(What, Context) ->
     ensure_db_exists(Context),
     mod_scraper_schema:manage_schema(What, Context).
@@ -97,7 +97,7 @@ event(#postback{message={run, Args}}, Context) ->
             end,
             Context
     end;
-    
+
 event(#postback{message={run_all, []}}, Context) ->
     run_all(Context),
     Context;
@@ -194,7 +194,7 @@ init(Args) ->
 handle_call({run_scraper, ScraperId, Context}, _From, State) ->
     z_mqtt:publish(["~site", "mod_scraper", ScraperId], <<"fetch_scheduled">>, Context),
     TimerRef = case State#state.fetch_timer_ref of
-        undefined -> 
+        undefined ->
             {ok, TRef} = timer:send_interval(?FETCH_INTERVAL, next_task),
             TRef;
         TRef -> TRef
@@ -222,7 +222,7 @@ handle_call({scraper_scheduled, ScraperId}, _From, State) ->
 %% @doc Trap unknown calls
 handle_call(Message, _From, State) ->
     {stop, {unknown_call, Message}, State}.
-   
+
 handle_cast({#m_config_update{module="mod_scraper", key="interval", value=Interval}, _Ctx}, State) ->
     IntervalNumber = z_convert:to_float(Interval),
     CurrentInterval = State#state.periodic_scrape_timer_ref,
@@ -233,14 +233,14 @@ handle_cast({#m_config_update{module="mod_scraper", key="interval", value=Interv
     end,
     TimerRef = case IntervalNumber of
         0 -> undefined;
-        _ -> 
+        _ ->
             {ok, TRef} = timer:send_interval(periodic_interval_to_ms(IntervalNumber), periodic_scrape),
             TRef
     end,
 	{noreply, State#state{
 	    periodic_scrape_timer_ref = TimerRef
 	}};
-	
+
 handle_cast(Message, State) ->
     {stop, {unknown_cast, Message}, State}.
 
@@ -265,7 +265,7 @@ handle_info(next_task, State) ->
         _ ->
             next_url(State)
     end;
-            
+
 handle_info({'EXIT', _Pid, normal}, State) ->
     {noreply, State};
 
@@ -305,7 +305,7 @@ get_scraper_urls(ScraperId, State) ->
     Context = State#state.context,
     UrlData = m_scraper:urls(ScraperId, Context),
     case length(UrlData) of
-        0 -> 
+        0 ->
             {noreply, State};
         _ ->
             % add each url to the url queue
@@ -328,7 +328,7 @@ next_url(State) ->
             {noreply, State#state{
                 scraper_id = undefined
             }};
-        _ -> 
+        _ ->
             z_mqtt:publish(["~site", "mod_scraper", State#state.scraper_id], <<"fetch_url">>, State#state.context),
             {{value, Url}, Remaining} = queue:out(State#state.url_queue),
             Pid = do_next_url(Url, State),
@@ -342,7 +342,7 @@ next_url(State) ->
 
 do_periodic_scrape(Context) ->
     spawn_link(fun() -> do_periodic_scrape_process(Context) end).
-    
+
 do_periodic_scrape_process(Context) ->
     run_all(Context).
 
@@ -379,7 +379,7 @@ fetch_url(ScraperId, Url, ConnectedId, RuleIds, Context) ->
 
 humanize_error_message(Error) ->
     case Error of
-        {failed_connect, [{to_address,{URL,_}},{inet,[inet],nxdomain}]} -> 
+        {failed_connect, [{to_address,{URL,_}},{inet,[inet],nxdomain}]} ->
             io_lib:format("Could not connect to ~s", [URL]);
         {Reason, Details} ->
             lists:flatten(io_lib:format("~p,~p", [Reason, Details]));
@@ -405,9 +405,9 @@ store_result(ScraperId, ConnectedId, Url, _Error, Date, Scraped, RuleIds, Contex
             [xpath_parse_error, Reason] ->
                 Error = lists:flatten(io_lib:format("~p,~p", [xpath_parse_error, Reason])),
                 scraper_cache:put(ScraperId, RuleId, ConnectedId, Url, 1, Error, Date, undefined, Property, Context);
-            _ -> 
+            _ ->
                 CleanValue = m_scraper:cleanup_value(Value),
-                
+
                 % automatically save to page
                 CatName = proplists:get_value(name, m_rsc:p(RuleId, category, Context)),
                 AutomaticSave = CatName =:= automatic_scraper_rule,
@@ -415,7 +415,7 @@ store_result(ScraperId, ConnectedId, Url, _Error, Date, Scraped, RuleIds, Contex
                  % store a raw version of the data
                 scraper_cache:put(ScraperId, RuleId, ConnectedId, Url, 1, undefined, Date, empty_to_undefined(CleanValue), empty_to_undefined(Property), Context),
                 %% map values using the type
-                MappedValues = m_scraper:map_value_to_type(CleanValue, Type, Property),
+                MappedValues = m_scraper:map_value_to_type(CleanValue, Type, Property, RuleId, Context),
                 lists:map(fun([{property,P},{value,V}]) ->
                     case AutomaticSave of
                         true ->
@@ -433,7 +433,7 @@ save_to_page(_ConnectedRscId, Property, _Value, _Context) when Property =:= unde
     undefined;
 save_to_page(ConnectedId, Property, Value, Context) ->
     case m_rsc:name_to_id(ConnectedId, Context) of
-        {ok, RId} ->  
+        {ok, RId} ->
             P = z_convert:to_atom(Property),
             V = to_page_value(Value),
             Current = m_rsc:p(RId, P, Context),
@@ -441,7 +441,7 @@ save_to_page(ConnectedId, Property, Value, Context) ->
                 false -> {ok, _} = m_rsc:update(RId, [{P, V}], Context);
                 true -> undefined
             end;
-        {error, _Reason} -> 
+        {error, _Reason} ->
             undefined
     end.
 
@@ -469,7 +469,7 @@ ensure_db_exists(Context) ->
         true ->
             ok
     end.
-    
+
 rule_ids(ScraperId, Context) ->
     Ids = m_edge:objects(ScraperId, hasscraperrule, Context),
     [Id || Id <- Ids, m_rsc:p(Id, is_published, Context)].

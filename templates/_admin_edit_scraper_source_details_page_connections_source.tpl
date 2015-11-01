@@ -6,7 +6,7 @@
             action={
                 dialog_open
                 template="_action_dialog_connect.tpl"
-                title=_"Connect page" 
+                title=_"Connect page"
                 subject_id=id
                 tabs_enabled=["find"]
                 delegate=`scraper_rsc`
@@ -31,7 +31,7 @@
             <label class="control-label col-md-3">{_ Connection _}</label>
             <div class="col-md-9">
                 {% with m.rsc[source_id] as r %}
-                    {% with predicate_ids|default:r.predicates_edit as pred_shown %}
+                    {% with r.predicates_edit as pred_shown %}
                         {% wire
                             id="page_connections_predicate"
                             type="change"
@@ -47,11 +47,18 @@
                         %}
                         <select class="form-control" id="page_connections_predicate" name="page_connections_predicate">
                             <option value=""></option>
-                            {% for name, p in m.predicate %}
-                                {% if p.id|member:pred_shown %}
-                                    <option value="{{ name }}"{% if id.page_connections_predicate==name %} selected="selected"{% endif %}>{{ p.title }} - {_ connections: _} {{ m.edge.o[source_id][name]|length }}</option>
-                                {% endif %}
-                            {% endfor %}
+                            <optgroup label="Outgoing connections">
+                                {% for name, p in m.predicate %}
+                                    {% if p.id|member:pred_shown %}
+                                        <option value="{{ name }}"{% if id.page_connections_predicate==name %} selected="selected"{% endif %}>{{ p.title }} - {_ connections: _} {{ m.edge.o[source_id][name]|length }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </optgroup>
+                            <optgroup label="Incoming connections">
+                                {% for name in r.sp %}
+                                    <option value="{{ name }}"{% if id.page_connections_predicate==name %} selected="selected"{% endif %}>{{ m.rsc[name].title }} - {_ connections: _} {{ m.edge.s[source_id][name]|length }}</option>
+                                {% endfor %}
+                            </optgroup>
                         </select>
                     {% endwith %}
                 {% endwith %}
@@ -60,6 +67,6 @@
         <div id="connected_urls">
             {% include "_admin_edit_scraper_source_details_page_connections_source_urls.tpl" id=id %}
         </div>
-        
+
     {% endif %}
 {% endwith %}

@@ -55,6 +55,8 @@ Use this to scrape multiple pages from a single website. Because the web pages w
 
 In this setup you have one "aggregator" page ("webshop") with connections to pages that have a property ``url`` ("product page") (see option 2).
 
+The connection can either be outgoing or incoming.
+
 
 ### Connected page
 
@@ -80,9 +82,9 @@ Instruction to read data from the page, see "XPath rule" below
 How data should be interpreted. Currently supported types are:
   * **Text**: for titles, summaries, product info, and so on
   * **Price**: the price text will be parsed and written to extra fields: `price_text`, `price_currency`, `price_whole`, `price_fraction`
-  * **True when a value is found**: use for a checkbox value that should get checked
-  * **False when a value is found**: use for a checkbox value that should get unchecked
-    * For instance an "available" checkbox that get unchecked when the page contains the text "sold out"
+  * **Boolean contains**: true when the found value contains a specific text (set in an additional field)
+  * **Boolean true**: true when any value is found; use for a checkbox value that should get checked
+  * **Boolean false**: false when any value is found; use for a checkbox value that should get unchecked
 
 ##### Property mapping
 
@@ -92,7 +94,7 @@ Not needed for type "price", because extra fields will be used.
 
 ##### Published
 
-An unpublished rule will not be processed.
+A rule page with state "unpublished" will not be processed.
 
 
 #### Leveraging rich snippets
