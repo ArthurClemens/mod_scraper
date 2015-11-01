@@ -128,7 +128,7 @@ observe_postback_notify(_, _Context) ->
 
 -record(state, {
     context,
-    scraper_queue :: queue(),
+    scraper_queue :: queue:queue(),
     periodic_scrape_pid,
     periodic_scrape_timer_ref,
     periodic_scrape_start,
@@ -136,7 +136,7 @@ observe_postback_notify(_, _Context) ->
     fetch_start,
     fetch_pid,
     fetch_timer_ref,
-    url_queue :: queue()
+    url_queue :: queue:queue()
 }).
 
 % Interval for checking for new and/or changed files.
