@@ -79,12 +79,12 @@ Instruction to read data from the page, see "XPath rule" below
 
 ##### Data type
 
-How data should be interpreted. Currently supported types are:
+How data should be processed. Supported types are:
   * **Text**: for titles, summaries, product info, and so on
   * **Price**: the price text will be parsed and written to extra fields: `price_text`, `price_currency`, `price_whole`, `price_fraction`
-  * **Boolean contains**: true when the found value contains a specific text (set in an additional field)
-  * **Boolean true**: true when any value is found; use for a checkbox value that should get checked
-  * **Boolean false**: false when any value is found; use for a checkbox value that should get unchecked
+  * **Match**: transform to `true` or `false` when a match is found
+  * **No match**: transform to `true` or `false` when no match is found
+  * **Contains**: transform to `true` or `false` when a specific text is found
 
 ##### Property mapping
 

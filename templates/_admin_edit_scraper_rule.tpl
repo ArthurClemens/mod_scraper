@@ -40,6 +40,22 @@
                     />
                 </div>
             </div>
+
+            <div class="form-group row">
+                <label class="control-label col-md-3">{_ Property mapping _}</label>
+                <div class="col-md-9">
+                    <input type="text"
+                        id="property"
+                        name="property"
+                        class="form-control"
+                        value="{{ r.property }}"
+                        {% if not is_editable %}disabled="disabled"{% endif %}
+                    />
+                </div>
+            </div>
+
+            <hr />
+
             <div class="form-group row">
                 <label class="control-label col-md-3">{_ Data type _}</label>
                 <div class="col-md-9">
@@ -48,6 +64,7 @@
                 		action={update
 							target="details"
 							template="_scraper_rule_type_details.tpl"
+                            id=id
                             is_editable=is_editable
 						}
 					%}
@@ -55,9 +72,9 @@
                         <option value=""{% if id.type=="" %} selected="selected"{% endif %}></option>
                         <option value="text"{% if id.type=="text" %} selected="selected"{% endif %}>{_ Text _}</option>
                         <option value="price"{% if id.type=="price" %} selected="selected"{% endif %}>{_ Price _}</option>
-                        <option value="boolean_contains"{% if id.type=="boolean_contains" %} selected="selected"{% endif %}>{_ True when the found value contains a specific text _}</option>
-                        <option value="boolean_true"{% if id.type=="boolean_true" %} selected="selected"{% endif %}>{_ True when any value is found _}</option>
-                        <option value="boolean_false"{% if id.type=="boolean_false" %} selected="selected"{% endif %}>{_ False when any value is found _}</option>
+                        <option value="match"{% if id.type=="match" %} selected="selected"{% endif %}>{_ Match _}</option>
+                        <option value="no_match"{% if id.type=="no_match" %} selected="selected"{% endif %}>{_ No match _}</option>
+                        <option value="contains"{% if id.type=="contains" %} selected="selected"{% endif %}>{_ Contains _}</option>
 {#
                         <option value="image"{% if id.type=="image" %} selected="selected"{% endif %}>{_ Image (not implemented) _}</option>
                         <option value="date"{% if id.type=="date" %} selected="selected"{% endif %}>{_ Date (not implemented) _}</option>
@@ -68,33 +85,8 @@
             <div id="details">
                 {% include "_scraper_rule_type_details.tpl" id=id is_editable=is_editable %}
             </div>
-            <div class="form-group row">
-                <label class="control-label col-md-3">{_ Property mapping _}</label>
-                <div class="col-md-9">
-{#
-                    {% wire id="property"
-                		type="keyup"
-                		action={update
-							target="property_automatic"
-							template="_scraper_rule_property_automatic.tpl"
-							id=id
-						}
-					%}
-#}
-                    <input type="text"
-                        id="property"
-                        name="property"
-                        class="form-control"
-                        value="{{ r.property }}"
-                        {% if not is_editable %}disabled="disabled"{% endif %}
-                    />
-                </div>
-            </div>
-{#
-            <div id="property_automatic">
-                {% include "_scraper_rule_property_automatic.tpl" id=id first_time=1 %}
-            </div>
-#}
+            <hr />
+
         </fieldset>
         {% endwith %}
     {% endblock %}

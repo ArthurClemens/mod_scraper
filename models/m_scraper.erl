@@ -167,14 +167,36 @@ map_value_to_type(Value, Type, Property, RuleId, Context) ->
             lists:map(fun({P, V}) ->
                 [{property, P}, {value, V}]
             end, PriceData1);
-        <<"boolean_contains">> ->
+        <<"match">> ->
+            ReturnValue = case m_rsc:p(RuleId, transform_match, Context) of
+                <<"transform_match_to_true">> -> true;
+                _ -> false
+            end,
             case Value of
-                undefined -> [[{property, Property}, {value, false}]];
+                undefined -> [[{property, Property}, {value, not ReturnValue}]];
+                _ -> [[{property, Property}, {value, ReturnValue}]]
+            end;
+        <<"no_match">> ->
+            ReturnValue = case m_rsc:p(RuleId, transform_no_match, Context) of
+                <<"transform_no_match_to_true">> -> true;
+                _ -> false
+            end,
+            case Value of
+                undefined -> [[{property, Property}, {value, ReturnValue}]];
+                _ -> [[{property, Property}, {value, not ReturnValue}]]
+            end;
+        <<"contains">> ->
+            ReturnValue = case m_rsc:p(RuleId, transform_contains, Context) of
+                <<"transform_contains_to_true">> -> true;
+                _ -> false
+            end,
+            case Value of
+                undefined -> [[{property, Property}, {value, not ReturnValue}]];
                 _ ->
-                    ToMatch = m_rsc:p(RuleId, boolean_contains, Context),
+                    ToMatch = m_rsc:p(RuleId, contains_value, Context),
                     case re:run(Value, ToMatch) of
-                        {match, _Captured} -> [[{property, Property}, {value, true}]];
-                        nomatch -> [[{property, Property}, {value, false}]]
+                        {match, _Captured} -> [[{property, Property}, {value, ReturnValue}]];
+                        nomatch -> [[{property, Property}, {value, not ReturnValue}]]
                     end
             end;
         <<"boolean_true">> ->
