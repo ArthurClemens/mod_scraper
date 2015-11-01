@@ -139,8 +139,6 @@ observe_postback_notify(_, _Context) ->
     url_queue :: queue:queue()
 }).
 
-% Interval for checking for new and/or changed files.
--define(PERIODIC_FETCH_INTERVAL, 1000 * 3600 * 6). % in milliseconds, so every 6 hours
 -define(FETCH_INTERVAL, 1000 * 5). % in milliseconds, so every 5 seconds
 
 %%====================================================================
