@@ -3,13 +3,13 @@
 {% block title %} {_ Scraper _} {% endblock %}
 
 {% block content %}
-{% lib 
+{% lib
 	"mod_scraper/css/mod_scraper-overview.css"
 	"mod_scraper/css/mod_scraper-spinner.css"
 %}
 {% with m.acl.is_allowed.use.mod_scraper as is_editable %}
     <div class="admin-header">
-        <h2>{_ Scraper _}</h2> 
+        <h2>{_ Scraper _}</h2>
         <p>
             {_ Fetch data from websites, feed to Zotonic pages. _}
         </p>
@@ -43,7 +43,7 @@
             %}
         </div>
     {% endif %}
-    
+
     <h3>{_ Scrapers _}</h3>
     {% with m.search[{query cat='scraper'}] as scrapers %}
         {% if scrapers %}
@@ -78,8 +78,8 @@
         {% endif %}
     {% endwith %}
 {% endwith %}
-{% lib 
-    "mod_scraper/js/node_modules/moment/min/moment-with-locales.min.js"
+{% lib
+    "mod_scraper/js/moment-with-locales.min.js"
 	"mod_scraper/js/mod_scraper.js"
 %}
 {% endblock %}

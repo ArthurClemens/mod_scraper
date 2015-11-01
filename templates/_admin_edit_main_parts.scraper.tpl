@@ -5,12 +5,12 @@
     {% include "_admin_edit_scraper_data.tpl" %}
 </div>
 {% include "_admin_edit_content_advanced.tpl" %}
-{% lib 
+{% lib
 	"mod_scraper/css/mod_scraper.css"
 	"mod_scraper/css/mod_scraper-spinner.css"
 %}
-{% lib 
-    "mod_scraper/js/node_modules/moment/min/moment-with-locales.min.js"
+{% lib
+    "mod_scraper/js/moment-with-locales.min.js"
 	"mod_scraper/js/mod_scraper.js"
 %}
 {% javascript %}
