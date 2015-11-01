@@ -23,6 +23,26 @@ msgid ""
 "(not published)"
 msgstr ""
 
+#: ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:28 ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:43 ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:69 
+msgid ""
+"0"
+msgstr ""
+
+#: ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:26 ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:41 ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:67 
+msgid ""
+"1"
+msgstr ""
+
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source.tpl:33 
+msgid ""
+"A page that contains a property 'url'"
+msgstr ""
+
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source.tpl:34 
+msgid ""
+"A page with connections to other pages, each with a property 'url'"
+msgstr ""
+
 #: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rules_list.tpl:4 
 msgid ""
 "Add Rule"
@@ -31,21 +51,6 @@ msgstr ""
 #: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rules_list.tpl:6 
 msgid ""
 "Add a rule"
-msgstr ""
-
-#: ./user/modules/mod_scraper/templates/_scraper_rule_type_help.tpl:11 
-msgid ""
-"An additional property mapping is not required."
-msgstr ""
-
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source.tpl:33 
-msgid ""
-"Another page that contains a property 'url'"
-msgstr ""
-
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source.tpl:34 
-msgid ""
-"Another page with connections to other pages, each with a property 'url'"
 msgstr ""
 
 #: ./user/modules/mod_scraper/templates/_admin_edit_basics.scraper_rule.tpl:4 
@@ -78,6 +83,16 @@ msgid ""
 "Connection saved"
 msgstr ""
 
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:77 
+msgid ""
+"Contains"
+msgstr ""
+
+#: ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:51 
+msgid ""
+"Contains text"
+msgstr ""
+
 #: ./user/modules/mod_scraper/templates/_admin_edit_scraper_result_card_item.tpl:77 
 msgid ""
 "Copy"
@@ -103,7 +118,7 @@ msgid ""
 "Data Source"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:44 
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:60 
 msgid ""
 "Data type"
 msgstr ""
@@ -113,9 +128,9 @@ msgid ""
 "Edit"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:57 
+#: ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:27 ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:42 ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:68 
 msgid ""
-"False when a value is found"
+"False"
 msgstr ""
 
 #: ./user/modules/mod_scraper/templates/admin_scraper.tpl:14 
@@ -133,6 +148,11 @@ msgid ""
 "In progress"
 msgstr ""
 
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:75 
+msgid ""
+"Match"
+msgstr ""
+
 #: ./user/modules/mod_scraper/templates/admin_scraper.tpl:66 
 msgid ""
 "Modified by"
@@ -148,9 +168,14 @@ msgid ""
 "New scraper"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source_urls.tpl:19 
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source_urls.tpl:20 
 msgid ""
 "No URLs found"
+msgstr ""
+
+#: ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:13 
+msgid ""
+"No additional property mapping is required."
 msgstr ""
 
 #: ./user/modules/mod_scraper/templates/_admin_edit_scraper_result_card.tpl:42 ./user/modules/mod_scraper/templates/_admin_edit_scraper_result_card.tpl:46 
@@ -166,6 +191,11 @@ msgstr ""
 #: ./user/modules/mod_scraper/templates/_scraper_run_status.tpl:26 
 msgid ""
 "No data source"
+msgstr ""
+
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:76 
+msgid ""
+"No match"
 msgstr ""
 
 #: ./user/modules/mod_scraper/templates/_admin_edit_scraper_result_card_item.tpl:82 
@@ -213,7 +243,7 @@ msgid ""
 "Parse error"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:55 
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:74 
 msgid ""
 "Price"
 msgstr ""
@@ -238,7 +268,7 @@ msgid ""
 "Price whole"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:69 
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:45 
 msgid ""
 "Property mapping"
 msgstr ""
@@ -246,6 +276,11 @@ msgstr ""
 #: ./user/modules/mod_scraper/templates/_scraper_run_status.tpl:20 
 msgid ""
 "Ready"
+msgstr ""
+
+#: ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:21 ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:36 ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:62 
+msgid ""
+"Return value"
 msgstr ""
 
 #: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rules.tpl:4 
@@ -339,12 +374,12 @@ msgid ""
 "Status"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:54 
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:73 
 msgid ""
 "Text"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_scraper_rule_type_help.tpl:4 
+#: ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:6 
 msgid ""
 "These additional price properties will be written to the page:"
 msgstr ""
@@ -353,6 +388,11 @@ msgstr ""
 msgid ""
 "This is an automatic rule: the scraped value will be used to directly "
 "update the linked page."
+msgstr ""
+
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:36 
+msgid ""
+"This page does not contain a value for the property 'url'"
 msgstr ""
 
 #: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule_referrers.tpl:31 
@@ -365,12 +405,12 @@ msgid ""
 "Title"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:56 
+#: ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:25 ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:40 ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:66 
 msgid ""
-"True when a value is found"
+"True"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_content.scraper_target.tpl:13 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details.tpl:3 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:24 
+#: ./user/modules/mod_scraper/templates/_admin_edit_content.scraper_target.tpl:13 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details.tpl:3 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source_urls.tpl:14 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:24 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:31 
 msgid ""
 "URL"
 msgstr ""
@@ -430,7 +470,7 @@ msgid ""
 "automatic"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source.tpl:52 
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source.tpl:53 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source.tpl:59 
 msgid ""
 "connections:"
 msgstr ""
@@ -483,6 +523,11 @@ msgstr ""
 #: ./user/modules/mod_scraper/templates/_admin_edit_scraper_result_card_item.tpl:42 
 msgid ""
 "no property:"
+msgstr ""
+
+#: ./user/modules/mod_scraper/templates/_rsc_edge_item.scraper_rule.tpl:5 
+msgid ""
+"no type set"
 msgstr ""
 
 #: ./user/modules/mod_scraper/templates/_admin_edit_scraper_result_card_item.tpl:39 
