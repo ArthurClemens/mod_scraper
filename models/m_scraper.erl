@@ -209,12 +209,11 @@ digest(Result, Context) ->
     % group data per url so that we can show everything regarding the url on one card
     DataByUrl = lists:foldr(fun(Row, Acc) ->
         Url = proplists:get_value(url, Row),
-        UrlAt = z_convert:to_atom(Url),
-        case proplists:get_value(UrlAt, Acc) of
+        case proplists:get_value(Url, Acc) of
             undefined ->
                 % url not yet used as key
                 % first store the properties for this url
-                [{UrlAt, [
+                [{Url, [
                     {scraper_id, proplists:get_value(scraper_id, Row)},
                     {date, proplists:get_value(date, Row)},
                     {error, proplists:get_value(error, Row)},
@@ -225,12 +224,12 @@ digest(Result, Context) ->
                 % add this row to the list of values
                 Values = proplists:get_value(values, R),
                 NewRow = lists:keyreplace(values, 1, R, {values, [Row|Values]}),
-                lists:keyreplace(UrlAt, 1, Acc, {UrlAt, NewRow})
+                lists:keyreplace(Url, 1, Acc, {Url, NewRow})
         end
     end, [], Result),
 
     % map raw data to current rules
-    MappedData = lists:map(fun({UrlAt, Data}) ->
+    MappedData = lists:map(fun({Url, Data}) ->
         Rows = proplists:get_value(values, Data),
         MappedRows = lists:reverse(lists:foldl(fun(R, Acc) ->
             RuleId = proplists:get_value(rule_id, R),
@@ -250,7 +249,7 @@ digest(Result, Context) ->
             end, Acc, MappedValues)
         end, [], Rows)),
         NewData = lists:keyreplace(values, 1, Data, {values, MappedRows}),
-        {UrlAt, NewData}
+        {Url, NewData}
     end, DataByUrl),
 
     Digest = lists:map(fun({_UrlAt, Data}) ->

@@ -29,11 +29,11 @@ get(ScraperId, Context) ->
 
 get_raw(ScraperId, Context) ->
 	z_db:assoc("SELECT * FROM mod_scraper_cache WHERE scraper_id=$1 AND raw=1 ORDER BY url, date desc", [ScraperId], Context).
-	
+
 
 get_last_run_data(ScraperId, Context) ->
 	Result = z_db:assoc("SELECT date,error FROM mod_scraper_cache WHERE scraper_id=$1 GROUP BY date, error ORDER BY date desc", [ScraperId], Context),
-	case Result of 
+	case Result of
 	    [] -> [];
 	    [R|_] -> R
 	end.
@@ -58,19 +58,6 @@ put(ScraperId, RuleId, ConnectedId, Url, Raw, Error, Date, Data, Property, Conte
 
 delete(ScraperId, Context) ->
     z_db:q("DELETE FROM mod_scraper_cache WHERE scraper_id=$1", [ScraperId], Context).
-
-
-%set_ignored(Id, Url, RuleId, Attr, Context) ->
-%	case z_db:q("SELECT status_ignored FROM mod_scraper_cache WHERE scraper_id=$1 and url=$2", [Id, Url], Context) of
-%		[] -> false;
-%		[{StatusIgnored}] -> 
-%			lager:info("Id=~p, Url=~p, StatusIgnored=~p", [Id, Url, StatusIgnored]),
-%			RuleIdAt = z_convert:to_atom(RuleId),
-%			StatusIgnored1 = lists:keydelete(RuleIdAt, 1, StatusIgnored),
-%			StatusIgnored2 = [{RuleIdAt, true}|StatusIgnored1],
-%			lager:info("StatusIgnored2=~p", [StatusIgnored2]),
-%			z_db:q("UPDATE mod_scraper_cache SET status_ignored=$1 WHERE scraper_id=$2 AND url=$3", [?DB_PROPS(StatusIgnored2), Id, Url], Context) == 1
-%	end.
 
 
 -spec init(Context) -> atom() when
@@ -130,23 +117,20 @@ init(Context) ->
                     is_nullable=true
                 }
             ], Context),
-            
+
             % Add some indices and foreign keys, ignore errors
             z_db:equery("create index fki_mod_scraper_scraper_id on mod_scraper_cache(scraper_id)", Context),
             % Delete row when scraper is deleted
-            z_db:equery("alter table mod_scraper_cache add 
-                        constraint fk_mod_scraper_scraper_id foreign key (scraper_id) references rsc(id) 
+            z_db:equery("alter table mod_scraper_cache add
+                        constraint fk_mod_scraper_scraper_id foreign key (scraper_id) references rsc(id)
                         on update cascade on delete cascade", Context),
             % Delete row when connected page is deleted
-            z_db:equery("alter table mod_scraper_cache add 
-                        constraint fk_mod_scraper_connected_page_id foreign key (connected_rsc_id) references rsc(id) 
+            z_db:equery("alter table mod_scraper_cache add
+                        constraint fk_mod_scraper_connected_page_id foreign key (connected_rsc_id) references rsc(id)
                         on update cascade on delete cascade", Context),
             % Delete row when rule is deleted
-            z_db:equery("alter table mod_scraper_cache add 
-                        constraint fk_mod_scraper_rule_id foreign key (rule_id) references rsc(id) 
+            z_db:equery("alter table mod_scraper_cache add
+                        constraint fk_mod_scraper_rule_id foreign key (rule_id) references rsc(id)
                         on update cascade on delete cascade", Context);
         true -> ok
     end.
-
-
-    

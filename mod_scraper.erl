@@ -359,7 +359,7 @@ do_next_url_process(UrlData, State) ->
 
 fetch_url(ScraperId, Url, ConnectedId, RuleIds, Context) ->
     Rules = lists:flatten(lists:map(fun(RuleId) ->
-        [{z_convert:to_atom(RuleId), z_html:unescape(m_rsc:p(RuleId, rule, Context))}]
+        [{RuleId, z_html:unescape(m_rsc:p(RuleId, rule, Context))}]
     end, RuleIds)),
     Results = scraper_fetch:fetch(Url, [], Rules),
     Date = proplists:get_value(date, Results),
@@ -400,7 +400,7 @@ store_result(ScraperId, ConnectedId, Url, _Error, Date, Scraped, RuleIds, Contex
         RuleId = z_convert:to_integer(RuleIdStr),
         Property = m_rsc:p(RuleId, property, Context),
         Type = m_rsc:p(RuleId, type, <<"text">>, Context),
-        Value = proplists:get_value(z_convert:to_atom(RuleIdStr), Scraped),
+        Value = proplists:get_value(RuleIdStr, Scraped),
         case Value of
             [xpath_parse_error, Reason] ->
                 Error = lists:flatten(io_lib:format("~p,~p", [xpath_parse_error, Reason])),
