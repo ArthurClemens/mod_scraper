@@ -36,6 +36,7 @@
                         name="rule"
                         class="form-control"
                         value="{{ r.rule }}"
+                        style="font-family: monospace;"
                         {% if not is_editable %}disabled="disabled"{% endif %}
                     />
                 </div>
