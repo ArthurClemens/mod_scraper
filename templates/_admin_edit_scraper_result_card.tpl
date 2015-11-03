@@ -19,7 +19,7 @@ Params:
 	<div class="panel-heading">
 		{% if id != data.connected_rsc_id %}
 			<h4>
-				<a href="{% url admin_edit_rsc id=connected_rsc_id %}">{{ m.rsc[connected_rsc_id].title }}</a>
+				<a href="{% url admin_edit_rsc id=connected_rsc_id %}" target="_blank">{{ m.rsc[connected_rsc_id].title }}</a>
 			</h4>
 		{% endif %}
 		<div class="text-muted meta">
