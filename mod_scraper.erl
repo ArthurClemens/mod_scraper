@@ -22,7 +22,7 @@
     scraper_scheduled/2,
     run_all/1
 ]).
--export([ manage_schema/2, event/2, observe_admin_menu/3, observe_postback_notify/2]).
+-export([manage_schema/2, event/2, observe_admin_menu/3, observe_postback_notify/2]).
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
 -export([start_link/1]).
 
@@ -379,6 +379,9 @@ humanize_error_message(Error) ->
     case Error of
         {failed_connect, [{to_address,{URL,_}},{inet,[inet],nxdomain}]} ->
             io_lib:format("Could not connect to ~s", [URL]);
+        {failed_connect,[{to_address,{[],80}},_]} ->
+            io_lib:format("Could not connect to URL. Does URL exist?");
+
         {Reason, Details} ->
             lists:flatten(io_lib:format("~p,~p", [Reason, Details]));
         timeout -> "Timeout: no data scraped";
