@@ -25,7 +25,7 @@ datamodel() ->
                 {title, <<"Scraper target">>}
             ]}
         ]},
-        
+
         {predicates, [
             {hasscraperrule, [{title, <<"Scraper rules">>}], [{scraper, scraper_rule}]}        ]},
 
@@ -76,7 +76,7 @@ datamodel() ->
                 automatic_scraper_rule,
                 make_itemprop_attr_rule(<<"priceCurrency">>, <<"text">>, <<"price_currency">>)
             },
-            
+
             {bol_scraper_target, scraper_target, [
                 {title, <<"Bol.com product page">>},
                 {url, <<"http://www.bol.com/nl/p/withings-smart-body-analyzer-weegschaal-zwart/9200000013728054/">>}
@@ -114,7 +114,7 @@ make_itemprop_rule(Prop, Type, PageProp) ->
         {rule, make_itemprop_rule(Prop)},
         {property, PageProp}
     ].
-    
+
 make_itemprop_title(Prop) ->
     Prefix = <<"Itemprop: ">>,
     Suffix = <<" (visible)">>,
@@ -124,14 +124,13 @@ make_itemprop_attr_title(Prop) ->
     Prefix = <<"Itemprop: ">>,
     Suffix = <<" (content attribute)">>,
     <<Prefix/binary, Prop/binary, Suffix/binary>>.
-    
+
 make_itemprop_rule(Prop) ->
     Prefix = <<"string(//*[@itemprop='">>,
-    Suffix = <<"'])">>,
-    <<Prefix/binary, Prop/binary, Suffix/binary>>.
-    
-make_itemprop_attr_rule(Prop) ->
-    Prefix = <<"//*[@itemprop='">>,
-    Suffix = <<"']//@content">>,
+    Suffix = <<"'][1])">>,
     <<Prefix/binary, Prop/binary, Suffix/binary>>.
 
+make_itemprop_attr_rule(Prop) ->
+    Prefix = <<"string(//*[@itemprop='">>,
+    Suffix = <<"'][1]//@content)">>,
+    <<Prefix/binary, Prop/binary, Suffix/binary>>.
