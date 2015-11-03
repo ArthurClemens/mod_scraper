@@ -131,6 +131,6 @@ make_itemprop_rule(Prop) ->
     <<Prefix/binary, Prop/binary, Suffix/binary>>.
 
 make_itemprop_attr_rule(Prop) ->
-    Prefix = <<"string(//*[@itemprop='">>,
-    Suffix = <<"'][1]//@content)">>,
+    Prefix = <<"//*[@itemprop='">>,
+    Suffix = <<"'][1]//@content">>,
     <<Prefix/binary, Prop/binary, Suffix/binary>>.
