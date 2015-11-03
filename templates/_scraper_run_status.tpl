@@ -27,8 +27,8 @@ as
             {% elif status_info == "no_rules" %}
                 <dt class="form-field-error">{_ No rules _}</dt>
             {% endif %}
-        {% endif %} 
-    
+        {% endif %}
+
         {% if in_progress %}
             <dd class="spinner">
                 <div class="bounce1"></div>
@@ -48,6 +48,7 @@ as
     {% javascript %}
         modScraper.initTimeSince({
             id: "{{id}}",
+            locale: "{{z_language}}",
             timeSinceEl: "{{ time_since_id }}",
             start: "{{ last.date|date:"U" }}",
             dateFormat: "X"

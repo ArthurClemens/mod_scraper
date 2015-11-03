@@ -37,7 +37,7 @@ Params:
 %}
     <tr id="{{ tr_id }}" class="{% if not is_ready %}unpublished{% endif %}{% if in_progress or is_scheduled %} updating{% endif %}" data-href="{% url admin_edit_rsc id=id %}">
         <td>{{ id.title }}</td>
-        <td>            
+        <td>
             {% include "_scraper_run_status.tpl" id=id %}
         </td>
         <td>{{ m.rsc[id].created|date:_"d M Y, H:i" }}</td>
@@ -79,6 +79,7 @@ as
 {% javascript %}
     modScraper.init({
         id: "{{id}}",
+        locale: "{{z_language}}",
         elemId: "{{ tr_id }}",
         subscribeEvents: ["fetch_scheduled", "fetch_started", "fetch_completed"],
         callbackEventId: "{{ eid }}"

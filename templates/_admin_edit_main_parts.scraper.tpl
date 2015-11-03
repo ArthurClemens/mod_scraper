@@ -16,6 +16,7 @@
 {% javascript %}
 	modScraper.init({
 	    id: "{{id}}",
+        locale: "{{z_language}}",
 	    elemId: "scraper_data",
 	    subscribeEvents: ["fetch_scheduled", "fetch_started", "fetch_completed"],
 	    callbackEventId: "update_run_results"

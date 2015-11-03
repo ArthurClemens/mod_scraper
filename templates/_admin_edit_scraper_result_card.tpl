@@ -61,6 +61,7 @@ Params:
 {% javascript %}
     modScraper.initTimeSince({
         id: "{{card_id}}",
+        locale: "{{z_language}}",
         timeSinceEl: "{{ time_since_id }}",
         start: "{{ data.date|date:"U" }}",
         dateFormat: "X"
