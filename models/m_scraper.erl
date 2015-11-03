@@ -174,9 +174,9 @@ map_value_to_type(Value, Type, Property, RuleId, Context) ->
                 <<"transform_false">> -> false;
                 <<"transform_zero">> -> 0
             end,
-            case Value of
-                undefined -> [[{property, Property}, {value, false}]];
-                _ -> [[{property, Property}, {value, ReturnValue}]]
+            case is_empty(Value) of
+                true -> [[{property, Property}, {value, false}]];
+                false -> [[{property, Property}, {value, ReturnValue}]]
             end;
         <<"no_match">> ->
             ReturnValue = case m_rsc:p(RuleId, transform, Context) of
@@ -185,9 +185,9 @@ map_value_to_type(Value, Type, Property, RuleId, Context) ->
                 <<"transform_false">> -> false;
                 <<"transform_zero">> -> 0
             end,
-            case Value of
-                undefined -> [[{property, Property}, {value, ReturnValue}]];
-                _ -> [[{property, Property}, {value, false}]]
+            case is_empty(Value) of
+                true -> [[{property, Property}, {value, ReturnValue}]];
+                false -> [[{property, Property}, {value, false}]]
             end;
         <<"contains">> ->
             ReturnValue = case m_rsc:p(RuleId, transform, Context) of
@@ -196,9 +196,9 @@ map_value_to_type(Value, Type, Property, RuleId, Context) ->
                 <<"transform_false">> -> false;
                 <<"transform_zero">> -> 0
             end,
-            case Value of
-                undefined -> [[{property, Property}, {value, false}]];
-                _ ->
+            case is_empty(Value) of
+                true -> [[{property, Property}, {value, false}]];
+                false ->
                     ToMatch = m_rsc:p(RuleId, contains_value, Context),
                     case re:run(Value, ToMatch) of
                         {match, _Captured} -> [[{property, Property}, {value, ReturnValue}]];
@@ -376,12 +376,13 @@ is_equal(Fetched, Current, Type) ->
         boolean_false ->
             define_boolean(Fetched) =:= define_boolean(Current);
         _ ->
-            Fetched =:= Current
+            z_html:escape(z_html:nl2br(Fetched)) =:= z_html:escape(z_html:nl2br(Current))
     end.
 
 
 is_empty(Fetched) ->
     case Fetched of
+        undefined -> true;
         <<>> -> true;
         _ -> false
     end.

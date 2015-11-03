@@ -381,7 +381,6 @@ humanize_error_message(Error) ->
             io_lib:format("Could not connect to ~s", [URL]);
         {failed_connect,[{to_address,{[],80}},_]} ->
             io_lib:format("Could not connect to URL. Does URL exist?");
-
         {Reason, Details} ->
             lists:flatten(io_lib:format("~p,~p", [Reason, Details]));
         timeout -> "Timeout: no data scraped";
@@ -437,10 +436,18 @@ save_to_page(ConnectedId, Property, Value, Context) ->
         {ok, RId} ->
             P = z_convert:to_atom(Property),
             V = to_page_value(Value),
-            Current = m_rsc:p(RId, P, Context),
-            case Current =:= V of
-                false -> {ok, _} = m_rsc:update(RId, [{P, V}], Context);
-                true -> undefined
+            case V of
+                undefined -> undefined;
+                _ ->
+                    V1 = case is_binary(V) of
+                        true -> z_html:nl2br(V);
+                        false -> V
+                    end,
+                    Current = m_rsc:p(RId, P, Context),
+                    case Current =/= V1 of
+                        true -> {ok, _} = m_rsc:update(RId, [{P, V}], Context);
+                        false -> undefined
+                    end
             end;
         {error, _Reason} ->
             undefined
