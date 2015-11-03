@@ -14,7 +14,7 @@
                 center=0
             }
         %}
-        <div class="input-group">
+        <div class="input-group col-md-12">
             <input id="{{ #page_connections_source }}" type="text" class="form-control scraper-dialog-input" placeholder="{{ id.page_connections_source.title|default:_"Select..." }}" />
             {% if id.page_connections_source %}
                 <span class="input-group-btn">

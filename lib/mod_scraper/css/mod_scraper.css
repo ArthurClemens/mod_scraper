@@ -1,15 +1,6 @@
 
 /* Scraper edit page */
 
-.table.scraper-url-table {
-    margin-top: 0;
-}
-.table.scraper-url-table,
-.table.scraper-url-table > thead > tr > th,
-.table.scraper-url-table > tbody > tr > th,
-.table.scraper-url-table > tbody > tr > td {
-    border-color: #ddd;
-}
 .table.scraper-url-table .label {
     color: #999;
 }
