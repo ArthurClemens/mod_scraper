@@ -370,20 +370,20 @@ fetch_url(ScraperId, Url, ConnectedId, RuleIds, Context) ->
             Scraped = proplists:get_value(data, Results, []),
             store_result(ScraperId, ConnectedId, Url, undefined, Date, Scraped, RuleIds, Context);
         _ ->
-            ErrorMsg = humanize_error_message(Error),
+            ErrorMsg = humanize_error_message(Error, Context),
             PutError(ErrorMsg)
     end.
 
 
-humanize_error_message(Error) ->
+humanize_error_message(Error, Context) ->
     case Error of
         {failed_connect, [{to_address,{URL,_}},{inet,[inet],nxdomain}]} ->
             io_lib:format("Could not connect to ~s", [URL]);
         {failed_connect,[{to_address,{[],80}},_]} ->
-            io_lib:format("Could not connect to URL. Does URL exist?");
+            ?__("Could not connect to URL. Does URL exist?", Context);
         {Reason, Details} ->
             lists:flatten(io_lib:format("~p,~p", [Reason, Details]));
-        timeout -> "Timeout: no data scraped";
+        timeout -> ?__("Timeout: no data scraped", Context);
         Reason -> Reason
     end.
 

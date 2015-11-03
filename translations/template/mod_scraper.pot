@@ -18,6 +18,11 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source_urls.tpl:13 
+msgid ""
+" URLs"
+msgstr ""
+
 #: ./user/modules/mod_scraper/templates/_rsc_edge_item.scraper_rule.tpl:6 
 msgid ""
 "(not published)"
@@ -31,6 +36,11 @@ msgstr ""
 #: ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:26 ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:41 ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:67 
 msgid ""
 "1"
+msgstr ""
+
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:31 
+msgid ""
+"1 URL"
 msgstr ""
 
 #: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source.tpl:33 
@@ -83,7 +93,7 @@ msgid ""
 "Connection saved"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:77 
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:78 
 msgid ""
 "Contains"
 msgstr ""
@@ -96,6 +106,11 @@ msgstr ""
 #: ./user/modules/mod_scraper/templates/_admin_edit_scraper_result_card_item.tpl:77 
 msgid ""
 "Copy"
+msgstr ""
+
+#: ./user/modules/mod_scraper/mod_scraper.erl:383 
+msgid ""
+"Could not connect to URL. Does URL exist?"
 msgstr ""
 
 #: ./user/modules/mod_scraper/templates/admin_scraper.tpl:60 
@@ -118,7 +133,7 @@ msgid ""
 "Data Source"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:60 
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:61 
 msgid ""
 "Data type"
 msgstr ""
@@ -148,7 +163,7 @@ msgid ""
 "In progress"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:75 
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:76 
 msgid ""
 "Match"
 msgstr ""
@@ -168,7 +183,7 @@ msgid ""
 "New scraper"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source_urls.tpl:20 
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source_urls.tpl:25 
 msgid ""
 "No URLs found"
 msgstr ""
@@ -193,7 +208,7 @@ msgid ""
 "No data source"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:76 
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:77 
 msgid ""
 "No match"
 msgstr ""
@@ -243,7 +258,7 @@ msgid ""
 "Parse error"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:74 
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:75 
 msgid ""
 "Price"
 msgstr ""
@@ -268,7 +283,7 @@ msgid ""
 "Price whole"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:45 
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:46 
 msgid ""
 "Property mapping"
 msgstr ""
@@ -374,7 +389,7 @@ msgid ""
 "Status"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:73 
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:74 
 msgid ""
 "Text"
 msgstr ""
@@ -390,7 +405,7 @@ msgid ""
 "update the linked page."
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:36 
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:43 
 msgid ""
 "This page does not contain a value for the property 'url'"
 msgstr ""
@@ -398,6 +413,11 @@ msgstr ""
 #: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule_referrers.tpl:31 
 msgid ""
 "This rule is not used by any scraper."
+msgstr ""
+
+#: ./user/modules/mod_scraper/mod_scraper.erl:386 
+msgid ""
+"Timeout: no data scraped"
 msgstr ""
 
 #: ./user/modules/mod_scraper/templates/_admin_edit_scraper_properties.tpl:15 ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:22 ./user/modules/mod_scraper/templates/admin_scraper.tpl:54 
@@ -410,7 +430,7 @@ msgid ""
 "True"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_content.scraper_target.tpl:13 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details.tpl:3 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source_urls.tpl:14 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:24 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:31 
+#: ./user/modules/mod_scraper/templates/_admin_edit_content.scraper_target.tpl:13 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details.tpl:3 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:24 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_urls.tpl:9 
 msgid ""
 "URL"
 msgstr ""
@@ -430,7 +450,7 @@ msgid ""
 "URL text"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source_urls.tpl:6 
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source_urls.tpl:6 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source_urls.tpl:18 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:36 
 msgid ""
 "URLs"
 msgstr ""
@@ -450,7 +470,7 @@ msgid ""
 "Used by"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_data_results.tpl:10 
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_data_results.tpl:11 
 msgid ""
 "View all results"
 msgstr ""
@@ -458,6 +478,11 @@ msgstr ""
 #: ./user/modules/mod_scraper/templates/_admin_edit_scraper_data_results.tpl:9 
 msgid ""
 "View differences only"
+msgstr ""
+
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_data_results.tpl:10 
+msgid ""
+"View errors"
 msgstr ""
 
 #: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:33 

@@ -14,533 +14,480 @@ msgstr ""
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ./user/modules/mod_scraper/templates/_rsc_edge_item.scraper_rule.tpl:6
-msgid ""
-"(not published)"
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source_urls.tpl:13
+msgid " URLs"
+msgstr " URLs"
+
+#: user/modules/mod_scraper/templates/_rsc_edge_item.scraper_rule.tpl:6
+msgid "(not published)"
 msgstr "(niet gepubliceerd)"
 
-#: ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:28 ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:43 ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:69
-msgid ""
-"0"
+#: user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:28
+#: user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:43
+#: user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:69
+msgid "0"
 msgstr "0"
 
-#: ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:26 ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:41 ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:67
-msgid ""
-"1"
+#: user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:26
+#: user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:41
+#: user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:67
+msgid "1"
 msgstr "1"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source.tpl:33
-msgid ""
-"A page that contains a property 'url'"
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:31
+msgid "1 URL"
+msgstr "1 URL"
+
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_source.tpl:33
+msgid "A page that contains a property 'url'"
 msgstr "Een pagina die de eigenschap 'url' bevat"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source.tpl:34
-msgid ""
-"A page with connections to other pages, each with a property 'url'"
-msgstr "Een pagina met connecties naar andere pagina's, elk met een eigenschap 'url'"
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_source.tpl:34
+msgid "A page with connections to other pages, each with a property 'url'"
+msgstr ""
+"Een pagina met connecties naar andere pagina's, elk met een eigenschap 'url'"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rules_list.tpl:4
-msgid ""
-"Add Rule"
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_rules_list.tpl:4
+msgid "Add Rule"
 msgstr "Regel toevoegen"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rules_list.tpl:6
-msgid ""
-"Add a rule"
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_rules_list.tpl:6
+msgid "Add a rule"
 msgstr "Voeg een regel toe"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_basics.scraper_rule.tpl:4
-msgid ""
-"Basic"
+#: user/modules/mod_scraper/templates/_admin_edit_basics.scraper_rule.tpl:4
+msgid "Basic"
 msgstr "Standaard"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_content.scraper_target.tpl:25
-msgid ""
-"Brand"
+#: user/modules/mod_scraper/templates/_admin_edit_content.scraper_target.tpl:25
+msgid "Brand"
 msgstr "Merk"
 
-#: ./user/modules/mod_scraper/templates/_scraper_settings.tpl:39
-msgid ""
-"Close"
+#: user/modules/mod_scraper/templates/_scraper_settings.tpl:39
+msgid "Close"
 msgstr "Sluiten"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source.tpl:9 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:10
-msgid ""
-"Connect page"
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source.tpl:9
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:10
+msgid "Connect page"
 msgstr "Paginaconnectie maken"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source.tpl:31
-msgid ""
-"Connection"
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source.tpl:31
+msgid "Connection"
 msgstr "Paginaconnectie"
 
-#: ./user/modules/mod_scraper/support/scraper_rsc.erl:30
-msgid ""
-"Connection saved"
+#: user/modules/mod_scraper/support/scraper_rsc.erl:30
+msgid "Connection saved"
 msgstr "Paginaconnectie opgeslagen"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:77
-msgid ""
-"Contains"
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:78
+msgid "Contains"
 msgstr "Bevat"
 
-#: ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:51
-msgid ""
-"Contains text"
+#: user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:51
+msgid "Contains text"
 msgstr "Bevat tekst"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_result_card_item.tpl:77
-msgid ""
-"Copy"
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_result_card_item.tpl:77
+msgid "Copy"
 msgstr "Kopieer"
 
-#: ./user/modules/mod_scraper/templates/admin_scraper.tpl:60
-msgid ""
-"Created on"
-msgstr "Aangemaakt op"
-
-#: ./user/modules/mod_scraper/templates/_admin_edit_content.scraper_target.tpl:54
-msgid ""
-"Currency code"
-msgstr "Valuta code"
-
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_data.tpl:4
-msgid ""
-"Data"
-msgstr "data"
-
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source.tpl:4
-msgid ""
-"Data Source"
-msgstr "Databron"
-
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:60
-msgid ""
-"Data type"
-msgstr "Datatype"
-
-#: ./user/modules/mod_scraper/templates/_admin_scraper_row.tpl:49
-msgid ""
-"Edit"
-msgstr "Bewerken"
-
-#: ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:27 ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:42 ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:68
-msgid ""
-"False"
-msgstr "False"
-
-#: ./user/modules/mod_scraper/templates/admin_scraper.tpl:14
-msgid ""
-"Fetch data from websites, feed to Zotonic pages."
+#: user/modules/mod_scraper/mod_scraper.erl:383
+msgid "Could not connect to URL. Does URL exist?"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source.tpl:21
-msgid ""
-"Go to page"
+#: user/modules/mod_scraper/templates/admin_scraper.tpl:60
+msgid "Created on"
+msgstr "Aangemaakt op"
+
+#: user/modules/mod_scraper/templates/_admin_edit_content.scraper_target.tpl:54
+msgid "Currency code"
+msgstr "Valuta code"
+
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_data.tpl:4
+msgid "Data"
+msgstr "Data"
+
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_source.tpl:4
+msgid "Data Source"
+msgstr "Databron"
+
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:61
+msgid "Data type"
+msgstr "Datatype"
+
+#: user/modules/mod_scraper/templates/_admin_scraper_row.tpl:49
+msgid "Edit"
+msgstr "Bewerken"
+
+#: user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:27
+#: user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:42
+#: user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:68
+msgid "False"
+msgstr "False"
+
+#: user/modules/mod_scraper/templates/admin_scraper.tpl:14
+msgid "Fetch data from websites, feed to Zotonic pages."
+msgstr ""
+
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source.tpl:21
+msgid "Go to page"
 msgstr "Ga naar pagina"
 
-#: ./user/modules/mod_scraper/templates/_scraper_run_status.tpl:15
-msgid ""
-"In progress"
+#: user/modules/mod_scraper/templates/_scraper_run_status.tpl:15
+msgid "In progress"
 msgstr "Bezig"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:75
-msgid ""
-"Match"
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:76
+msgid "Match"
 msgstr "Match"
 
-#: ./user/modules/mod_scraper/templates/admin_scraper.tpl:66
-msgid ""
-"Modified by"
+#: user/modules/mod_scraper/templates/admin_scraper.tpl:66
+msgid "Modified by"
 msgstr "Bewerkt door"
 
-#: ./user/modules/mod_scraper/templates/admin_scraper.tpl:63
-msgid ""
-"Modified on"
+#: user/modules/mod_scraper/templates/admin_scraper.tpl:63
+msgid "Modified on"
 msgstr "Bewerkt op"
 
-#: ./user/modules/mod_scraper/templates/admin_scraper.tpl:21
-msgid ""
-"New scraper"
+#: user/modules/mod_scraper/templates/admin_scraper.tpl:21
+msgid "New scraper"
 msgstr "Nieuwe scraper"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source_urls.tpl:20
-msgid ""
-"No URLs found"
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source_urls.tpl:25
+msgid "No URLs found"
 msgstr "Geen URLs gevonden"
 
-#: ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:13
-msgid ""
-"No additional property mapping is required."
+#: user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:13
+msgid "No additional property mapping is required."
 msgstr "Toewijzen van een eigenschap is niet nodig."
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_result_card.tpl:42 ./user/modules/mod_scraper/templates/_admin_edit_scraper_result_card.tpl:46
-msgid ""
-"No changes."
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_result_card.tpl:42
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_result_card.tpl:46
+msgid "No changes."
 msgstr "Geen wijzigingen."
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_result_card.tpl:38
-msgid ""
-"No data found."
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_result_card.tpl:38
+msgid "No data found."
 msgstr "Geen data gevonden."
 
-#: ./user/modules/mod_scraper/templates/_scraper_run_status.tpl:26
-msgid ""
-"No data source"
+#: user/modules/mod_scraper/templates/_scraper_run_status.tpl:26
+msgid "No data source"
 msgstr "Geen databron"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:76
-msgid ""
-"No match"
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:77
+msgid "No match"
 msgstr "Geen match"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_result_card_item.tpl:82
-msgid ""
-"No property assigned"
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_result_card_item.tpl:82
+msgid "No property assigned"
 msgstr "Geen eigenschap toegekend"
 
-#: ./user/modules/mod_scraper/templates/_scraper_rule_property_automatic.tpl:5
-msgid ""
-"No property set: automatic update will fail."
+#: user/modules/mod_scraper/templates/_scraper_rule_property_automatic.tpl:5
+msgid "No property set: automatic update will fail."
 msgstr "Geen eigenschap ingesteld, hierdoor werkt automatisch updaten niet."
 
-#: ./user/modules/mod_scraper/templates/_scraper_run_status.tpl:28
-msgid ""
-"No rules"
+#: user/modules/mod_scraper/templates/_scraper_run_status.tpl:28
+msgid "No rules"
 msgstr "Geen regels"
 
-#: ./user/modules/mod_scraper/mod_scraper.erl:90
-msgid ""
-"No rules to run. Add one or more rules."
+#: user/modules/mod_scraper/mod_scraper.erl:90
+msgid "No rules to run. Add one or more rules."
 msgstr "Geen regels om te doorlopen. Voeg een of meer regels toe."
 
-#: ./user/modules/mod_scraper/templates/admin_scraper.tpl:77
-msgid ""
-"No scrapers found."
+#: user/modules/mod_scraper/templates/admin_scraper.tpl:77
+msgid "No scrapers found."
 msgstr "Geen scrapers gevonden."
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_result_card_item.tpl:80
-msgid ""
-"Nothing scraped"
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_result_card_item.tpl:80
+msgid "Nothing scraped"
 msgstr "Niets gescraped"
 
-#: ./user/modules/mod_scraper/templates/_scraper_run_status.tpl:41
-msgid ""
-"Nothing scraped yet"
+#: user/modules/mod_scraper/templates/_scraper_run_status.tpl:41
+msgid "Nothing scraped yet"
 msgstr "Nog niets gescraped"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source.tpl:2 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:3
-msgid ""
-"Page"
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source.tpl:2
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:3
+msgid "Page"
 msgstr "Pagina"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_result_card_item.tpl:85
-msgid ""
-"Parse error"
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_result_card_item.tpl:85
+msgid "Parse error"
 msgstr "Fout bij verwerken"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:74
-msgid ""
-"Price"
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:75
+msgid "Price"
 msgstr "Prijs"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_content.scraper_target.tpl:37
-msgid ""
-"Price data"
+#: user/modules/mod_scraper/templates/_admin_edit_content.scraper_target.tpl:37
+msgid "Price data"
 msgstr "Prijsdata"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_content.scraper_target.tpl:72
-msgid ""
-"Price fraction"
+#: user/modules/mod_scraper/templates/_admin_edit_content.scraper_target.tpl:72
+msgid "Price fraction"
 msgstr "Prijs breuk getal"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_content.scraper_target.tpl:45
-msgid ""
-"Price text"
+#: user/modules/mod_scraper/templates/_admin_edit_content.scraper_target.tpl:45
+msgid "Price text"
 msgstr "Prijstekst"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_content.scraper_target.tpl:63
-msgid ""
-"Price whole"
+#: user/modules/mod_scraper/templates/_admin_edit_content.scraper_target.tpl:63
+msgid "Price whole"
 msgstr "Prijs heel getal"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:45
-msgid ""
-"Property mapping"
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:46
+msgid "Property mapping"
 msgstr "Eigenschap toewijzen"
 
-#: ./user/modules/mod_scraper/templates/_scraper_run_status.tpl:20
-msgid ""
-"Ready"
+#: user/modules/mod_scraper/templates/_scraper_run_status.tpl:20
+msgid "Ready"
 msgstr "Gereed"
 
-#: ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:21 ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:36 ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:62
-msgid ""
-"Return value"
+#: user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:21
+#: user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:36
+#: user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:62
+msgid "Return value"
 msgstr "Waarde resultaat"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rules.tpl:4
-msgid ""
-"Rules"
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_rules.tpl:4
+msgid "Rules"
 msgstr "Regels"
 
-#: ./user/modules/mod_scraper/templates/_admin_scraper_row.tpl:50
-msgid ""
-"Run"
+#: user/modules/mod_scraper/templates/_admin_scraper_row.tpl:50
+msgid "Run"
 msgstr "Uitvoeren"
 
-#: ./user/modules/mod_scraper/templates/admin_scraper.tpl:38
-msgid ""
-"Run all"
+#: user/modules/mod_scraper/templates/admin_scraper.tpl:38
+msgid "Run all"
 msgstr "Alle uitvoeren"
 
-#: ./user/modules/mod_scraper/templates/_scraper_settings.tpl:7
-msgid ""
-"Run scrapers"
+#: user/modules/mod_scraper/templates/_scraper_settings.tpl:7
+msgid "Run scrapers"
 msgstr "Scrapers uitvoeren"
 
-#: ./user/modules/mod_scraper/templates/_scraper_run_status.tpl:17
-msgid ""
-"Scheduled"
+#: user/modules/mod_scraper/templates/_scraper_run_status.tpl:17
+msgid "Scheduled"
 msgstr "Ingepland"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:4
-msgid ""
-"Scrape Rule Properties"
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:4
+msgid "Scrape Rule Properties"
 msgstr "Scrape regel eigenschappen"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_data_action.tpl:14
-msgid ""
-"Scrape data"
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_data_action.tpl:14
+msgid "Scrape data"
 msgstr "Scrape data"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_result_card.tpl:28 ./user/modules/mod_scraper/templates/_scraper_run_status.tpl:39
-msgid ""
-"Scraped"
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_result_card.tpl:28
+#: user/modules/mod_scraper/templates/_scraper_run_status.tpl:39
+msgid "Scraped"
 msgstr "Gescraped"
 
-#: ./user/modules/mod_scraper/templates/admin_scraper.tpl:3 ./user/modules/mod_scraper/templates/admin_scraper.tpl:12 ./user/modules/mod_scraper/mod_scraper.erl:79
-msgid ""
-"Scraper"
+#: user/modules/mod_scraper/templates/admin_scraper.tpl:3
+#: user/modules/mod_scraper/templates/admin_scraper.tpl:12
+#: user/modules/mod_scraper/mod_scraper.erl:79
+msgid "Scraper"
 msgstr "Scraper"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_properties.tpl:4
-msgid ""
-"Scraper Properties"
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_properties.tpl:4
+msgid "Scraper Properties"
 msgstr "Scraper eigenschappen"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_content.scraper_target.tpl:4
-msgid ""
-"Scraper Target Properties"
+#: user/modules/mod_scraper/templates/_admin_edit_content.scraper_target.tpl:4
+msgid "Scraper Target Properties"
 msgstr "Scraper doel eigenschappen"
 
-#: ./user/modules/mod_scraper/templates/admin_scraper.tpl:32
-msgid ""
-"Scraper settings"
+#: user/modules/mod_scraper/templates/admin_scraper.tpl:32
+msgid "Scraper settings"
 msgstr "Scraper instellingen"
 
-#: ./user/modules/mod_scraper/templates/admin_scraper.tpl:47
-msgid ""
-"Scrapers"
+#: user/modules/mod_scraper/templates/admin_scraper.tpl:47
+msgid "Scrapers"
 msgstr "Scrapers"
 
-#: ./user/modules/mod_scraper/templates/_scraper_settings.tpl:5
+#: user/modules/mod_scraper/templates/_scraper_settings.tpl:5
 msgid ""
 "Scrapers can be run automatically. Scrapers that contain \"automatic scraper "
 "rules\" will update connected pages with the scraped data."
 msgstr ""
-"Scrapers kunnen automatisch uitgevoerd worden. Scraper die \"automatische scraper "
-"regels\" bevatten zullen pagina's met een connectie updaten met de gevonden data.'"
+"Scrapers kunnen automatisch uitgevoerd worden. Scraper die \"automatische "
+"scraper regels\" bevatten zullen pagina's met een connectie updaten met de "
+"gevonden data.'"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source.tpl:18 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:18
-msgid ""
-"Select..."
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source.tpl:18
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:18
+msgid "Select..."
 msgstr "Kies..."
 
-#: ./user/modules/mod_scraper/templates/admin_scraper.tpl:30
-msgid ""
-"Settings"
+#: user/modules/mod_scraper/templates/admin_scraper.tpl:30
+msgid "Settings"
 msgstr "Instellingen"
 
-#: ./user/modules/mod_scraper/support/scraper_rsc.erl:18
-msgid ""
-"Source saved"
+#: user/modules/mod_scraper/support/scraper_rsc.erl:18
+msgid "Source saved"
 msgstr "Bron bewaard"
 
-#: ./user/modules/mod_scraper/templates/admin_scraper.tpl:57
-msgid ""
-"Status"
+#: user/modules/mod_scraper/templates/admin_scraper.tpl:57
+msgid "Status"
 msgstr "Status"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:73
-msgid ""
-"Text"
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:74
+msgid "Text"
 msgstr "Tekst"
 
-#: ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:6
-msgid ""
-"These additional price properties will be written to the page:"
-msgstr "Deze aanvullende prijs eigenschappen zullen op de pagina worden opgeslagen:"
+#: user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:6
+msgid "These additional price properties will be written to the page:"
+msgstr ""
+"Deze aanvullende prijs eigenschappen zullen op de pagina worden opgeslagen:"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:17
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:17
 msgid ""
-"This is an automatic rule: the scraped value will be used to directly "
-"update the linked page."
+"This is an automatic rule: the scraped value will be used to directly update "
+"the linked page."
 msgstr ""
 "Dit is een automatische regel: de gevonden waarde zal worden gebruikt om de "
 "gelinkte pagina direct te updaten."
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:36
-msgid ""
-"This page does not contain a value for the property 'url'"
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:43
+msgid "This page does not contain a value for the property 'url'"
 msgstr "Deze pagina bevat geen waarde voor de eigenschap 'url'"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule_referrers.tpl:31
-msgid ""
-"This rule is not used by any scraper."
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_rule_referrers.tpl:31
+msgid "This rule is not used by any scraper."
 msgstr "Deze regel wordt door geen scaper gebruikt."
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_properties.tpl:15 ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:22 ./user/modules/mod_scraper/templates/admin_scraper.tpl:54
-msgid ""
-"Title"
+#: user/modules/mod_scraper/mod_scraper.erl:386
+msgid "Timeout: no data scraped"
+msgstr "Timeout: geen data gescraped"
+
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_properties.tpl:15
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:22
+#: user/modules/mod_scraper/templates/admin_scraper.tpl:54
+msgid "Title"
 msgstr "Titel"
 
-#: ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:25 ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:40 ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:66
-msgid ""
-"True"
+#: user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:25
+#: user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:40
+#: user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:66
+msgid "True"
 msgstr "True"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_content.scraper_target.tpl:13 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details.tpl:3 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source_urls.tpl:14 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:24 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:31
-msgid ""
-"URL"
+#: user/modules/mod_scraper/templates/_admin_edit_content.scraper_target.tpl:13
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_source_details.tpl:3
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:24
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_source_urls.tpl:9
+msgid "URL"
 msgstr "URL"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source.tpl:14
-msgid ""
-"URL data source"
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_source.tpl:14
+msgid "URL data source"
 msgstr "URL databron"
 
-#: ./user/modules/mod_scraper/support/scraper_rsc.erl:24
-msgid ""
-"URL saved"
+#: user/modules/mod_scraper/support/scraper_rsc.erl:24
+msgid "URL saved"
 msgstr "URL opgeslagen"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source.tpl:32
-msgid ""
-"URL text"
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_source.tpl:32
+msgid "URL text"
 msgstr "URL tekst"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source_urls.tpl:6
-msgid ""
-"URLs"
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source_urls.tpl:6
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source_urls.tpl:18
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:36
+msgid "URLs"
 msgstr "URLs"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_content.scraper_target.tpl:81
-msgid ""
-"Unavailable"
+#: user/modules/mod_scraper/templates/_admin_edit_content.scraper_target.tpl:81
+msgid "Unavailable"
 msgstr "Niet beschikbaar"
 
-#: ./user/modules/mod_scraper/templates/_scraper_run_status.tpl:23
-msgid ""
-"Unpublished, will not run automatically"
+#: user/modules/mod_scraper/templates/_scraper_run_status.tpl:23
+msgid "Unpublished, will not run automatically"
 msgstr "Niet gepubliceerd, zal niet automatisch uitgevoerd worden"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule_referrers.tpl:4
-msgid ""
-"Used by"
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_rule_referrers.tpl:4
+msgid "Used by"
 msgstr "In gebruik door"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_data_results.tpl:10
-msgid ""
-"View all results"
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_data_results.tpl:11
+msgid "View all results"
 msgstr "Bekijk alle resultaten"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_data_results.tpl:9
-msgid ""
-"View differences only"
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_data_results.tpl:9
+msgid "View differences only"
 msgstr "Bekijk alleen de verschillen"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:33
-msgid ""
-"XPath rule"
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_data_results.tpl:10
+msgid "View errors"
+msgstr "Bekijk fouten"
+
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:33
+msgid "XPath rule"
 msgstr "XPath regel"
 
-#: ./user/modules/mod_scraper/templates/_rsc_edge_item.scraper_rule.tpl:3
-msgid ""
-"automatic"
+#: user/modules/mod_scraper/templates/_rsc_edge_item.scraper_rule.tpl:3
+msgid "automatic"
 msgstr "automatisch"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source.tpl:53 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source.tpl:59
-msgid ""
-"connections:"
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source.tpl:53
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source.tpl:59
+msgid "connections:"
 msgstr "connecties:"
 
-#: ./user/modules/mod_scraper/templates/_admin_scraper_row.tpl:43 ./user/modules/mod_scraper/templates/_admin_scraper_row.tpl:44
-msgid ""
-"d M Y, H:i"
-msgstr ""
-"d M Y, H:i"
+#: user/modules/mod_scraper/templates/_admin_scraper_row.tpl:43
+#: user/modules/mod_scraper/templates/_admin_scraper_row.tpl:44
+msgid "d M Y, H:i"
+msgstr "d M Y, H:i"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule_referrers.tpl:21
-msgid ""
-"edit"
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_rule_referrers.tpl:21
+msgid "edit"
 msgstr "bewerken"
 
-#: ./user/modules/mod_scraper/templates/_scraper_settings.tpl:14
-msgid ""
-"every 12 hours"
+#: user/modules/mod_scraper/templates/_scraper_settings.tpl:14
+msgid "every 12 hours"
 msgstr "elke 12 uur"
 
-#: ./user/modules/mod_scraper/templates/_scraper_settings.tpl:15
-msgid ""
-"every 24 hours"
+#: user/modules/mod_scraper/templates/_scraper_settings.tpl:15
+msgid "every 24 hours"
 msgstr "elke 24 uur"
 
-#: ./user/modules/mod_scraper/templates/_scraper_settings.tpl:12
-msgid ""
-"every 3 hours"
+#: user/modules/mod_scraper/templates/_scraper_settings.tpl:12
+msgid "every 3 hours"
 msgstr "elke 3 uur"
 
-#: ./user/modules/mod_scraper/templates/_scraper_settings.tpl:13
-msgid ""
-"every 6 hours"
+#: user/modules/mod_scraper/templates/_scraper_settings.tpl:13
+msgid "every 6 hours"
 msgstr "elke 6 uur"
 
-#: ./user/modules/mod_scraper/templates/_scraper_settings.tpl:11
-msgid ""
-"every hour"
+#: user/modules/mod_scraper/templates/_scraper_settings.tpl:11
+msgid "every hour"
 msgstr "elk uur"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_result_card_item.tpl:37
-msgid ""
-"mapped property:"
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_result_card_item.tpl:37
+msgid "mapped property:"
 msgstr "toegekende eigenschap:"
 
-#: ./user/modules/mod_scraper/templates/_scraper_settings.tpl:10
-msgid ""
-"never"
+#: user/modules/mod_scraper/templates/_scraper_settings.tpl:10
+msgid "never"
 msgstr "nooit"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_result_card_item.tpl:42
-msgid ""
-"no property:"
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_result_card_item.tpl:42
+msgid "no property:"
 msgstr "geen eigenschap:"
 
-#: ./user/modules/mod_scraper/templates/_rsc_edge_item.scraper_rule.tpl:5
-msgid ""
-"no type set"
+#: user/modules/mod_scraper/templates/_rsc_edge_item.scraper_rule.tpl:5
+msgid "no type set"
 msgstr "geen type ingesteld"
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_result_card_item.tpl:39
-msgid ""
-"property:"
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_result_card_item.tpl:39
+msgid "property:"
 msgstr "eigenschap:"
 
-#: ./user/modules/mod_scraper/templates/_rsc_edge_item.scraper_rule.tpl:5
-msgid ""
-"type="
+#: user/modules/mod_scraper/templates/_rsc_edge_item.scraper_rule.tpl:5
+msgid "type="
 msgstr "type="
