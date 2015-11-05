@@ -2,20 +2,37 @@
 Params:
 - id
 #}
-{% with m.scraper[id].digests as list %}
+{% with m.scraper[id].digests as digests %}
 <div id="results">
-{% if list %}
+{% if digests %}
 	<ul class="nav nav-tabs nav-justified">
-		<li role="presentation" class="active"><a href="#differences" aria-controls="differences" role="tab" data-toggle="tab">{_ View differences only _}</a></li>
-		<li role="presentation"><a href="#all" aria-controls="all" role="tab" data-toggle="tab">{_ View all results _}</a></li>
+		<li><a href="#all">{_ All results _}</a></li>
+        <li class="{% if not digests.errors %}disabled{% endif %}"><a href="#errors">{_ Errors _}</a></li>
+        <li class="{% if not digests.warnings %}disabled{% endif %}"><a href="#warnings">{_ Warnings _}</a></li>
+        <li class="{% if not digests.differences %}disabled{% endif %}"><a href="#differences">{_ Differences _}</a></li>
 	</ul>
-	<div class="tab-content">
-		<div role="tabpanel" class="tab-pane active" id="differences"></div>
-		<div role="tabpanel" class="tab-pane" id="all"></div>
-		<div class="result-views">
-			{% include "_admin_edit_scraper_data_results_list.tpl" id=id list=list %}
-		</div>
+	<div class="result-views">
+		{% include "_admin_edit_scraper_data_results_list.tpl" id=id data=digests.data %}
 	</div>
+
+{% javascript %}
+var currentTabName;
+function showTab(el) {
+    $(el).tab('show');
+    if (currentTabName) {
+        document.body.classList.remove(currentTabName);
+    }
+    var name = el.getAttribute("href").substring(1);
+    currentTabName = "scraper-view-" + name;
+    document.body.classList.add(currentTabName);
+}
+$('#results .nav-tabs > li:not(.disabled) > a').click(function(e) {
+    e.preventDefault();
+    showTab(this);
+});
+showTab(document.querySelector("#results .nav-tabs > li > a[href='#all']"));
+{% endjavascript %}
+
 {% endif %}
 </div>
 {% endwith %}

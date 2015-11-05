@@ -1,12 +1,12 @@
 {#
 Params:
 - id
-- data
+- item
 - index
 #}
-{% with data|default:m.scraper[id].digests[index] as data %}
-{% with data.values,
-		data.connected_rsc_id,
+{% with item|default:m.scraper[id].digests.data[index] as item %}
+{% with item.values,
+		item.connected_rsc_id,
 		#card.index,
 		#card.index ++ "-since"
 		as
@@ -15,38 +15,38 @@ Params:
 		card_id,
 		time_since_id
 %}
-<div id="{{ card_id }}" class="panel panel-default{% if data.all_empty %} empty{% endif %}{% if data.all_equal %} equal{% endif %}">
+<div id="{{ card_id }}" class="panel panel-default{% if item.all_empty %} empty{% endif %}{% if item.all_equal %} equal{% endif %}{% if item.error %} error{% endif %}{% if item.warning %} warning{% endif %}{% if item.has_differences %} has_differences{% endif %}">
 	<div class="panel-heading">
-		{% if id != data.connected_rsc_id %}
+		{% if id != item.connected_rsc_id %}
 			<h4>
 				<a href="{% url admin_edit_rsc id=connected_rsc_id %}" target="_blank">{{ m.rsc[connected_rsc_id].title }}</a>
 			</h4>
 		{% endif %}
 		<div class="text-muted meta">
 			<dl>
-				<dd><a href="{{ data.url }}">{{ data.url }}</a></dd>
+				<dd><a href="{{ item.url }}">{{ item.url }}</a></dd>
 				<dd>{_ Scraped _} <span id="{{ time_since_id }}"></span></dd>
 			</dl>
 		</div>
 	</div>
-	{% if data.error %}
+	{% if item.error %}
 	    <div class="panel-body form-field-error">
-	        {{ data.error }}
+	        {{ item.error }}
 	    </div>
-	{% elif data.all_empty %}
+    {% elif item.warning %}
+        <div class="panel-body form-field-error">
+            {_ Some values not scraped. _}
+        </div>
+	{% elif item.all_empty %}
 	    <div class="panel-body">
-            {_ No data found. _}
+            {_ No item found. _}
         </div>
-	{% elif data.all_equal %}
-        <div class="panel-body">
-            {_ No changes. _}
-        </div>
-    {% elif data.all_inactive %}
+	{% elif item.all_equal %}
         <div class="panel-body">
             {_ No changes. _}
         </div>
     {% endif %}
-    {% if not data.all_empty %}
+    {% if not item.all_empty %}
         {% for value in values %}
             {% with value.comparison as comparison %}
                 {% include "_admin_edit_scraper_result_card_item.tpl"
@@ -63,7 +63,7 @@ Params:
         id: "{{card_id}}",
         locale: "{{z_language}}",
         timeSinceEl: "{{ time_since_id }}",
-        start: "{{ data.date|date:"U" }}",
+        start: "{{ item.date|date:"U" }}",
         dateFormat: "X"
     });
 {% endjavascript %}

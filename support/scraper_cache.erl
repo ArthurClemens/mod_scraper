@@ -8,38 +8,59 @@
 -include_lib("zotonic.hrl").
 
 -export([
+    ensure_db_exists/1,
     list/1,
     get/2,
-    get_last_run_data/2,
+    get_last_run_status/2,
     get_raw/2,
-    put/10,
+    put/11,
     delete/2,
     init/1
 %    set_ignored/5
 ]).
 
+ensure_db_exists(Context) ->
+    case z_db:table_exists(mod_scraper_cache, Context) of
+        false ->
+            scraper_cache:init(Context);
+        true ->
+            ok
+    end.
 
 list(Context) ->
+    ensure_db_exists(Context),
 	z_db:assoc("SELECT * FROM mod_scraper_cache ORDER BY url, date desc", Context).
 
 
 get(ScraperId, Context) ->
+    ensure_db_exists(Context),
 	z_db:assoc("SELECT * FROM mod_scraper_cache WHERE scraper_id=$1 ORDER BY url, date desc", [ScraperId], Context).
 
 
 get_raw(ScraperId, Context) ->
+    ensure_db_exists(Context),
 	z_db:assoc("SELECT * FROM mod_scraper_cache WHERE scraper_id=$1 AND raw=1 ORDER BY url, date desc", [ScraperId], Context).
 
 
-get_last_run_data(ScraperId, Context) ->
-	Result = z_db:assoc("SELECT date,error FROM mod_scraper_cache WHERE scraper_id=$1 GROUP BY date, error ORDER BY date desc", [ScraperId], Context),
-	case Result of
-	    [] -> [];
-	    [R|_] -> R
-	end.
+get_last_run_status(ScraperId, Context) ->
+    ensure_db_exists(Context),
+	Result = z_db:assoc("SELECT date,error,warning FROM mod_scraper_cache WHERE scraper_id=$1 GROUP BY date, error, warning ORDER BY date desc", [ScraperId], Context),
+    case Result of
+        [] -> [];
+        _ ->
+            [[{date, LastDate},_,_]|_] = Result,
+            Errors = lists:filter(fun([_, Error, _]) ->
+                Error =/= {error,undefined}
+            end, Result),
+            Warnings = lists:filter(fun([_, _, Warning]) ->
+                Warning =/= {warning,undefined}
+            end, Result),
+            [{date, LastDate}, {errors, length(Errors)}, {warnings, length(Warnings)}]
+    end.
 
 
-put(ScraperId, RuleId, ConnectedId, Url, Raw, Error, Date, Data, Property, Context) ->
+put(ScraperId, RuleId, ConnectedId, Url, Raw, Error, Warning, Date, Data, Property, Context) ->
+    ensure_db_exists(Context),
     % ensure that we are storing an integer
     {ok, RId} = m_rsc:name_to_id(ConnectedId, Context),
     Columns = [
@@ -49,6 +70,7 @@ put(ScraperId, RuleId, ConnectedId, Url, Raw, Error, Date, Data, Property, Conte
         {url, Url},
         {raw, Raw},
         {error, Error},
+        {warning, Warning},
         {date, Date},
         {data, ?DB_PROPS(Data)},
         {property, Property}
@@ -57,6 +79,7 @@ put(ScraperId, RuleId, ConnectedId, Url, Raw, Error, Date, Data, Property, Conte
 
 
 delete(ScraperId, Context) ->
+    ensure_db_exists(Context),
     z_db:q("DELETE FROM mod_scraper_cache WHERE scraper_id=$1", [ScraperId], Context).
 
 
@@ -98,6 +121,11 @@ init(Context) ->
                 },
                 #column_def{
                     name=error,
+                    type="text",
+                    is_nullable=true
+                },
+                #column_def{
+                    name=warning,
                     type="text",
                     is_nullable=true
                 },

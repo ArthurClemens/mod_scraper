@@ -20,13 +20,13 @@ Params:
     is_scheduled
 %}
 {% with
-    m.scraper[id].last_run_data,
+    m.scraper[id].last_run_status,
     id ++ "-since"
 as
-    last,
+    last_status,
     time_since_id
 %}
-{% with last.date|timesince as timesince %}
+{% with last_status.date|timesince as timesince %}
     <dl class="scraper-status">
         {% if in_progress %}
             <dt>{_ In progress _}</dt>
@@ -56,22 +56,37 @@ as
 
         {% if in_progress %}
             {# #}
-        {% elif last %}
+        {% elif last_status %}
             <dd class="text-muted">{_ Scraped _} <span id="{{ time_since_id }}"></span></dd>
         {% else %}
             <dd class="text-muted">{_ Nothing scraped yet _}</dd>
         {% endif %}
 
-        {% if last.error %}
-            <dd class="form-field-error">{{ last.error }}</dd>
-        {% endif %}
+        {% with
+            last_status.errors,
+            last_status.warnings
+            as
+            error_count,
+            warning_count
+        %}
+            {% if error_count or warning_count %}
+                <dd class="form-field-error">
+                    {% if error_count %}
+                        {_ Errors: _} {{ error_count }}
+                    {% endif %}
+                    {% if warning_count %}
+                        {_ Warnings: _} {{ warning_count }}
+                    {% endif %}
+                </dd>
+            {% endif %}
+        {% endwith %}
     </dl>
     {% javascript %}
         modScraper.initTimeSince({
             id: "{{id}}",
             locale: "{{z_language}}",
             timeSinceEl: "{{ time_since_id }}",
-            start: "{{ last.date|date:"U" }}",
+            start: "{{ last_status.date|date:"U" }}",
             dateFormat: "X"
         });
     {% endjavascript %}

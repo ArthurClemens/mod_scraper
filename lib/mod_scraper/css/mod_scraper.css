@@ -17,12 +17,35 @@
 .panel .panel-heading .meta dl a {
 	color: inherit;
 }
-.tab-content #differences.active + .tab-pane,
-.tab-content #differences.active + .tab-pane + .result-views .card.equal,
-.tab-content #differences.active + .tab-pane + .result-views .card.empty,
-.tab-content #differences.active + .tab-pane + .result-views .card-item.equal,
-.tab-content #differences.active + .tab-pane + .result-views .card-item.empty {
-	display: none;
+.result-views {
+    margin: 1em 0;
+}
+
+.panel {
+    display: none;
+}
+
+.scraper-view-differences .result-views .card.equal,
+.scraper-view-differences .result-views .card.empty,
+.scraper-view-differences .result-views .card-item.equal,
+.scraper-view-differences .result-views .card-item.empty {
+    display: none;
+}
+
+.scraper-view-all .result-views .panel {
+    display: block;
+}
+
+.scraper-view-differences .result-views .panel.has_differences {
+    display: block;
+}
+
+.scraper-view-errors .result-views .panel.error {
+    display: block;
+}
+
+.scraper-view-warnings .result-views .panel.warning {
+    display: block;
 }
 
 #scraper_data.scheduled {

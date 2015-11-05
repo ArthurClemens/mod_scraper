@@ -59,7 +59,7 @@ run_all(Context) ->
 
 
 manage_schema(What, Context) ->
-    ensure_db_exists(Context),
+    scraper_cache:ensure_db_exists(Context),
     mod_scraper_schema:manage_schema(What, Context).
 
 observe_admin_menu(admin_menu, Acc, Context) ->
@@ -156,7 +156,7 @@ start_link(Args) when is_list(Args) ->
 init(Args) ->
     process_flag(trap_exit, true),
     {context, Context} = proplists:lookup(context, Args),
-    ensure_db_exists(Context),
+    scraper_cache:ensure_db_exists(Context),
     z_notifier:observe(m_config_update, self(), Context),
     TimerRef = case m_config:get_value(?MODULE, interval, Context) of
         undefined -> undefined;
@@ -391,6 +391,8 @@ humanize_error_message(Error, Context) ->
         {Reason, Details} ->
             lists:flatten(io_lib:format("~p,~p", [Reason, Details]));
         timeout -> ?__("Timeout: no data scraped", Context);
+        "socket_closed_remotely" ->
+            ?__("Socket closed remotely", Context);
         Reason -> Reason
     end.
 
@@ -399,7 +401,7 @@ store_result(ScraperId, ConnectedId, Url, Error, Date, _Scraped, RuleIds, Contex
     lists:map(fun(RuleIdStr) ->
         RuleId = z_convert:to_integer(RuleIdStr),
         Property = m_rsc:p(RuleId, property, Context),
-        scraper_cache:put(ScraperId, RuleId, ConnectedId, Url, 1, Error, Date, undefined, Property, Context)
+        scraper_cache:put(ScraperId, RuleId, ConnectedId, Url, 1, Error, undefined, Date, undefined, Property, Context)
     end, RuleIds);
 
 store_result(ScraperId, ConnectedId, Url, _Error, Date, Scraped, RuleIds, Context) ->
@@ -411,7 +413,7 @@ store_result(ScraperId, ConnectedId, Url, _Error, Date, Scraped, RuleIds, Contex
         case Value of
             [xpath_parse_error, Reason] ->
                 Error = lists:flatten(io_lib:format("~p,~p", [xpath_parse_error, Reason])),
-                scraper_cache:put(ScraperId, RuleId, ConnectedId, Url, 1, Error, Date, undefined, Property, Context);
+                scraper_cache:put(ScraperId, RuleId, ConnectedId, Url, 1, Error, undefined, Date, undefined, Property, Context);
             _ ->
                 CleanValue = m_scraper:cleanup_value(Value),
 
@@ -419,8 +421,14 @@ store_result(ScraperId, ConnectedId, Url, _Error, Date, Scraped, RuleIds, Contex
                 CatName = proplists:get_value(name, m_rsc:p(RuleId, category, Context)),
                 AutomaticSave = CatName =:= automatic_scraper_rule,
 
+                Error = undefined,
+                Warning = case m_scraper:is_empty(CleanValue) of
+                    true -> "No value";
+                    false -> undefined
+                end,
+
                  % store a raw version of the data
-                scraper_cache:put(ScraperId, RuleId, ConnectedId, Url, 1, undefined, Date, empty_to_undefined(CleanValue), empty_to_undefined(Property), Context),
+                scraper_cache:put(ScraperId, RuleId, ConnectedId, Url, 1, Error, Warning, Date, empty_to_undefined(CleanValue), empty_to_undefined(Property), Context),
                 %% map values using the type
                 MappedValues = m_scraper:map_value_to_type(CleanValue, Type, Property, RuleId, Context),
                 lists:map(fun([{property,P},{value,V}]) ->
@@ -429,7 +437,7 @@ store_result(ScraperId, ConnectedId, Url, _Error, Date, Scraped, RuleIds, Contex
                             save_to_page(ConnectedId, P, to_page_value(V), Context);
                         false -> undefined
                     end,
-                    scraper_cache:put(ScraperId, RuleId, ConnectedId, Url, 0, undefined, Date, empty_to_undefined(V), empty_to_undefined(P), Context)
+                    scraper_cache:put(ScraperId, RuleId, ConnectedId, Url, 0, Error, Warning, Date, empty_to_undefined(V), empty_to_undefined(P), Context)
                 end, MappedValues)
         end
     end, RuleIds).
@@ -477,13 +485,7 @@ empty_to_undefined(Value) ->
         _ -> Value
     end.
 
-ensure_db_exists(Context) ->
-    case z_db:table_exists(mod_scraper_cache, Context) of
-        false ->
-            scraper_cache:init(Context);
-        true ->
-            ok
-    end.
+
 
 rule_ids(ScraperId, Context) ->
     Ids = m_edge:objects(ScraperId, hasscraperrule, Context),

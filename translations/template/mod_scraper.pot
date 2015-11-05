@@ -63,6 +63,11 @@ msgid ""
 "Add a rule"
 msgstr ""
 
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_data_results.tpl:9 
+msgid ""
+"All results"
+msgstr ""
+
 #: ./user/modules/mod_scraper/templates/_admin_edit_basics.scraper_rule.tpl:4 
 msgid ""
 "Basic"
@@ -108,7 +113,7 @@ msgid ""
 "Copy"
 msgstr ""
 
-#: ./user/modules/mod_scraper/mod_scraper.erl:383 
+#: ./user/modules/mod_scraper/mod_scraper.erl:390 
 msgid ""
 "Could not connect to URL. Does URL exist?"
 msgstr ""
@@ -138,9 +143,24 @@ msgid ""
 "Data type"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_scraper_row.tpl:49 
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_data_results.tpl:12 
+msgid ""
+"Differences"
+msgstr ""
+
+#: ./user/modules/mod_scraper/templates/_admin_scraper_row.tpl:50 
 msgid ""
 "Edit"
+msgstr ""
+
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_data_results.tpl:10 
+msgid ""
+"Errors"
+msgstr ""
+
+#: ./user/modules/mod_scraper/templates/_scraper_run_status.tpl:75 
+msgid ""
+"Errors:"
 msgstr ""
 
 #: ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:27 ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:42 ./user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:68 
@@ -158,7 +178,7 @@ msgid ""
 "Go to page"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_scraper_run_status.tpl:15 
+#: ./user/modules/mod_scraper/templates/_scraper_run_status.tpl:32 
 msgid ""
 "In progress"
 msgstr ""
@@ -193,17 +213,17 @@ msgid ""
 "No additional property mapping is required."
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_result_card.tpl:42 ./user/modules/mod_scraper/templates/_admin_edit_scraper_result_card.tpl:46 
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_result_card.tpl:50 
 msgid ""
 "No changes."
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_result_card.tpl:38 
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_result_card.tpl:46 
 msgid ""
 "No data found."
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_scraper_run_status.tpl:26 
+#: ./user/modules/mod_scraper/templates/_scraper_run_status.tpl:43 
 msgid ""
 "No data source"
 msgstr ""
@@ -223,12 +243,12 @@ msgid ""
 "No property set: automatic update will fail."
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_scraper_run_status.tpl:28 
+#: ./user/modules/mod_scraper/templates/_scraper_run_status.tpl:45 
 msgid ""
 "No rules"
 msgstr ""
 
-#: ./user/modules/mod_scraper/mod_scraper.erl:90 
+#: ./user/modules/mod_scraper/mod_scraper.erl:80 
 msgid ""
 "No rules to run. Add one or more rules."
 msgstr ""
@@ -243,9 +263,14 @@ msgid ""
 "Nothing scraped"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_scraper_run_status.tpl:41 
+#: ./user/modules/mod_scraper/templates/_scraper_run_status.tpl:62 
 msgid ""
 "Nothing scraped yet"
+msgstr ""
+
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_result_card.tpl:42 
+msgid ""
+"Nothing scraped."
 msgstr ""
 
 #: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source.tpl:2 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:3 
@@ -288,7 +313,7 @@ msgid ""
 "Property mapping"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_scraper_run_status.tpl:20 
+#: ./user/modules/mod_scraper/templates/_scraper_run_status.tpl:37 
 msgid ""
 "Ready"
 msgstr ""
@@ -303,7 +328,7 @@ msgid ""
 "Rules"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_scraper_row.tpl:50 
+#: ./user/modules/mod_scraper/templates/_admin_scraper_row.tpl:51 
 msgid ""
 "Run"
 msgstr ""
@@ -318,7 +343,7 @@ msgid ""
 "Run scrapers"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_scraper_run_status.tpl:17 
+#: ./user/modules/mod_scraper/templates/_scraper_run_status.tpl:34 
 msgid ""
 "Scheduled"
 msgstr ""
@@ -333,12 +358,12 @@ msgid ""
 "Scrape data"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_result_card.tpl:28 ./user/modules/mod_scraper/templates/_scraper_run_status.tpl:39 
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_result_card.tpl:28 ./user/modules/mod_scraper/templates/_scraper_run_status.tpl:60 
 msgid ""
 "Scraped"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/admin_scraper.tpl:3 ./user/modules/mod_scraper/templates/admin_scraper.tpl:12 ./user/modules/mod_scraper/mod_scraper.erl:79 
+#: ./user/modules/mod_scraper/templates/admin_scraper.tpl:3 ./user/modules/mod_scraper/templates/admin_scraper.tpl:12 ./user/modules/mod_scraper/mod_scraper.erl:69 
 msgid ""
 "Scraper"
 msgstr ""
@@ -379,6 +404,16 @@ msgid ""
 "Settings"
 msgstr ""
 
+#: ./user/modules/mod_scraper/mod_scraper.erl:395 
+msgid ""
+"Socket closed remotely"
+msgstr ""
+
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_result_card.tpl:38 
+msgid ""
+"Some values not scraped."
+msgstr ""
+
 #: ./user/modules/mod_scraper/support/scraper_rsc.erl:18 
 msgid ""
 "Source saved"
@@ -415,7 +450,7 @@ msgid ""
 "This rule is not used by any scraper."
 msgstr ""
 
-#: ./user/modules/mod_scraper/mod_scraper.erl:386 
+#: ./user/modules/mod_scraper/mod_scraper.erl:393 
 msgid ""
 "Timeout: no data scraped"
 msgstr ""
@@ -460,7 +495,7 @@ msgid ""
 "Unavailable"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_scraper_run_status.tpl:23 
+#: ./user/modules/mod_scraper/templates/_scraper_run_status.tpl:40 
 msgid ""
 "Unpublished, will not run automatically"
 msgstr ""
@@ -470,14 +505,14 @@ msgid ""
 "Used by"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_data_results.tpl:10 
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_data_results.tpl:11 
 msgid ""
-"View all results"
+"Warnings"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_data_results.tpl:9 
+#: ./user/modules/mod_scraper/templates/_scraper_run_status.tpl:78 
 msgid ""
-"View differences only"
+"Warnings:"
 msgstr ""
 
 #: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:33 
@@ -495,7 +530,7 @@ msgid ""
 "connections:"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_scraper_row.tpl:43 ./user/modules/mod_scraper/templates/_admin_scraper_row.tpl:44 
+#: ./user/modules/mod_scraper/templates/_admin_scraper_row.tpl:45 ./user/modules/mod_scraper/templates/_admin_scraper_row.tpl:46 
 msgid ""
 "d M Y, H:i"
 msgstr ""

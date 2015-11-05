@@ -6,7 +6,7 @@ Params:
 - row_id
 #}
 
-{% with card_id ++ "-" ++ comparison.property, 
+{% with card_id ++ "-" ++ comparison.property,
         comparison.fetched,
         comparison.current,
         comparison.type,
@@ -67,7 +67,7 @@ Params:
 							target=card_id
 							template="_admin_edit_scraper_result_card.tpl"
 							index=index
-							data=0
+							item=0
 							id=id
 						}
 					}

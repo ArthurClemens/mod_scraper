@@ -12,7 +12,8 @@
     has_urls/2,
     has_rules/2,
     map_value_to_type/5,
-    cleanup_value/1
+    cleanup_value/1,
+    is_empty/1
 ]).
 
 %% @spec m_find_value(Key, Source, Context) -> term()
@@ -29,8 +30,8 @@ m_find_value(urls, #m{value=Id} = _M, Context) when is_integer(Id) ->
 m_find_value(urls_data, #m{value=Id} = _M, Context) when is_integer(Id) ->
     urls(Id, Context);
 
-m_find_value(last_run_data, #m{value=Id} = _M, Context) when is_integer(Id) ->
-    scraper_cache:get_last_run_data(Id, Context);
+m_find_value(last_run_status, #m{value=Id} = _M, Context) when is_integer(Id) ->
+    scraper_cache:get_last_run_status(Id, Context);
 
 m_find_value(status, #m{value=Id} = _M, Context) when is_integer(Id) ->
     Status = mod_scraper:scraper_in_progress(Id, Context),
@@ -247,6 +248,7 @@ digest(Result, Context) ->
                     {scraper_id, proplists:get_value(scraper_id, Row)},
                     {date, proplists:get_value(date, Row)},
                     {error, proplists:get_value(error, Row)},
+                    {warning, proplists:get_value(warning, Row)},
                     {connected_rsc_id, proplists:get_value(connected_rsc_id, Row)},
                     {values, [Row]}
                 ]}|Acc];
@@ -282,12 +284,13 @@ digest(Result, Context) ->
         {Url, NewData}
     end, DataByUrl),
 
-    Digest = lists:map(fun({_UrlAt, Data}) ->
+    DataDigest = lists:map(fun({_UrlAt, Data}) ->
         Values = proplists:get_value(values, Data),
         WithComparison = lists:map(fun(UrlData) ->
             [{comparison, comparison(UrlData, Context)}|UrlData]
         end, Values),
         Data1 = lists:keyreplace(values, 1, Data, {values, WithComparison}),
+
         AllEqual = lists:foldl(fun(WC, Acc) ->
             Comparison = proplists:get_value(comparison, WC),
             case Comparison of
@@ -296,6 +299,7 @@ digest(Result, Context) ->
             end
         end, true, WithComparison),
         Data2 = [{all_equal, AllEqual}|Data1],
+
         AllEmpty = lists:foldl(fun(WC, Acc) ->
             Comparison = proplists:get_value(comparison, WC),
             case Comparison of
@@ -306,17 +310,51 @@ digest(Result, Context) ->
         Data3 = [{all_empty, AllEmpty}|Data2],
 
         % all empty or equal
-        AllInactive = lists:foldl(fun(WC, Acc) ->
+        NotEmptyOrEqualCount = lists:foldl(fun(WC, Acc) ->
             Comparison = proplists:get_value(comparison, WC),
             case Comparison of
                 [] -> Acc;
-                _ -> Acc and (proplists:get_value(is_empty, Comparison) or proplists:get_value(is_equal, Comparison))
+                _ ->
+                    EmptyOrEqual = (proplists:get_value(is_empty, Comparison) or proplists:get_value(is_equal, Comparison)),
+                    case EmptyOrEqual of
+                        true -> Acc;
+                        false ->
+                            Acc + 1
+                    end
             end
-        end, true, WithComparison),
-        Data4 = [{all_inactive, AllInactive}|Data3],
+        end, 0, WithComparison),
+        HasDifferences = (NotEmptyOrEqualCount > 0),
+        Data4 = [{has_differences, HasDifferences}|Data3],
         Data4
     end, MappedData),
-    Digest.
+
+    ErrorCount = lists:foldl(fun({_UrlAt, Data}, Acc) ->
+        case proplists:get_value(error, Data) of
+            undefined -> Acc;
+            _ -> Acc + 1
+        end
+    end, 0, MappedData),
+
+    WarningCount = lists:foldl(fun({_UrlAt, Data}, Acc) ->
+        case proplists:get_value(warning, Data) of
+            undefined -> Acc;
+            _ -> Acc + 1
+        end
+    end, 0, MappedData),
+
+    DifferencesCount = lists:foldl(fun(Data, Acc) ->
+        case proplists:get_value(has_differences, Data) of
+            true -> Acc + 1;
+            false -> Acc
+        end
+    end, 0, DataDigest),
+
+    [
+        {data, DataDigest},
+        {errors, ErrorCount},
+        {warnings, WarningCount},
+        {differences, DifferencesCount}
+    ].
 
 
 comparison(UrlData, Context) ->
