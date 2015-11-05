@@ -470,7 +470,7 @@ msgid ""
 "Used by"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_data_results.tpl:11 
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_data_results.tpl:10 
 msgid ""
 "View all results"
 msgstr ""
@@ -478,11 +478,6 @@ msgstr ""
 #: ./user/modules/mod_scraper/templates/_admin_edit_scraper_data_results.tpl:9 
 msgid ""
 "View differences only"
-msgstr ""
-
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_data_results.tpl:10 
-msgid ""
-"View errors"
 msgstr ""
 
 #: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:33 

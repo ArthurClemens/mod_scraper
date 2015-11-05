@@ -247,7 +247,7 @@ msgstr "Eigenschap toewijzen"
 
 #: user/modules/mod_scraper/templates/_scraper_run_status.tpl:20
 msgid "Ready"
-msgstr "Gereed"
+msgstr "Klaar"
 
 #: user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:21
 #: user/modules/mod_scraper/templates/_scraper_rule_type_details.tpl:36
