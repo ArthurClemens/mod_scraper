@@ -33,21 +33,23 @@ m_find_value(last_run_data, #m{value=Id} = _M, Context) when is_integer(Id) ->
     scraper_cache:get_last_run_data(Id, Context);
 
 m_find_value(status, #m{value=Id} = _M, Context) when is_integer(Id) ->
-    case mod_scraper:scraper_in_progress(Id, Context) of
-        true -> [{true, "in_progress"}];
-        false ->
+    Status = mod_scraper:scraper_in_progress(Id, Context),
+    case Status of
+        [{in_progress, true}, {count_percentage, Percentage}] ->
+            [{true, "in_progress", trunc(100 * Percentage)}];
+        _ ->
             case mod_scraper:scraper_scheduled(Id, Context) of
-                true -> [{true, "is_scheduled"}];
+                true -> [{true, "is_scheduled", -1}];
                 false ->
                     HasUrls = has_urls(Id, Context),
                     HasRules = has_rules(Id, Context),
                     case HasUrls of
                         true ->
                             case HasRules of
-                                true -> [{true, "ok"}];
-                                false -> [{false, "no_rules"}]
+                                true -> [{true, "ok", -1}];
+                                false -> [{false, "no_rules", -1}]
                             end;
-                        false -> [{false, "no_urls"}]
+                        false -> [{false, "no_urls", -1}]
                     end
             end
     end;

@@ -286,7 +286,7 @@ msgstr "Scrape data"
 #: user/modules/mod_scraper/templates/_admin_edit_scraper_result_card.tpl:28
 #: user/modules/mod_scraper/templates/_scraper_run_status.tpl:39
 msgid "Scraped"
-msgstr "Gescraped"
+msgstr "Uitgevoerd:"
 
 #: user/modules/mod_scraper/templates/admin_scraper.tpl:3
 #: user/modules/mod_scraper/templates/admin_scraper.tpl:12
@@ -408,7 +408,7 @@ msgstr "Niet beschikbaar"
 
 #: user/modules/mod_scraper/templates/_scraper_run_status.tpl:23
 msgid "Unpublished, will not run automatically"
-msgstr "Niet gepubliceerd, zal niet automatisch uitgevoerd worden"
+msgstr "Niet gepubliceerd, wordt niet automatisch uitgevoerd"
 
 #: user/modules/mod_scraper/templates/_admin_edit_scraper_rule_referrers.tpl:4
 msgid "Used by"

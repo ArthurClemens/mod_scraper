@@ -37,6 +37,7 @@
             {% include "_admin_edit_scraper_data_action.tpl"
                 id=id
                 status=status
+                in_progress=in_progress
                 is_ready=is_ready
                 runnable=runnable
             %}
@@ -57,6 +58,3 @@
 {% endwith %}
 {% endwith %}
 {% endblock %}
-
-
-

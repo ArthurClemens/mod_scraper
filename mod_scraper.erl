@@ -126,7 +126,9 @@ observe_postback_notify(_, _Context) ->
     fetch_start,
     fetch_pid,
     fetch_timer_ref,
-    url_queue :: queue:queue()
+    url_queue :: queue:queue(),
+    count_start :: integer(),
+    count_remaining :: integer()
 }).
 
 -define(FETCH_INTERVAL, 1000 * 5). % in milliseconds, so every 5 seconds
@@ -167,7 +169,9 @@ init(Args) ->
         context = Context,
         scraper_queue = queue:new(),
         url_queue = queue:new(),
-        periodic_scrape_timer_ref = TimerRef
+        periodic_scrape_timer_ref = TimerRef,
+        count_start = 0,
+        count_remaining = 0
     },
     {ok, State}.
 
@@ -196,7 +200,17 @@ handle_call({run_scraper, ScraperId, Context}, _From, State) ->
 
 %% @doc Returns boolean
 handle_call({scraper_in_progress, ScraperId}, _From, State) ->
-    {reply, State#state.scraper_id =:= ScraperId, State};
+    CountStart = State#state.count_start,
+    CountRemaining = State#state.count_remaining,
+    CountDone = CountStart - CountRemaining,
+    CountPercentage = case (CountStart =/= 0) of
+        true -> 1.0 / CountStart * CountDone;
+        false -> 0
+    end,
+    {reply, [
+        {in_progress, State#state.scraper_id =:= ScraperId},
+        {count_percentage, CountPercentage}
+    ], State};
 
 %% @doc Returns boolean
 handle_call({scraper_scheduled, ScraperId}, _From, State) ->
@@ -274,7 +288,9 @@ next_scraper(State) ->
             {noreply, State#state{
                 scraper_id = undefined,
                 fetch_pid = undefined,
-                fetch_timer_ref = undefined
+                fetch_timer_ref = undefined,
+                count_start = 0,
+                count_remaining = 0
             }};
         _ ->
             {{value, ScraperId}, Remaining} = queue:out(State#state.scraper_queue),
@@ -297,10 +313,13 @@ get_scraper_urls(ScraperId, State) ->
             UrlQueue = lists:foldl(fun({RuleId, Url}, Queue) ->
                 queue:in({ScraperId, RuleId, Url}, Queue)
             end, State#state.url_queue, UrlData),
+            Count = queue:len(UrlQueue),
             scraper_cache:delete(ScraperId, Context),
             z_mqtt:publish(["~site", "mod_scraper", ScraperId], <<"fetch_started">>, State#state.context),
             {noreply, State#state{
-                url_queue = UrlQueue
+                url_queue = UrlQueue,
+                count_start = Count,
+                count_remaining = Count
             }}
     end.
 
@@ -313,13 +332,15 @@ next_url(State) ->
                 scraper_id = undefined
             }};
         _ ->
-            z_mqtt:publish(["~site", "mod_scraper", State#state.scraper_id], <<"fetch_url">>, State#state.context),
+            z_mqtt:publish(["~site", "mod_scraper", State#state.scraper_id], <<"fetch_progress">>, State#state.context),
             {{value, Url}, Remaining} = queue:out(State#state.url_queue),
+            Count = queue:len(Remaining),
             Pid = do_next_url(Url, State),
             {noreply, State#state{
                 fetch_pid = Pid,
                 fetch_start = calendar:universal_time(),
-                url_queue = Remaining
+                url_queue = Remaining,
+                count_remaining = Count
             }}
     end.
 

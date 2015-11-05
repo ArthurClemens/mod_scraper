@@ -1,7 +1,24 @@
 {#
 Params:
 - id
+- status
 #}
+{% with
+    (status|element:1|stringify == "true") and (id.is_published),
+    status|element:2|stringify,
+    status|element:3
+    as
+    is_ready,
+    status_info,
+    status_percentage
+%}
+{% with
+    status_info == "in_progress",
+    status_info == "is_scheduled"
+    as
+    in_progress,
+    is_scheduled
+%}
 {% with
     m.scraper[id].last_run_data,
     id ++ "-since"
@@ -29,12 +46,16 @@ as
             {% endif %}
         {% endif %}
 
+        {% if is_scheduled or in_progress %}
+            {% with status_percentage|stringify|to_integer as status_percentage1 %}
+                <dd class="progress">
+                    <div class="progress-bar progress-bar-success progress-bar-striped" style="width: {{status_percentage1}}%"></div>
+                </dd>
+            {% endwith %}
+        {% endif %}
+
         {% if in_progress %}
-            <dd class="spinner">
-                <div class="bounce1"></div>
-                <div class="bounce2"></div>
-                <div class="bounce3"></div>
-            </dd>
+            {# #}
         {% elif last %}
             <dd class="text-muted">{_ Scraped _} <span id="{{ time_since_id }}"></span></dd>
         {% else %}
@@ -54,5 +75,7 @@ as
             dateFormat: "X"
         });
     {% endjavascript %}
+{% endwith %}
+{% endwith %}
 {% endwith %}
 {% endwith %}

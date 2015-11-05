@@ -39,4 +39,3 @@
     {% button class="btn btn-default" text=_"Close" action={dialog_close} tag="a" %}
 </div>
 {% endwith %}
-

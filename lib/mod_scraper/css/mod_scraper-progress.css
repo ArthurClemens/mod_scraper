@@ -1,0 +1,7 @@
+.progress {
+    margin: 1em 0;
+    display: none;
+}
+.updating .progress {
+    display: block;
+}

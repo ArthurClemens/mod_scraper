@@ -11,10 +11,12 @@ Params:
 %}
 {% with
     (status|element:1|stringify == "true") and (id.is_published),
-    status|element:2|stringify
+    status|element:2|stringify,
+    status|element:3|stringify
     as
     is_ready,
-    status_info
+    status_info,
+    status_percentage
 %}
 {% with
     status_info == "in_progress",
@@ -38,29 +40,25 @@ Params:
     <tr id="{{ tr_id }}" class="{% if not is_ready %}unpublished{% endif %}{% if in_progress or is_scheduled %} updating{% endif %}" data-href="{% url admin_edit_rsc id=id %}">
         <td>{{ id.title }}</td>
         <td>
-            {% include "_scraper_run_status.tpl" id=id %}
+            {% include "_scraper_run_status.tpl" id=id status=status %}
         </td>
         <td>{{ m.rsc[id].created|date:_"d M Y, H:i" }}</td>
         <td>{{ m.rsc[id].modified|date:_"d M Y, H:i" }}</td>
         <td>
             {{ m.rsc[m.rsc[id].modifier_id].title|default:"-" }}
-            {% if is_editable %}
-                <span class="pull-right buttons">
-                    <a href="{% url admin_edit_rsc id=id %}" class="btn btn-default btn-xs">{_ Edit _}</a>
-                    <a id="{{ #run.id }}" class="btn btn-primary btn-xs" {% if not now_editable %}disabled="disabled"{% endif %}>{_ Run _}</a>
-                    {% if is_ready %}
-                        {% wire
-                            id=#run.id
-                            action={postback
-                                delegate="mod_scraper"
-                                postback={run
-                                    id=id
-                                }
-                            }
-                        %}
-                    {% endif %}
-                </span>
-            {% endif %}
+            <span class="pull-right buttons">
+                <a href="{% url admin_edit_rsc id=id %}" class="btn btn-default btn-xs">{_ Edit _}</a>
+                <a id="{{ #run.id }}" class="btn btn-primary btn-xs">{_ Run _}</a>
+                {% wire
+                    id=#run.id
+                    action={postback
+                        delegate="mod_scraper"
+                        postback={run
+                            id=id
+                        }
+                    }
+                %}
+            </span>
         </td>
     </tr>
 {% with
@@ -81,7 +79,7 @@ as
         id: "{{id}}",
         locale: "{{z_language}}",
         elemId: "{{ tr_id }}",
-        subscribeEvents: ["fetch_scheduled", "fetch_started", "fetch_completed"],
+        subscribeEvents: ["fetch_scheduled", "fetch_started", "fetch_progress", "fetch_completed"],
         callbackEventId: "{{ eid }}"
     });
 {% endjavascript %}
