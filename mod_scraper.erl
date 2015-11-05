@@ -17,7 +17,6 @@
 
 -export([
     list_archives/1,
-    scraping_in_progress/1,
     scraper_in_progress/2,
     scraper_scheduled/2,
     run_all/1
@@ -34,15 +33,6 @@
     Context:: #context{}.
 list_archives(Context) ->
     scraper_cache:list(Context).
-
-
--spec scraping_in_progress(Context) -> boolean() when
-    Context:: #context{}.
-scraping_in_progress(Context) ->
-    case gen_server:call(z_utils:name_for_host(?MODULE, z_context:site(Context)), scraping_in_progress) of
-        undefined -> false;
-        _ -> true
-    end.
 
 
 -spec scraper_in_progress(ScraperId, Context) -> boolean() when
@@ -203,10 +193,6 @@ handle_call({run_scraper, ScraperId, Context}, _From, State) ->
         fetch_timer_ref = TimerRef
     }};
 
-
-%% @doc Returns boolean
-handle_call(scraping_in_progress, _From, State) ->
-    {reply, State#state.fetch_start =/= undefined, State};
 
 %% @doc Returns boolean
 handle_call({scraper_in_progress, ScraperId}, _From, State) ->

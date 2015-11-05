@@ -13,9 +13,7 @@ is_authorized(ReqData, Context) ->
 html(Context) ->
     Vars = [
         {page_admin_backup_tarsnap, true},
-        {archives, mod_scraper:list_archives(Context)},
-        {scraping_in_progress, mod_scraper:scraping_in_progress(Context)}
+        {archives, mod_scraper:list_archives(Context)}
     ],
 	Html = z_template:render("admin_scraper.tpl", Vars, Context),
 	z_context:output(Html, Context).
-
