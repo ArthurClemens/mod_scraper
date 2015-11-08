@@ -4,6 +4,7 @@
 -export([
     fetch/2,
     fetch/3,
+    refetch_with_rules/3,
 	fetch_from_string/3,
     default_rule/1,
     test_xpath/2
@@ -56,12 +57,13 @@ fetch(Url0, Options, Rules) ->
     UrlContext = url_context(Url),
     case get_page_body(Url) of
         {Length, Body} when is_integer(Length) ->
-            Fetched = fetch_page_parts(Body, Rules, Options),
+            Fetched = parse_body(Body, Rules, Options),
             [
                 {url, Url},
                 {size, Length},
                 {url_context, UrlContext},
                 {date, calendar:universal_time()},
+                {body, Body},
                 {data, Fetched}
             ];
         {error, Reason} ->
@@ -72,14 +74,60 @@ fetch(Url0, Options, Rules) ->
             ]
     end.
 
-fetch_from_string(Body, Options, Rules) -> 
+
+refetch_with_rules(Results, Options, Rules) ->
+    Body = proplists:get_value(body, Results),
+    Fetched = parse_body(Body, Rules, Options),
+    lists:keyreplace(data, 1, Results, {data, Fetched}).
+
+
+fetch_from_string(Body, Options, Rules) ->
 	[
 		{size, length(Body)},
 		{date, calendar:universal_time()},
-		{data, fetch_page_parts(Body, Rules, Options)}
+		{data, parse_body(Body, Rules, Options)}
 	].
 
--spec default_rule(Name) -> list() when 
+
+-spec parse_body(Body, Rules, Options) -> list() when
+    Body :: list(),
+    Rules :: list(),
+    Options :: list().
+parse_body(Body, Rules, Options) ->
+    Tree = mochiweb_html:parse(Body),
+    lists:foldl(fun({Name, Rule}, Acc) ->
+        case Rule of
+            undefined -> [{Name, [xpath_parse_error, no_rule]}|Acc];
+            [] -> [{Name, [xpath_parse_error, no_rule]}|Acc];
+            <<>> -> [{Name, [xpath_parse_error, no_rule]}|Acc];
+            _ ->
+                Rule1 = binary_to_list(Rule),
+                try mochiweb_xpath:execute(Rule1, Tree) of
+                    Found when is_list(Found) ->
+                        FoundProcessed = lists:reverse(lists:foldl(fun(Opt, Acc1) ->
+                            case proplists:get_value(Opt, ?OPT_RULES) of
+                                undefined -> Acc1;
+                                F -> F(Acc1)
+                            end
+                        end, Found, Options)),
+                        [{Name, FoundProcessed}|Acc];
+                    _ -> [{Name, [xpath_parse_error, unknown_error]}|Acc]
+                catch
+                    error:Reason ->
+                        %io:fwrite("Error reason: ~p~n", [Reason]),
+                        [{Name, [xpath_parse_error, Reason]}|Acc];
+                    throw:Reason ->
+                        %io:fwrite("Throw reason: ~p~n", [Reason]),
+                        [{Name, [xpath_parse_error, Reason]}|Acc];
+                    exit:Reason ->
+                        %io:fwrite("Exit reason: ~p~n", [Reason]),
+                        [{Name, [xpath_parse_error, Reason]}|Acc]
+                end
+        end
+    end, [], Rules).
+
+
+-spec default_rule(Name) -> list() when
     Name :: atom().
 default_rule(Name) ->
     {Name, proplists:get_value(Name, ?DEFAULT_RULES)}.
@@ -127,7 +175,7 @@ get_page_body(Url) ->
 				0 ->
 					{error, "No content"};
 				Length ->
-					case proplists:get_value("status", Headers) of 
+					case proplists:get_value("status", Headers) of
 						"404 Not Found" ->
 							{error, "404"};
 						_ ->
@@ -136,43 +184,6 @@ get_page_body(Url) ->
 			end;
         Error -> Error
     end.
-
--spec fetch_page_parts(Body, Rules, Options) -> list() when
-    Body :: list(),
-    Rules :: list(),
-    Options :: list().
-fetch_page_parts(Body, Rules, Options) ->
-    Tree = mochiweb_html:parse(Body),
-    lists:foldl(fun({Name, Rule}, Acc) ->
-        case Rule of
-            undefined -> [{Name, [xpath_parse_error, no_rule]}|Acc];
-            [] -> [{Name, [xpath_parse_error, no_rule]}|Acc];
-            <<>> -> [{Name, [xpath_parse_error, no_rule]}|Acc];
-            _ -> 
-                Rule1 = binary_to_list(Rule),
-                try mochiweb_xpath:execute(Rule1, Tree) of
-                    Found when is_list(Found) -> 
-                        FoundProcessed = lists:reverse(lists:foldl(fun(Opt, Acc1) ->
-                            case proplists:get_value(Opt, ?OPT_RULES) of
-                                undefined -> Acc1;
-                                F -> F(Acc1)
-                            end
-                        end, Found, Options)),
-                        [{Name, FoundProcessed}|Acc];
-                    _ -> [{Name, [xpath_parse_error, unknown_error]}|Acc]
-                catch
-                    error:Reason ->
-                        %io:fwrite("Error reason: ~p~n", [Reason]),
-                        [{Name, [xpath_parse_error, Reason]}|Acc];
-                    throw:Reason ->
-                        %io:fwrite("Throw reason: ~p~n", [Reason]),
-                        [{Name, [xpath_parse_error, Reason]}|Acc];
-                    exit:Reason ->
-                        %io:fwrite("Exit reason: ~p~n", [Reason]),
-                        [{Name, [xpath_parse_error, Reason]}|Acc]
-                end
-        end
-    end, [], Rules).
 
 
 -spec remove_duplicates(L) -> list() when
@@ -194,13 +205,12 @@ content_length(Headers) ->
     list_to_integer(proplists:get_value("content-length", Headers, "0")).
 
 
-% Returns the domain, and current context path. 
+% Returns the domain, and current context path.
 % url_context(<<"http://www.some.domain.com/content/index.html>>)
 %      -> {<<"http://www.some.domain.com">>, <<"/content">>}
 url_context(Url) ->
-    {ok, {Protocol, _, Root, _Port, Path, _Query}} = http_uri:parse(z_convert:to_list(Url)), 
+    {ok, {Protocol, _, Root, _Port, Path, _Query}} = http_uri:parse(z_convert:to_list(Url)),
     Ctx = z_convert:to_binary(string:sub_string(Path, 1, string:rstr(Path,"/"))),
     RootBin = z_convert:to_binary(Root),
     ProtocolBin = z_convert:to_binary(Protocol),
     {<<ProtocolBin/binary, "://", RootBin/binary>>, Ctx}.
-

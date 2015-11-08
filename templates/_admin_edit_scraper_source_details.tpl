@@ -12,7 +12,7 @@
             %}
             <input id="url_source_url"
                 type="text"
-                name="url_source_url" 
+                name="url_source_url"
                 class="form-control"
                 value="{{ id.url_source_url }}"
                 {% if not is_editable %}disabled="disabled"{% endif %}

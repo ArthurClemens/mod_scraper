@@ -4,7 +4,7 @@ Params:
 #}
 {% with m.scraper[id].digests as digests %}
 <div id="results">
-{% if digests %}
+{% if digests and digests.data %}
 	<ul class="nav nav-tabs nav-justified">
 		<li><a href="#all">{_ All results _}</a></li>
         <li class="{% if not digests.errors %}disabled{% endif %}"><a href="#errors">{_ Errors _}</a></li>

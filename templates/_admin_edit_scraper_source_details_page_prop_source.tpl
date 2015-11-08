@@ -23,19 +23,20 @@
     <div class="form-group row">
         <label class="control-label col-md-3">{_ URL _}</label>
         <div class="col-md-9">
-            {% with m.scraper[id].urls_data as urls_data %}
-                {% if urls_data %}
+            {% with m.scraper[id].urls_data as url_list_data %}
+                {% if url_list_data %}
                     {% button
                         id=#urls
                         class="btn btn-default"
                         text=_"1 URL"
+                        type="button"
                     %}
                     {% wire
                         id=#urls
                         action={dialog_open
                             title=_"URLs"
                             template="_admin_edit_scraper_source_urls.tpl"
-                            urls_data=urls_data
+                            url_list_data=url_list_data
                         }
                     %}
                 {% else %}

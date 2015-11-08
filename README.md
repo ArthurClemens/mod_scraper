@@ -35,6 +35,8 @@ This module comes with an example scraper. Have a look at `your_site/admin/edit/
 
 ## Scraper setup
 
+<img src="http://arthurclemens.github.io/assets/mod_scraper/docs/scraper-diagram.png" />
+
 ### Data source
 
 When you create a new scraper, the edit page will ask you where to get the URL/URLs from.The options for choosing the **URL data source** are:
@@ -60,7 +62,7 @@ The connection can either be outgoing or incoming.
 
 ### Connected page
 
-The pages that provide the URLs are also called "connected pages". Any scraped data will be connected to these pages - either to be copied manually or automatically.
+The pages that provide the URLs are also called "connected pages". Any scraped data will be written to these pages - either as manual copy action (copy button) or automatically (with automatic rules).
 
 
 ### Rules
@@ -82,15 +84,23 @@ Instruction to read data from the page, see "XPath rule" below
 How data should be processed. Supported types are:
   * **Text**: for titles, summaries, product info, and so on
   * **Price**: the price text will be parsed and written to extra fields: `price_text`, `price_currency`, `price_whole`, `price_fraction`
-  * **Match**: transform to `true` or `false` when a match is found
-  * **No match**: transform to `true` or `false` when no match is found
-  * **Contains**: transform to `true` or `false` when a specific text is found
+  * **Match**: transform to `true`/`false`/`1`/`0` when a match is found
+  * **No match**: transform to `true`/`false`/`1`/`0` when no match is found
+  * **Contains**: transform to `true`/`false`/`1`/`0` when a specific text is found
+  * **Links**: handle links on the page for further processing
 
 ##### Property mapping
 
-The field name (page property) of the connected page that should get the scraped data. You can use Zotonic properties such as "title" and "summary", or create your own property.
+The field name (page property) of the connected page that should receive the scraped data. You can use Zotonic property fields such as "title" and "summary", or create your own property.
 
-Not needed for type "price", because extra fields will be used.
+No property mapping is needed for type "price", because extra fields will be created automatically.
+
+##### Handling links
+
+A website commonly contains aggregation pages (category and search results pages) that link to detail pages. From a data quality point of view it makes sense to scrape each detail page instead of the summaries.
+
+Use data type **Links** to follow each found URL with a chained scraper (see below).
+
 
 ##### Published
 
@@ -200,6 +210,42 @@ Selecting a nested element:
 ~~~xpath
 //div[contains(@class, "some-class")] and //div[contains(@class, "other-class")]
 ~~~
+
+
+## Chaining scrapers
+
+The data types "Links", "Match" and "No match" let you define which scraper should be used to parse the found detail pages.
+
+That is, a scraper rule can contain a reference to another scraper that will do the work. The found results will be listed at the original scraper.
+
+You can optionally define a filter.
+
+Currently the supported filter is "Select page with lowest price". All URLs will first be fetched, then compared on price, then the data from the page with the lowest price is kept.
+
+
+### Dealing with multiple page types
+
+To scrape a site with different types of pages, you can set up rules to assign a scraper per page type.
+
+Take for example this setup where the top scraper only defines 2 rules:
+
+<img src="http://arthurclemens.github.io/assets/mod_scraper/docs/chaining-scrapers-screenshot-rules.png" />
+
+The search results rule is defined with data type "match". For each match, the chained scraper "handle links" is invoked:
+
+<img src="http://arthurclemens.github.io/assets/mod_scraper/docs/chaining-scrapers-screenshot-rule-search-results.png" />
+
+The scraper only needs to deal with links on the page:
+
+<img src="http://arthurclemens.github.io/assets/mod_scraper/docs/chaining-scrapers-screenshot-scraper-links-rules.png" />
+
+The scraper rule invokes the "detail page" scraper for each found link:
+
+<img src="http://arthurclemens.github.io/assets/mod_scraper/docs/chaining-scrapers-screenshot-rule-links.png" />
+
+The processing flow then looks as follows:
+
+<img src="http://arthurclemens.github.io/assets/mod_scraper/docs/chaining-scrapers-diagram.png" />
 
 
 ## Useful data

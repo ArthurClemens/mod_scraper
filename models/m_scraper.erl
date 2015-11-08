@@ -12,6 +12,7 @@
     has_urls/2,
     has_rules/2,
     map_value_to_type/5,
+    map_logical_value/4,
     cleanup_value/1,
     is_empty/1
 ]).
@@ -91,45 +92,69 @@ m_value(#m{value=undefined}, _Context) ->
     undefined.
 
 
--spec urls(Id, Context) -> list() when
-    Id :: integer(),
+-spec urls(ScraperId, Context) -> list() when
+    ScraperId :: integer(),
     Context:: #context{}.
-urls(Id, Context) ->
-    Source = m_rsc:p(Id, source, Context),
+urls(ScraperId, Context) ->
+    Source = m_rsc:p(ScraperId, source, Context),
+    RuleSource = ScraperId,
     UrlData = case Source of
         <<"url">> ->
-            {Id, m_rsc:p(Id, url_source_url, Context)};
+            Url = m_rsc:p(ScraperId, url_source_url, Context),
+            case Url of
+                undefined -> [];
+                _ ->
+                    [[
+                        {rule_source, RuleSource},
+                        {destination, ScraperId},
+                        {url, Url}
+                    ]]
+            end;
         <<"page_prop">> ->
-            PagePropId = m_rsc:p(Id, page_prop_source, Context),
-            {PagePropId, m_rsc:p(PagePropId, url, Context)};
+            PagePropId = m_rsc:p(ScraperId, page_prop_source, Context),
+            Url = m_rsc:p(PagePropId, url, Context),
+            case Url of
+                undefined -> [];
+                _ ->
+                    [[
+                        {rule_source, RuleSource},
+                        {destination, m_rsc:p(ScraperId, page_prop_source, Context)},
+                        {url, Url}
+                    ]]
+            end;
         <<"page_connections">> ->
-            SourceId = m_rsc:p(Id, page_connections_source, Context),
-            PredicateName = m_rsc:p(Id, page_connections_predicate, Context),
+            SourceId = m_rsc:p(ScraperId, page_connections_source, Context),
+            PredicateName = m_rsc:p(ScraperId, page_connections_predicate, Context),
             Pages = m_edge:objects(SourceId, PredicateName, Context),
             Pages1 = case Pages of
                 [] -> m_edge:subjects(SourceId, PredicateName, Context);
                 _ -> Pages
             end,
             lists:map(fun(P) ->
-                {P, m_rsc:p(P, url, Context)}
+                Url = m_rsc:p(P, url, Context),
+                case Url of
+                    undefined -> [];
+                    _ ->
+                        [
+                            {rule_source, RuleSource},
+                            {destination, P},
+                            {url, Url}
+                        ]
+                end
             end, Pages1);
         _ ->
-            undefined
+            []
     end,
-    case UrlData of
-        undefined -> [];
-        <<>> -> [];
-        {_, undefined} -> [];
-        List when is_list(List) ->
-            [{LId, LUrl} || {LId, LUrl} <- List, LUrl /= undefined];
-        {_, _} -> [UrlData]
-    end.
-
-
-urls_from_data(UrlData) ->
-    lists:map(fun({_, Url}) ->
-        Url
+    % remove empty values
+    lists:filter(fun(D) ->
+        proplists:get_value(url, D) =/= []
     end, UrlData).
+
+
+urls_from_data(UrlListData) ->
+    lists:map(fun(UrlData) ->
+        proplists:get_value(url, UrlData)
+    end, UrlListData).
 
 
 has_urls(Id, Context) ->
@@ -156,26 +181,18 @@ has_rules(Id, Context) ->
 map_value_to_type(Value, Type, Property, RuleId, Context) ->
     case Type of
         <<"price">> ->
-            %% parse value to separate fields
-            PriceData = parse_price:parse(Value),
-            KeyMapping = [
-                {currency, price_currency},
-                {whole, price_whole},
-                {fraction, price_fraction},
-                {text, price_text}
-            ],
-            PriceData1 = lists:foldl(fun({OldKey, NewKey}, Acc) ->
-                lists:keyreplace(OldKey, 1, Acc, {NewKey, proplists:get_value(OldKey, Acc)})
-            end, PriceData, KeyMapping),
-            lists:map(fun({P, V}) ->
-                [{property, P}, {value, V}]
-            end, PriceData1);
+            case Value of
+                [{Transform, V}] ->
+                    parse_price_data(Transform, V);
+                _ -> parse_price_data(Value)
+            end;
         <<"match">> ->
             ReturnValue = case m_rsc:p(RuleId, transform, Context) of
                 <<"transform_true">> -> true;
                 <<"transform_one">> -> 1;
                 <<"transform_false">> -> false;
-                <<"transform_zero">> -> 0
+                <<"transform_zero">> -> 0;
+                _ -> true
             end,
             case is_empty(Value) of
                 true -> [[{property, Property}, {value, false}]];
@@ -186,7 +203,8 @@ map_value_to_type(Value, Type, Property, RuleId, Context) ->
                 <<"transform_true">> -> true;
                 <<"transform_one">> -> 1;
                 <<"transform_false">> -> false;
-                <<"transform_zero">> -> 0
+                <<"transform_zero">> -> 0;
+                _ -> false
             end,
             case is_empty(Value) of
                 true -> [[{property, Property}, {value, ReturnValue}]];
@@ -197,7 +215,8 @@ map_value_to_type(Value, Type, Property, RuleId, Context) ->
                 <<"transform_true">> -> true;
                 <<"transform_one">> -> 1;
                 <<"transform_false">> -> false;
-                <<"transform_zero">> -> 0
+                <<"transform_zero">> -> 0;
+                _ -> Value
             end,
             case is_empty(Value) of
                 true -> [[{property, Property}, {value, false}]];
@@ -208,13 +227,56 @@ map_value_to_type(Value, Type, Property, RuleId, Context) ->
                         nomatch -> [[{property, Property}, {value, false}]]
                     end
             end;
-        <<"boolean_true">> ->
-            [[{property, Property}, {value, convert_to_bool_int(Value)}]];
-        <<"boolean_false">> ->
-            [[{property, Property}, {value, 1 - convert_to_bool_int(Value)}]];
         _ ->
             [[{property, Property}, {value, Value}]]
     end.
+
+
+map_logical_value(Value, Type, RuleId, Context) ->
+    case Type of
+        <<"match">> ->
+            case is_empty(Value) of
+                true -> false;
+                false -> true
+            end;
+        <<"no_match">> ->
+            case is_empty(Value) of
+                true -> true;
+                false -> false
+            end;
+        <<"contains">> ->
+            case is_empty(Value) of
+                true -> false;
+                false ->
+                    ToMatch = m_rsc:p(RuleId, contains_value, Context),
+                    case re:run(Value, ToMatch) of
+                        {match, _Captured} -> true;
+                        nomatch -> false
+                    end
+            end;
+        _ -> false
+end.
+
+
+parse_price_data(Value) ->
+    %% parse value to separate fields
+    PriceData = parse_price:parse(Value),
+    KeyMapping = [
+        {currency, price_currency},
+        {whole, price_whole},
+        {fraction, price_fraction},
+        {text, price_text}
+    ],
+    PriceData1 = lists:foldl(fun({OldKey, NewKey}, Acc) ->
+        lists:keyreplace(OldKey, 1, Acc, {NewKey, proplists:get_value(OldKey, Acc)})
+    end, PriceData, KeyMapping),
+    lists:map(fun({P, V}) ->
+        [{property, P}, {value, V}]
+    end, PriceData1).
+
+parse_price_data(Transform, Value) when Transform =:= is_from_price ->
+    Mapping = parse_price_data(Value),
+    [[{property, is_from_price}, {value, true}]|Mapping].
 
 
 %% @doc Removes empty binaries from list; trims whitespace from value.
@@ -342,6 +404,17 @@ digest(Result, Context) ->
         end
     end, 0, MappedData),
 
+    LastDate = lists:foldl(fun({_UrlAt, Data}, Acc) ->
+        case proplists:get_value(date, Data) of
+            undefined -> Acc;
+            Date ->
+                case (Date > Acc) of
+                    true -> Date;
+                    false -> Acc
+                end
+        end
+    end, 0, MappedData),
+
     DifferencesCount = lists:foldl(fun(Data, Acc) ->
         case proplists:get_value(has_differences, Data) of
             true -> Acc + 1;
@@ -353,7 +426,8 @@ digest(Result, Context) ->
         {data, DataDigest},
         {errors, ErrorCount},
         {warnings, WarningCount},
-        {differences, DifferencesCount}
+        {differences, DifferencesCount},
+        {date, LastDate}
     ].
 
 
@@ -411,9 +485,9 @@ comparison1(UrlData, Context) ->
 
 is_equal(Fetched, Current, Type) ->
     case Type of
-        boolean_true ->
+        match ->
             define_boolean(Fetched) =:= define_boolean(Current);
-        boolean_false ->
+        no_match ->
             define_boolean(Fetched) =:= define_boolean(Current);
         _ ->
             z_html:escape(z_html:nl2br(Fetched)) =:= z_html:escape(z_html:nl2br(Current))
@@ -462,14 +536,14 @@ define_boolean(Value) ->
 	    _ -> 1
 	end.
 
-convert_to_bool_int(Value) ->
-    case Value of
-        <<>> -> 0;
-        undefined -> 0;
-        _ ->
-            Bool = z_convert:to_bool(length(z_convert:to_list(Value))),
-            case Bool of
-                false -> 0;
-                 _ -> 1
-            end
-    end.
+% convert_to_bool_int(Value) ->
+%     case Value of
+%         <<>> -> 0;
+%         undefined -> 0;
+%         _ ->
+%             Bool = z_convert:to_bool(length(z_convert:to_list(Value))),
+%             case Bool of
+%                 false -> 0;
+%                  _ -> 1
+%             end
+%     end.

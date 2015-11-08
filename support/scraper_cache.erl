@@ -16,7 +16,6 @@
     put/11,
     delete/2,
     init/1
-%    set_ignored/5
 ]).
 
 ensure_db_exists(Context) ->

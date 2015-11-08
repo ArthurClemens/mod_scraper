@@ -85,11 +85,7 @@ Params:
 			<span class="form-field-error">{_ Parse error _}</span>
 		{% else %}
 			{% if not is_empty and fetched != undefined %}
-                {% if (type == 'boolean_true') or (type == 'boolean_false') %}
-                    <div class="fetched">{{ fetched|yesno:"true,false" }}</div>
-                {% else %}
-                    <div class="fetched">{{ fetched }}</div>
-                {% endif %}
+                <div class="fetched">{{ fetched }}</div>
 			{% else %}
 				<span class="card-row-content-none">&mdash;</span>
 			{% endif %}
