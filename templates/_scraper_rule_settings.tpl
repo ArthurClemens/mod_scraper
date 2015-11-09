@@ -53,7 +53,7 @@
                 <option value="match"{% if id.type=="match" %} selected="selected"{% endif %}>{_ Match _}</option>
                 <option value="no_match"{% if id.type=="no_match" %} selected="selected"{% endif %}>{_ No match _}</option>
                 <option value="contains"{% if id.type=="contains" %} selected="selected"{% endif %}>{_ Contains _}</option>
-                <option value="urls"{% if id.type=="urls" %} selected="selected"{% endif %}>{_ Links _}</option>
+                <option value="urls"{% if id.type=="urls" %} selected="selected"{% endif %}>{_ URLs _}</option>
 {#
                 <option value="image"{% if id.type=="image" %} selected="selected"{% endif %}>{_ Image (not implemented) _}</option>
                 <option value="date"{% if id.type=="date" %} selected="selected"{% endif %}>{_ Date (not implemented) _}</option>

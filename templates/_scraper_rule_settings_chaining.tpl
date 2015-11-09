@@ -22,9 +22,9 @@ Params:
                 cat='scraper'
                 sort='rsc.pivot_title'
             }] as scrapers %}
-                <option value=""{% if id.chain_scraper=="" %} selected="selected"{% endif %}></option>
+                <option value=""{% if id.chain_scraper == "" %} selected="selected"{% endif %}></option>
                 {% for scraper_id in scrapers %}
-                    <option value="{{ scraper_id }}"{% if id.chain_scraper==scraper_id %} selected="selected"{% endif %}>{{ scraper_id.title }}</option>
+                    <option value="{{ scraper_id }}"{% if m.rsc[id.chain_scraper].id == scraper_id %} selected="selected"{% endif %}>{{ scraper_id.title }} ({{scraper_id.id}})</option>
                 {% endfor %}
             {% endwith %}
         </select>

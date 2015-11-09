@@ -398,7 +398,7 @@ do_next_url_process(UrlData, State) ->
 fetch_url(UrlData, Context) ->
     ScraperId = proplists:get_value(scraper, UrlData),
     Url = proplists:get_value(url, UrlData),
-    DestinationId = proplists:get_value(destination, UrlData),
+    DestinationId = rsc_id(proplists:get_value(destination, UrlData), Context),
     RuleSource = proplists:get_value(rule_source, UrlData),
     RuleIds = rule_ids(RuleSource, Context),
     Rules = lists:flatten(lists:map(fun(RuleId) ->
@@ -410,9 +410,6 @@ fetch_url(UrlData, Context) ->
     end,
     Date = proplists:get_value(date, Results),
     Error = proplists:get_value(error, Results),
-    PutError = fun(Reason) ->
-        store_result(ScraperId, DestinationId, Url, Reason, Date, undefined, RuleIds, Context)
-    end,
     case Error of
         undefined ->
             Scraped = proplists:get_value(data, Results, []),
@@ -431,7 +428,7 @@ fetch_url(UrlData, Context) ->
                     undefined -> Acc;
                     <<>> -> Acc;
                     _ ->
-                        ChainedScraperId = z_convert:to_integer(ChainedScraper),
+                        ChainedScraperId = rsc_id(ChainedScraper, Context),
                         case Type of
                             <<"text">> -> Acc;
                             <<"price">> -> Acc;
@@ -465,7 +462,7 @@ fetch_url(UrlData, Context) ->
             end;
         _ ->
             ErrorMsg = humanize_error_message(Error, Context),
-            PutError(ErrorMsg)
+            store_result(ScraperId, DestinationId, Url, ErrorMsg, Date, undefined, RuleIds, Context)
     end.
 
 
@@ -690,3 +687,10 @@ ets_table_name(Context) ->
         name(?MODULE, Context#context.host).
     name(Module, Host) ->
         z_utils:name_for_host(Module, Host).
+
+
+rsc_id(Identifier, _Context) when is_integer(Identifier) ->
+    Identifier;
+rsc_id(Identifier, Context)  ->
+    {ok, Id} = m_rsc:name_to_id(Identifier, Context),
+    Id.
