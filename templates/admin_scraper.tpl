@@ -44,42 +44,18 @@
         </div>
     {% endif %}
 
-    <h3>{_ Scrapers _}</h3>
-    {% with m.search[{query cat='scraper'}] as scrapers %}
-        {% if scrapers %}
-            <table class="table table-striped do_adminLinkedTable">
-                <thead>
-                    <tr>
-                        <th width="20%">
-                            {% include "_admin_sort_header.tpl" field="pivot_title" caption=_"Title" type=type|default:"string" %}
-                        </th>
-                        <th width="25%">
-                            {_ Status _}
-                        </th>
-                        <th width="15%">
-                            {% include "_admin_sort_header.tpl" field="created" caption=_"Created on" type="date" qsort=qsort %}
-                        </th>
-                        <th width="15%">
-                            {% include "_admin_sort_header.tpl" field="modified" caption=_"Modified on" type="date" qsort=qsort %}
-                        </th>
-                        <th width="25%">
-                            {% include "_admin_sort_header.tpl" field="modifier_id" caption=_"Modified by" type=type|default:"string" qsort=qsort %}
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for id in scrapers %}
-                        {% include "_admin_scraper_row.tpl" id=id is_editable=is_editable %}
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            {_ No scrapers found. _}
-        {% endif %}
-    {% endwith %}
+    <ul class="nav nav-pills">
+        <li class="active"><a href="#scrapers" role="tab" data-toggle="tab">{_ Scrapers _}</a></li>
+        <li><a href="#rules" role="tab" data-toggle="tab">{_ Rules _}</a></li>
+	</ul>
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="scrapers">
+            {% include "_overview_scrapers.tpl" is_editable=is_editable %}
+        </div>
+        <div role="tabpanel" class="tab-pane" id="rules">
+            {% include "_overview_rules.tpl" is_editable=is_editable %}
+        </div>
+    </div>
 {% endwith %}
-{% lib
-    "mod_scraper/js/moment-with-locales.min.js"
-	"mod_scraper/js/mod_scraper.js"
-%}
+
 {% endblock %}
