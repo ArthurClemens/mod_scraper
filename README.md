@@ -35,7 +35,7 @@ This module comes with an example scraper. Have a look at `your_site/admin/edit/
 
 ## Scraper setup
 
-<img src="http://arthurclemens.github.io/assets/mod_scraper/docs/scraper-diagram.png" />
+<img src="http://arthurclemens.github.io/assets/mod_scraper/docs/scraper-diagram.png" style="width:800px; margin: 0 auto" />
 
 ### Data source
 
@@ -82,12 +82,13 @@ Instruction to read data from the page, see "XPath rule" below
 ##### Data type
 
 How data should be processed. Supported types are:
+
   * **Text**: for titles, summaries, product info, and so on
   * **Price**: the price text will be parsed and written to extra fields: `price_text`, `price_currency`, `price_whole`, `price_fraction`
   * **Match**: transform to `true`/`false`/`1`/`0` when a match is found
   * **No match**: transform to `true`/`false`/`1`/`0` when no match is found
   * **Contains**: transform to `true`/`false`/`1`/`0` when a specific text is found
-  * **Links**: handle links on the page for further processing
+  * **URLs**: handle links on the page for further processing
 
 ##### Property mapping
 
@@ -99,7 +100,7 @@ No property mapping is needed for type "price", because extra fields will be cre
 
 A website commonly contains aggregation pages (category and search results pages) that link to detail pages. From a data quality point of view it makes sense to scrape each detail page instead of the summaries.
 
-Use data type **Links** to follow each found URL with a chained scraper (see below).
+Use data type **URLs** to follow each found URL with a chained scraper (see below).
 
 
 ##### Published
@@ -214,7 +215,7 @@ Selecting a nested element:
 
 ## Chaining scrapers
 
-The data types "Links", "Match" and "No match" let you define which scraper should be used to parse the found detail pages.
+The data types "URLs", "Match" and "No match" let you define which scraper should be used to parse the found detail pages.
 
 That is, a scraper rule can contain a reference to another scraper that will do the work. The found results will be listed at the original scraper.
 
@@ -229,23 +230,23 @@ To scrape a site with different types of pages, you can set up rules to assign a
 
 Take for example this setup where the top scraper only defines 2 rules:
 
-<img src="http://arthurclemens.github.io/assets/mod_scraper/docs/chaining-scrapers-screenshot-rules.png" />
+<img src="http://arthurclemens.github.io/assets/mod_scraper/docs/chaining-scrapers-screenshot-rules.png" style="width:800px; margin: 0 auto" />
 
 The search results rule is defined with data type "match". For each match, the chained scraper "handle links" is invoked:
 
-<img src="http://arthurclemens.github.io/assets/mod_scraper/docs/chaining-scrapers-screenshot-rule-search-results.png" />
+<img src="http://arthurclemens.github.io/assets/mod_scraper/docs/chaining-scrapers-screenshot-rule-search-results.png" style="width:800px; margin: 0 auto" />
 
 The scraper only needs to deal with links on the page:
 
-<img src="http://arthurclemens.github.io/assets/mod_scraper/docs/chaining-scrapers-screenshot-scraper-links-rules.png" />
+<img src="http://arthurclemens.github.io/assets/mod_scraper/docs/chaining-scrapers-screenshot-scraper-links-rules.png" style="width:800px; margin: 0 auto" />
 
 The scraper rule invokes the "detail page" scraper for each found link:
 
-<img src="http://arthurclemens.github.io/assets/mod_scraper/docs/chaining-scrapers-screenshot-rule-links.png" />
+<img src="http://arthurclemens.github.io/assets/mod_scraper/docs/chaining-scrapers-screenshot-rule-links.png" style="width:800px; margin: 0 auto" />
 
 The processing flow then looks as follows:
 
-<img src="http://arthurclemens.github.io/assets/mod_scraper/docs/chaining-scrapers-diagram.png" />
+<img src="http://arthurclemens.github.io/assets/mod_scraper/docs/chaining-scrapers-diagram.png" style="width:800px; margin: 0 auto" />
 
 
 ## Useful data
