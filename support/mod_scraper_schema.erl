@@ -84,13 +84,13 @@ datamodel() ->
             % example pages
             % scrapers
             {bol_com_scraper_detail_page, scraper, [
-                {title, "Bol.com scraper detail page"},
+                {title, <<"Bol.com scraper detail page">>},
                 {source, <<"page_prop">>},
                 {page_prop_source, <<"bol_scraper_target_detail_page">>},
                 {is_published, false}
             ]},
             {bol_com_scraper_search_results_page, scraper, [
-                {title, "Bol.com scraper search results page"},
+                {title, <<"Bol.com scraper search results page">>},
                 {source, <<"page_prop">>},
                 {page_prop_source, <<"bol_scraper_target_search_results_page">>},
                 {is_published, false}
@@ -102,30 +102,84 @@ datamodel() ->
             ]},
             % rules
             {bol_com_rule_no_price_found, automatic_scraper_rule, [
-                {title, "Bol.com rule: no price found"},
-                {type, "no_match"},
-                {rule, "//*[@itemprop='price']//@content"},
+                {title, <<"Bol.com rule: no price found">>},
+                {type, <<"no_match">>},
+                {rule, <<"//*[@itemprop='price']//@content">>},
                 {transform, "1"},
-                {property, "no_price_found"}
+                {property, <<"no_price_found">>}
             ]},
             {bol_com_rule_detail_pages, scraper_rule, [
-                {title, "Bol.com rule: detail pages"},
-                {type, "match"},
-                {rule, "//*/h1[@itemprop='name'][contains(@class, 'bol_header')]"},
+                {title, <<"Bol.com rule: detail pages">>},
+                {type, <<"match">>},
+                {rule, <<"//*/h1[@itemprop='name'][contains(@class, 'bol_header')]">>},
                 {chain_scraper, bol_com_scraper_detail_page}
             ]},
             {bol_com_rule_search_results_pages, scraper_rule, [
-                {title, "Bol.com rule: search results pages"},
-                {type, "match"},
-                {rule, ".//*[@id='js_listpage_resultlist']"},
+                {title, <<"Bol.com rule: search results pages">>},
+                {type, <<"match">>},
+                {rule, <<".//*[@id='js_listpage_resultlist']">>},
                 {chain_scraper, bol_com_scraper_search_results_page}
             ]},
             {bol_com_rule_handle_search_results_links, scraper_rule, [
-                {title, "Bol.com rule: handle search results links"},
-                {type, "urls"},
-                {rule, ".//*[@class='product_line']//a[@class='product_name']//@href"},
+                {title, <<"Bol.com rule: handle search results links">>},
+                {type, <<"urls">>},
+                {rule, <<".//*[@class='product_line']//a[@class='product_name']//@href">>},
                 {chain_scraper, bol_com_scraper_detail_page},
-                {chain_result, "lowest_price"}
+                {chain_result, <<"lowest_price">>}
+            ]},
+            {amazon_com_rule_title, automatic_scraper_rule, [
+                {title, <<"Amazon.com rule: product title">>},
+                {type, <<"text">>},
+                {rule, <<"string(.//*[@id='productTitle'])">>},
+                {property, <<"page_title">>}
+            ]},
+            {amazon_com_rule_price, automatic_scraper_rule, [
+                {title, <<"Amazon.com rule: price">>},
+                {type, <<"price">>},
+                {rule, <<"string(.//*[@id='priceblock_ourprice'])">>}
+            ]},
+            {amazon_com_rule_no_price_found, automatic_scraper_rule, [
+                {title, <<"Amazon.com rule: no price found">>},
+                {type, <<"no_match">>},
+                {rule, <<"string(.//*[@id='priceblock_ourprice'])">>},
+                {transform, "1"},
+                {property, <<"no_price_found">>}
+            ]},
+            {amazon_de_rule_title, automatic_scraper_rule, [
+                {title, <<"Amazon.de rule: product title">>},
+                {type, <<"text">>},
+                {rule, <<"string(.//*[@id='productTitle'])">>},
+                {property, <<"page_title">>}
+            ]},
+            {amazon_de_rule_price, automatic_scraper_rule, [
+                {title, <<"Amazon.de rule: price">>},
+                {type, <<"price">>},
+                {rule, <<"string(.//*[@id='priceblock_ourprice'])">>}
+            ]},
+            {amazon_de_rule_no_price_found, automatic_scraper_rule, [
+                {title, <<"Amazon.de rule: no price found">>},
+                {type, <<"no_match">>},
+                {rule, <<"string(.//*[@id='priceblock_ourprice'])">>},
+                {transform, "1"},
+                {property, <<"no_price_found">>}
+            ]},
+            {amazon_co_uk_rule_title, automatic_scraper_rule, [
+                {title, <<"Amazon.co.uk rule: product title">>},
+                {type, <<"text">>},
+                {rule, <<"string(.//*[@id='productTitle'])">>},
+                {property, <<"page_title">>}
+            ]},
+            {amazon_co_uk_rule_price, automatic_scraper_rule, [
+                {title, <<"Amazon.co.uk rule: price">>},
+                {type, <<"price">>},
+                {rule, <<"string(.//*[@id='priceblock_ourprice'])">>}
+            ]},
+            {amazon_co_uk_rule_no_price_found, automatic_scraper_rule, [
+                {title, <<"Amazon.co.uk rule: no price found">>},
+                {type, <<"no_match">>},
+                {rule, <<"string(.//*[@id='priceblock_ourprice'])">>},
+                {transform, "1"},
+                {property, <<"no_price_found">>}
             ]},
             % target pages
             {bol_scraper_target_search, query, [
