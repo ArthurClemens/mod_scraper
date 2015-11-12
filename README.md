@@ -60,6 +60,15 @@ In this setup you have one "aggregator" page ("webshop") with connections to pag
 The connection can either be outgoing or incoming.
 
 
+##### 4. Search query that returns pages with a property 'url'
+
+If you have multiple pages without a uniform connection, you can provide a [search query](http://zotonic.com/docs/latest/manuals/datamodel/search.html#manual-query-resources) as data source. The result set will be filtered to only include pages with property ``url``.
+
+The example Search query contains:
+
+    cat='scraper_target'
+
+
 ### Connected page
 
 The pages that provide the URLs are also called "connected pages". Any scraped data will be written to these pages - either as manual copy action (copy button) or automatically (with automatic rules).

@@ -63,6 +63,8 @@ m_find_value(title, #m{value=Id} = _M, Context) when is_integer(Id) ->
             Id;
         page_prop ->
             m_rsc:p(Id, page_prop_source, Context);
+        query ->
+            m_rsc:p(Id, query_source, Context);
         page_connections ->
             SourceId = m_rsc:p(Id, page_connections_source, Context),
             PredicateName = m_rsc:p(Id, page_connections_predicate, Context),
@@ -98,6 +100,20 @@ m_value(#m{value=undefined}, _Context) ->
 urls(ScraperId, Context) ->
     Source = m_rsc:p(ScraperId, source, Context),
     RuleSource = ScraperId,
+    MapUrls = fun(Pages) ->
+        lists:map(fun(P) ->
+            Url = m_rsc:p(P, url, Context),
+            case Url of
+                undefined -> [];
+                _ ->
+                    [
+                        {rule_source, RuleSource},
+                        {destination, P},
+                        {url, Url}
+                    ]
+            end
+        end, Pages)
+    end,
     UrlData = case Source of
         <<"url">> ->
             Url = m_rsc:p(ScraperId, url_source_url, Context),
@@ -130,18 +146,13 @@ urls(ScraperId, Context) ->
                 [] -> m_edge:subjects(SourceId, PredicateName, Context);
                 _ -> Pages
             end,
-            lists:map(fun(P) ->
-                Url = m_rsc:p(P, url, Context),
-                case Url of
-                    undefined -> [];
-                    _ ->
-                        [
-                            {rule_source, RuleSource},
-                            {destination, P},
-                            {url, Url}
-                        ]
-                end
-            end, Pages1);
+            MapUrls(Pages1);
+        <<"query">> ->
+            SourceId = m_rsc:p(ScraperId, query_source, Context),
+            RawQuery = binary_to_list(z_html:unescape(m_rsc:p(SourceId, query, Context))),
+            Query = search_query:parse_query_text(RawQuery),
+            #search_result{result=Result} = z_search:search({'query', Query}, Context),
+            MapUrls(Result);
         _ ->
             []
     end,

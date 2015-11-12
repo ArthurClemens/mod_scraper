@@ -44,20 +44,23 @@ event(#postback{message={admin_connect_select, Args}}, Context) ->
                 {z_convert:to_integer(SelectId),
                  z_convert:to_integer(ObjectId0)}
         end,
-        
+
     Id = SubjectId,
     % misuse callback name to distinguish postback_notify events
 
     Context1 = case Callback of
-    	"page_prop_source" -> 
+    	"page_prop_source" ->
     		m_rsc:update(Id, [{page_prop_source, ObjectId}], Context),
             update_page_prop_source(Id, Context);
         "page_connections_source" ->
             m_rsc:update(Id, [{page_connections_source, ObjectId}], Context),
             update_page_connections_source(Id, Context);
-    	_ -> 
+        "query_source" ->
+            m_rsc:update(Id, [{query_source, ObjectId}], Context),
+            update_query_source(Id, Context);
+    	_ ->
     		Context
-    end,    
+    end,
     Context2 = update_data_action(Id, Context1),
     z_render:dialog_close(Context2);
 
@@ -82,5 +85,8 @@ update_page_connections_source(Id, Context) ->
         z_template:render("_admin_edit_scraper_source_details_page_connections_source.tpl", [{id, Id}], Context),
         Context).
 
-
-
+update_query_source(Id, Context) ->
+    z_render:update(
+        "#" ++ "query_source",
+        z_template:render("_admin_edit_scraper_source_details_query_source.tpl", [{id, Id}], Context),
+        Context).

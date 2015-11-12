@@ -128,6 +128,10 @@ datamodel() ->
                 {chain_result, "lowest_price"}
             ]},
             % target pages
+            {bol_scraper_target_search, query, [
+                {title, <<"Bol.com target search query">>},
+                {query, <<"cat='scraper_target'">>}
+            ]},
             {bol_scraper_target_detail_page, scraper_target, [
                 {title, <<"Bol.com product page">>},
                 {url, <<"http://www.bol.com/nl/p/withings-smart-body-analyzer-weegschaal-zwart/9200000013728054/">>}

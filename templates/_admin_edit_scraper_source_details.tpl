@@ -27,4 +27,8 @@
     <div id="page_connections_source">
         {% include "_admin_edit_scraper_source_details_page_connections_source.tpl" id=id %}
     </div>
+{% elif id.source == "query" %}
+    <div id="query_source">
+        {% include "_admin_edit_scraper_source_details_query_source.tpl" id=id %}
+    </div>
 {% endif %}
