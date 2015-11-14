@@ -439,6 +439,7 @@ fetch_url(UrlData, Context) ->
                                 [];
                             _ ->
                                 % match, no_match, contains
+                                % if the found value is true, continue with a recursive fetch
                                 Value = proplists:get_value(RuleId, Scraped1),
                                 CleanValue = m_scraper:cleanup_value(Value),
                                 Mapped = m_scraper:map_logical_value(CleanValue, Type, RuleId, Context),

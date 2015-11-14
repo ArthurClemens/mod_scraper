@@ -192,11 +192,17 @@ has_rules(Id, Context) ->
 map_value_to_type(Value, Type, Property, RuleId, Context) ->
     case Type of
         <<"price">> ->
-            case Value of
-                [{Transform, V}] ->
-                    parse_price_data(Transform, V);
-                _ -> parse_price_data(Value)
-            end;
+            parse_price_data(Value);
+        _ ->
+            Typed = value_to_type(Value, Type, RuleId, Context),
+            [[{property, Property}, {value, Typed}]]
+    end.
+
+
+value_to_type(Value, Type, RuleId, Context) ->
+    case Type of
+        <<"price">> ->
+            parse_price_data(Value);
         <<"match">> ->
             ReturnValue = case m_rsc:p(RuleId, transform, Context) of
                 <<"transform_true">> -> true;
@@ -206,8 +212,8 @@ map_value_to_type(Value, Type, Property, RuleId, Context) ->
                 _ -> true
             end,
             case is_empty(Value) of
-                true -> [[{property, Property}, {value, false}]];
-                false -> [[{property, Property}, {value, ReturnValue}]]
+                true -> false;
+                false -> ReturnValue
             end;
         <<"no_match">> ->
             ReturnValue = case m_rsc:p(RuleId, transform, Context) of
@@ -218,8 +224,8 @@ map_value_to_type(Value, Type, Property, RuleId, Context) ->
                 _ -> false
             end,
             case is_empty(Value) of
-                true -> [[{property, Property}, {value, ReturnValue}]];
-                false -> [[{property, Property}, {value, false}]]
+                true -> ReturnValue;
+                false -> false
             end;
         <<"contains">> ->
             ReturnValue = case m_rsc:p(RuleId, transform, Context) of
@@ -230,43 +236,29 @@ map_value_to_type(Value, Type, Property, RuleId, Context) ->
                 _ -> Value
             end,
             case is_empty(Value) of
-                true -> [[{property, Property}, {value, false}]];
+                true -> false;
                 false ->
                     ToMatch = m_rsc:p(RuleId, contains_value, Context),
                     case re:run(Value, ToMatch) of
-                        {match, _Captured} -> [[{property, Property}, {value, ReturnValue}]];
-                        nomatch -> [[{property, Property}, {value, false}]]
+                        {match, _Captured} -> ReturnValue;
+                        nomatch -> false
                     end
             end;
         _ ->
-            [[{property, Property}, {value, Value}]]
+            Value
     end.
 
 
 map_logical_value(Value, Type, RuleId, Context) ->
     case Type of
         <<"match">> ->
-            case is_empty(Value) of
-                true -> false;
-                false -> true
-            end;
+            value_to_type(Value, Type, RuleId, Context);
         <<"no_match">> ->
-            case is_empty(Value) of
-                true -> true;
-                false -> false
-            end;
+            value_to_type(Value, Type, RuleId, Context);
         <<"contains">> ->
-            case is_empty(Value) of
-                true -> false;
-                false ->
-                    ToMatch = m_rsc:p(RuleId, contains_value, Context),
-                    case re:run(Value, ToMatch) of
-                        {match, _Captured} -> true;
-                        nomatch -> false
-                    end
-            end;
+            value_to_type(Value, Type, RuleId, Context);
         _ -> false
-end.
+    end.
 
 
 parse_price_data(Value) ->
@@ -284,10 +276,6 @@ parse_price_data(Value) ->
     lists:map(fun({P, V}) ->
         [{property, P}, {value, V}]
     end, PriceData1).
-
-parse_price_data(Transform, Value) when Transform =:= is_from_price ->
-    Mapping = parse_price_data(Value),
-    [[{property, is_from_price}, {value, true}]|Mapping].
 
 
 %% @doc Removes empty binaries from list; trims whitespace from value.
@@ -478,7 +466,7 @@ comparison1(UrlData, Context) ->
             z_convert:to_binary(unescape_value(ValueForLanguage))
     end,
     Type = z_convert:to_atom(m_rsc:p(RuleId, type, Context)),
-    IsEqual = is_equal(Fetched2, Current, Type),
+    IsEqual = is_equal(Fetched2, Current, Type, RuleId, Context),
     IsEmpty = is_empty(Fetched2),
     IsCurrentEmpty = is_empty(Current),
     [
@@ -494,15 +482,8 @@ comparison1(UrlData, Context) ->
     ].
 
 
-is_equal(Fetched, Current, Type) ->
-    case Type of
-        match ->
-            define_boolean(Fetched) =:= define_boolean(Current);
-        no_match ->
-            define_boolean(Fetched) =:= define_boolean(Current);
-        _ ->
-            z_html:escape(z_html:nl2br(Fetched)) =:= z_html:escape(z_html:nl2br(Current))
-    end.
+is_equal(Fetched, Current, Type, RuleId, Context) ->
+    value_to_type(Fetched, Type, RuleId, Context) =:= Current.
 
 
 is_empty(Fetched) ->
@@ -532,29 +513,3 @@ unescape_value(Value) ->
 		N when is_integer(N) -> N;
 		V -> z_html:unescape(V)
 	end.
-
-
-define_boolean(Value) ->
-	Bool = case Value of
-		undefined -> false;
-		<<>> -> false;
-		<<"false">> -> false;
-		L when is_list(L) -> z_convert:to_bool(length(L));
-		C -> z_convert:to_bool(C)
-	end,
-	case Bool of
-	    false -> 0;
-	    _ -> 1
-	end.
-
-% convert_to_bool_int(Value) ->
-%     case Value of
-%         <<>> -> 0;
-%         undefined -> 0;
-%         _ ->
-%             Bool = z_convert:to_bool(length(z_convert:to_list(Value))),
-%             case Bool of
-%                 false -> 0;
-%                  _ -> 1
-%             end
-%     end.
