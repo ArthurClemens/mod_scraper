@@ -147,8 +147,25 @@ dl.scraper-status dt + dd {
 dl.scraper-status dd {
     padding: .1em 0;
 }
+dl.scraper-status dd.labels {
+    font-size: 0;
+}
 dl.scraper-status dd .label {
     font-weight: normal;
+    display: inline-block;
+    font-size: 11px;
+    line-height: 11px;
+    height: 17px;
+    padding: 3px 6px;
+    margin: 0 3px 3px 0;
+}
+dl.scraper-status dd .scraper-label-icon {
+    padding: 2px 6px 2px 0;
+}
+dl.scraper-status dd .label svg {
+    height: 12px;
+    vertical-align: text-bottom;
+    fill: #666;
 }
 .scraper-label-error {
     background-color: #EE4D0D;
@@ -162,7 +179,8 @@ dl.scraper-status dd .label {
     background-color: #139164;
     color: #fff;
 }
-.scraper-label-count {
+.scraper-label-neutral,
+.scraper-label-icon {
     background-color: rgba(0, 0, 0, .08);
     color: #666;
 }
@@ -177,9 +195,14 @@ dl.scraper-status dd .label {
 /* PROGRESS */
 
 .progress {
-    margin: 1em 0;
+    margin: 0 0 .5em 0;
     display: none;
 }
+
+.well .progress {
+    margin: 1em 0;
+}
+
 .updating .progress {
     display: block;
 }

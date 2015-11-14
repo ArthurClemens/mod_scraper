@@ -69,7 +69,7 @@ as
 {% wire name=eid
     action={replace
         target=tr_id
-        template="_admin_scraper_row.tpl"
+        template="_overview_scraper_row.tpl"
         id=id
         is_editable=is_editable
     }

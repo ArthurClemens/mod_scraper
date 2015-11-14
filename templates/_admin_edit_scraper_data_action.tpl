@@ -11,16 +11,18 @@ Params:
         status=status
         is_ready=is_ready
     %}
-    <button id="run_scraper" type="button" class="btn btn-primary"{% if not runnable %} disabled="disabled"{% endif %}>{_ Scrape data _}</button>
-    {% if is_ready %}
-        {% wire
-            id="run_scraper"
-            action={postback
-                delegate="mod_scraper"
-                postback={run
-                    id=id
+    {% if runnable %}
+        <button id="run_scraper" type="button" class="btn btn-primary">{_ Scrape data _}</button>
+        {% if is_ready %}
+            {% wire
+                id="run_scraper"
+                action={postback
+                    delegate="mod_scraper"
+                    postback={run
+                        id=id
+                    }
                 }
-            }
-        %}
+            %}
+        {% endif %}
     {% endif %}
 </div>

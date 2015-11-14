@@ -35,12 +35,13 @@ as
     warning_count,
     ok_count
 %}
+{% with
+    error_count + warning_count + ok_count
+    as
+    total_count
+%}
     <dl class="scraper-status">
-        {% if in_progress %}
-            <dt>{_ In progress _}</dt>
-        {% elif is_scheduled %}
-            <dt>{_ Scheduled _}</dt>
-        {% else %}
+        {% if in_progress and not is_scheduled %}
             {% if status_info == "no_urls" %}
                 <dt class="form-field-error">{_ No data source _}</dt>
             {% elif status_info == "no_rules" %}
@@ -56,8 +57,12 @@ as
             {% endwith %}
         {% endif %}
 
-        <dd>
-            <span class="label scraper-label-count">{{ error_count + warning_count + ok_count }}</span>
+        <dd class="labels">
+            {% if is_scheduled or in_progress %}
+                <span class="label scraper-label-icon">{% include "_scraper_icon_time.tpl" %} {{ total_count }}</span>
+            {% else %}
+                <span class="label scraper-label-neutral">{{ total_count }}</span>
+            {% endif %}
             {% if error_count %}
                 <span class="label scraper-label-error">{{ error_count }}</span>
             {% endif %}
@@ -82,6 +87,7 @@ as
             dateFormat: "X"
         });
     {% endjavascript %}
+{% endwith %}
 {% endwith %}
 {% endwith %}
 {% endwith %}
