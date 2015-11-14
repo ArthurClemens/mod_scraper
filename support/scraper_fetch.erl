@@ -55,7 +55,8 @@ fetch(Url, Options) ->
 fetch(Url0, Options, Rules) ->
     Url = normalize_url(Url0),
     UrlContext = url_context(Url),
-    case get_page_body(Url) of
+
+    case get_page_body(Url, UrlContext) of
         {Length, Body} when is_integer(Length) ->
             Fetched = parse_body(Body, Rules, Options),
             [
@@ -155,6 +156,8 @@ test_xpath(Url, Query) ->
 %% Add protocol if it doesn't exist
 -spec normalize_url(Url) -> binary() when
     Url :: binary().
+normalize_url(Url) when Url =:= undefined ->
+    <<"">>;
 normalize_url(Url) when is_list(Url) ->
     normalize_url(list_to_binary(Url));
 normalize_url(<<"http://", T/binary>>) ->
@@ -165,11 +168,34 @@ normalize_url(Url) ->
     normalize_url(<<?DEFAULT_PROTOCOL/binary, "//", Url/binary>>).
 
 
--spec get_page_body(Url) -> {integer(), list()} | {error, Reason} when
+-spec get_page_body(Url, UrlContext) -> {integer(), list()} | {error, Reason} when
     Url :: binary(),
+    UrlContext :: binary(),
     Reason :: any().
-get_page_body(Url) ->
-    case httpc:request(get, {binary_to_list(Url), []}, [{timeout, timer:seconds(?TIMEOUT)}], []) of
+get_page_body(Url, UrlContext) ->
+    HTTPOptions = [{autoredirect, false}, {timeout, timer:seconds(?TIMEOUT)}],
+    case httpc:request(get, {binary_to_list(Url), []}, HTTPOptions, []) of
+        {ok, {{_Version, 301, _StatusMsg}, Headers, _Body}} ->
+            handle_moved(Headers, UrlContext);
+        {ok, {{_Version, 302, _StatusMsg}, Headers, _Body}} ->
+            handle_moved(Headers, UrlContext);
+        RequestResult -> handle_request_result(RequestResult)
+    end.
+
+handle_moved(Headers, UrlContext) ->
+    TestAbsoluteUrl = <<"^http">>,
+    Location = proplists:get_value("location", Headers),
+    AbsoluteUrl = case re:run(Location, TestAbsoluteUrl) of
+        {match, _} -> Location;
+        nomatch ->
+            {BaseUrl, _} = UrlContext,
+            binary_to_list(BaseUrl) ++ Location
+    end,
+    Result = httpc:request(get, {AbsoluteUrl, []}, [{autoredirect, false}, {timeout, timer:seconds(?TIMEOUT)}], []),
+    handle_request_result(Result).
+
+handle_request_result(RequestResult) ->
+    case RequestResult of
         {ok, {_, Headers, Body}} ->
         	case content_length(Headers) of
 				0 ->
@@ -184,7 +210,6 @@ get_page_body(Url) ->
 			end;
         Error -> Error
     end.
-
 
 -spec remove_duplicates(L) -> list() when
     L :: list().
