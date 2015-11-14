@@ -6,12 +6,20 @@ Params:
 <div class="form-group row">
     <label class="control-label col-md-3">{_ Return value _}</label>
     <div class="col-md-9">
-        <select class="form-control" name="transform">
+        {% wire id="transform"
+            type="change"
+            action={submit closest}
+            action={update
+                target="scraper_rule_settings"
+                template="_scraper_rule_settings.tpl"
+                id=id
+                is_editable=is_editable
+            }
+        %}
+        <select class="form-control" name="transform" id="transform">
             <option value=""{% if id.transform=="" %} selected="selected"{% endif %}></option>
             <option value="transform_true"{% if id.transform=="transform_true" %} selected="selected"{% endif %}>{_ True _}</option>
-            <option value="transform_one"{% if id.transform=="transform_one" %} selected="selected"{% endif %}>{_ 1 _}</option>
             <option value="transform_false"{% if id.transform=="transform_false" %} selected="selected"{% endif %}>{_ False _}</option>
-            <option value="transform_zero"{% if id.transform=="transform_zero" %} selected="selected"{% endif %}>{_ 0 _}</option>
         </select>
     </div>
 </div>

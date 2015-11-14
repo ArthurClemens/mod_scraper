@@ -26,17 +26,20 @@ as
     digests,
     time_since_id
 %}
+{% with
+    digests.errors,
+    digests.warnings,
+    digests.ok
+    as
+    error_count,
+    warning_count,
+    ok_count
+%}
     <dl class="scraper-status">
         {% if in_progress %}
             <dt>{_ In progress _}</dt>
         {% elif is_scheduled %}
             <dt>{_ Scheduled _}</dt>
-        {% elif is_ready %}
-            <dt>
-                {_ Ready for automatic scraping _}
-            </dt>
-        {% elif not id.is_published %}
-            <dt>{_ Ready for manual scraping _}</dt>
         {% else %}
             {% if status_info == "no_urls" %}
                 <dt class="form-field-error">{_ No data source _}</dt>
@@ -53,32 +56,22 @@ as
             {% endwith %}
         {% endif %}
 
-        {% if in_progress %}
-            {# #}
-        {% elif digests.data %}
-            <dd class="text-muted">{_ Scraped _} <span id="{{ time_since_id }}"></span></dd>
-        {% else %}
-            <dd class="text-muted">{_ Nothing scraped yet _}</dd>
-        {% endif %}
-
-        {% with
-            digests.errors,
-            digests.warnings
-            as
-            error_count,
-            warning_count
-        %}
-            {% if error_count or warning_count %}
-                <dd class="form-field-error">
-                    {% if error_count %}
-                        {_ Errors: _} {{ error_count }}
-                    {% endif %}
-                    {% if warning_count %}
-                        {_ Warnings: _} {{ warning_count }}
-                    {% endif %}
-                </dd>
+        <dd>
+            <span class="label scraper-label-count">{{ error_count + warning_count + ok_count }}</span>
+            {% if error_count %}
+                <span class="label scraper-label-error">{{ error_count }}</span>
             {% endif %}
-        {% endwith %}
+            {% if warning_count %}
+                <span class="label scraper-label-warning">{{ warning_count }}</span>
+            {% endif %}
+            <span class="label scraper-label-ok">{{ ok_count }}</span>
+            {% if digests.data %}
+                <span class="label scraper-label-date" id="{{ time_since_id }}"></span>
+            {% endif %}
+            {% if is_ready %}
+                <span class="label scraper-label-automatic">{_ automatic_}</span>
+            {% endif %}
+        </dd>
     </dl>
     {% javascript %}
         modScraper.initTimeSince({
@@ -89,6 +82,7 @@ as
             dateFormat: "X"
         });
     {% endjavascript %}
+{% endwith %}
 {% endwith %}
 {% endwith %}
 {% endwith %}

@@ -7,7 +7,6 @@
 {% include "_admin_edit_content_advanced.tpl" %}
 {% lib
 	"mod_scraper/css/mod_scraper.css"
-	"mod_scraper/css/mod_scraper-progress.css"
 %}
 {% lib
     "mod_scraper/js/moment-with-locales.min.js"

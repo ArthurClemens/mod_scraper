@@ -1,6 +1,12 @@
 
-/* Scraper edit page */
+/* OVERVIEW */
+.table > tbody > tr.updating,
+.table-striped > tbody > tr.updating {
+    background-color: #E8F5E9;
+}
 
+
+/* EDIT PAGE */
 .table.scraper-url-table .label {
     color: #999;
 }
@@ -45,6 +51,12 @@
 }
 
 .scraper-view-warnings .result-views .panel.warning {
+    display: block;
+}
+.scraper-view-warnings .result-views .card-item {
+    display: none;
+}
+.scraper-view-warnings .result-views .card-item.empty {
     display: block;
 }
 
@@ -95,6 +107,7 @@
     margin-top: -2px;
 }
 
+/* RULES */
 .scraper-dialog-input {
     cursor: pointer;
 }
@@ -115,4 +128,58 @@
 }
 .scraper-rule-label {
     color: #999;
+}
+
+/* STATUS */
+
+.well .scraper-status {
+    margin: 0 0 1em 0;
+}
+dl.scraper-status {
+    margin: 0;
+}
+dl.scraper-status dt {
+    font-weight: normal;
+}
+dl.scraper-status dt + dd {
+    margin-top: .25em;
+}
+dl.scraper-status dd {
+    padding: .1em 0;
+}
+dl.scraper-status dd .label {
+    font-weight: normal;
+}
+.scraper-label-error {
+    background-color: #EE4D0D;
+    color: #fff;
+}
+.scraper-label-warning {
+    background-color: #F19642;
+    color: #fff;
+}
+.scraper-label-ok {
+    background-color: #139164;
+    color: #fff;
+}
+.scraper-label-count {
+    background-color: rgba(0, 0, 0, .08);
+    color: #666;
+}
+.scraper-label-date {
+    background-color: rgba(0, 0, 0, .08);
+    color: #666;
+}
+.scraper-label-automatic {
+    background-color: #CC78A7;
+}
+
+/* PROGRESS */
+
+.progress {
+    margin: 1em 0;
+    display: none;
+}
+.updating .progress {
+    display: block;
 }

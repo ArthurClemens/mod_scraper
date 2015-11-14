@@ -104,6 +104,7 @@ urls(ScraperId, Context) ->
         lists:map(fun(P) ->
             Url = m_rsc:p(P, url, Context),
             case Url of
+                <<>> -> [];
                 undefined -> [];
                 _ ->
                     [
@@ -118,6 +119,7 @@ urls(ScraperId, Context) ->
         <<"url">> ->
             Url = m_rsc:p(ScraperId, url_source_url, Context),
             case Url of
+                <<>> -> [];
                 undefined -> [];
                 _ ->
                     [[
@@ -130,6 +132,7 @@ urls(ScraperId, Context) ->
             PagePropId = m_rsc:p(ScraperId, page_prop_source, Context),
             Url = m_rsc:p(PagePropId, url, Context),
             case Url of
+                <<>> -> [];
                 undefined -> [];
                 _ ->
                     [[
@@ -206,21 +209,17 @@ value_to_type(Value, Type, RuleId, Context) ->
         <<"match">> ->
             ReturnValue = case m_rsc:p(RuleId, transform, Context) of
                 <<"transform_true">> -> true;
-                <<"transform_one">> -> 1;
                 <<"transform_false">> -> false;
-                <<"transform_zero">> -> 0;
                 _ -> true
             end,
             case is_empty(Value) of
-                true -> false;
+                true -> undefined;
                 false -> ReturnValue
             end;
         <<"no_match">> ->
             ReturnValue = case m_rsc:p(RuleId, transform, Context) of
                 <<"transform_true">> -> true;
-                <<"transform_one">> -> 1;
                 <<"transform_false">> -> false;
-                <<"transform_zero">> -> 0;
                 _ -> false
             end,
             case is_empty(Value) of
@@ -230,13 +229,11 @@ value_to_type(Value, Type, RuleId, Context) ->
         <<"contains">> ->
             ReturnValue = case m_rsc:p(RuleId, transform, Context) of
                 <<"transform_true">> -> true;
-                <<"transform_one">> -> 1;
                 <<"transform_false">> -> false;
-                <<"transform_zero">> -> 0;
                 _ -> Value
             end,
             case is_empty(Value) of
-                true -> false;
+                true -> undefined;
                 false ->
                     ToMatch = m_rsc:p(RuleId, contains_value, Context),
                     case re:run(Value, ToMatch) of
@@ -403,6 +400,8 @@ digest(Result, Context) ->
         end
     end, 0, MappedData),
 
+    OkCount = length(MappedData) - WarningCount - ErrorCount,
+
     LastDate = lists:foldl(fun({_UrlAt, Data}, Acc) ->
         case proplists:get_value(date, Data) of
             undefined -> Acc;
@@ -424,6 +423,7 @@ digest(Result, Context) ->
     [
         {data, DataDigest},
         {errors, ErrorCount},
+        {ok, OkCount},
         {warnings, WarningCount},
         {differences, DifferencesCount},
         {date, LastDate}

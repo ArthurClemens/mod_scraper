@@ -4,8 +4,7 @@
 
 {% block content %}
 {% lib
-	"mod_scraper/css/mod_scraper-overview.css"
-	"mod_scraper/css/mod_scraper-progress.css"
+	"mod_scraper/css/mod_scraper.css"
 %}
 {% with m.acl.is_allowed.use.mod_scraper as is_editable %}
     <div class="admin-header">
