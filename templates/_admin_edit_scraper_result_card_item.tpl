@@ -2,7 +2,7 @@
 Params:
 - card_id
 - comparison
-- connected_rsc_id
+- destination
 - row_id
 #}
 
@@ -61,7 +61,7 @@ Params:
 					delegate="mod_scraper"
 					postback={copy
 						property=property
-						connected_rsc_id=connected_rsc_id
+						destination=destination
 						value=fetched
 						action={replace
 							target=card_id

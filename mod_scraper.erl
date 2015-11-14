@@ -94,7 +94,7 @@ event(#postback{message={run_all, []}}, Context) ->
 
 event(#postback{message={copy, Args}}, Context) ->
     Property = proplists:get_value(property, Args),
-    DestinationId = proplists:get_value(connected_rsc_id, Args),
+    DestinationId = proplists:get_value(destination, Args),
     Action = proplists:get_value(action, Args, []),
     Value = z_convert:to_binary(proplists:get_value(value, Args)),
     m_rsc:update(DestinationId, [{Property, Value}], Context),
@@ -398,7 +398,8 @@ do_next_url_process(UrlData, State) ->
 fetch_url(UrlData, Context) ->
     ScraperId = proplists:get_value(scraper, UrlData),
     Url = proplists:get_value(url, UrlData),
-    DestinationId = rsc_id(proplists:get_value(destination, UrlData), Context),
+    Destination = proplists:get_value(destination, UrlData),
+    DestinationId = rsc_id(Destination, Context),
     RuleSource = proplists:get_value(rule_source, UrlData),
     RuleIds = rule_ids(RuleSource, Context),
     Rules = lists:flatten(lists:map(fun(RuleId) ->
@@ -444,7 +445,6 @@ fetch_url(UrlData, Context) ->
                                 CleanValue = m_scraper:cleanup_value(Value),
                                 Mapped = m_scraper:map_logical_value(CleanValue, Type, RuleId, Context),
                                 case Mapped of
-                                    false -> Acc;
                                     true ->
                                         % recursively call fetch_url
                                         UrlData1 = lists:keydelete(results, 1, UrlData),
@@ -452,11 +452,13 @@ fetch_url(UrlData, Context) ->
                                         UrlData3 = [{results, Results}|UrlData2],
                                         UrlData4 = [{rule_source, ChainedScraperId}|UrlData3],
                                         fetch_url(UrlData4, Context),
-                                        []
+                                        [];
+                                    _ -> Acc
                                 end
                         end
                 end
             end, Scraped1, RuleIds),
+
             case Scraped2 of
                 [] -> undefined;
                 _ -> store_result(ScraperId, DestinationId, Url, undefined, Date, Scraped2, RuleIds, Context)
@@ -692,6 +694,8 @@ ets_table_name(Context) ->
 
 rsc_id(Identifier, _Context) when is_integer(Identifier) ->
     Identifier;
+rsc_id(Identifier, _Context) when Identifier =:= undefined ->
+    undefined;
 rsc_id(Identifier, Context)  ->
     {ok, Id} = m_rsc:name_to_id(Identifier, Context),
     Id.

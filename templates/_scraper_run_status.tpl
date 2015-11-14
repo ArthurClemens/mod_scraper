@@ -65,7 +65,7 @@ as
                 <span class="label scraper-label-warning">{{ warning_count }}</span>
             {% endif %}
             <span class="label scraper-label-ok">{{ ok_count }}</span>
-            {% if digests.data %}
+            {% if digests.data and not in_progress %}
                 <span class="label scraper-label-date" id="{{ time_since_id }}"></span>
             {% endif %}
             {% if is_ready %}

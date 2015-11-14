@@ -257,6 +257,9 @@ The processing flow then looks as follows:
 
 <img src="http://arthurclemens.github.io/assets/mod_scraper/docs/chaining-scrapers-diagram.png" style="width:800px; margin: 0 auto" />
 
+Note that the sub-scrapers "Detail Page" and "Search Results Links" each can have a data source themselves. The data source is useful for testing (and for running the scraper standalone); it will be ignored when the main scraper runs.
+
+
 
 ## Useful data
 

@@ -195,7 +195,12 @@ has_rules(Id, Context) ->
 map_value_to_type(Value, Type, Property, RuleId, Context) ->
     case Type of
         <<"price">> ->
-            parse_price_data(Value);
+            case Value of
+                [{Transform, V}] ->
+                    % is_from_price
+                    parse_price_data(Transform, V);
+                _ -> parse_price_data(Value)
+            end;
         _ ->
             Typed = value_to_type(Value, Type, RuleId, Context),
             [[{property, Property}, {value, Typed}]]
@@ -274,6 +279,10 @@ parse_price_data(Value) ->
         [{property, P}, {value, V}]
     end, PriceData1).
 
+parse_price_data(Transform, Value) when Transform =:= is_from_price ->
+    Mapping = parse_price_data(Value),
+    [[{property, is_from_price}, {value, true}]|Mapping].
+
 
 %% @doc Removes empty binaries from list; trims whitespace from value.
 -spec cleanup_value(ValueList) -> list() when
@@ -307,7 +316,7 @@ digest(Result, Context) ->
                     {date, proplists:get_value(date, Row)},
                     {error, proplists:get_value(error, Row)},
                     {warning, proplists:get_value(warning, Row)},
-                    {connected_rsc_id, proplists:get_value(connected_rsc_id, Row)},
+                    {destination, proplists:get_value(destination, Row)},
                     {values, [Row]}
                 ]}|Acc];
             R ->
@@ -437,7 +446,7 @@ comparison(UrlData, Context) ->
     end.
 
 comparison1(UrlData, Context) ->
-    Id = proplists:get_value(connected_rsc_id, UrlData),
+    Id = proplists:get_value(destination, UrlData),
     Fetched = proplists:get_value(data, UrlData),
     % lift value out of list
     Fetched1 = case Fetched of

@@ -65,7 +65,7 @@ put(ScraperId, RuleId, ConnectedId, Url, Raw, Error, Warning, Date, Data, Proper
     Columns = [
         {scraper_id, ScraperId},
         {rule_id, RuleId},
-        {connected_rsc_id, RId},
+        {destination, RId},
         {url, Url},
         {raw, Raw},
         {error, Error},
@@ -104,7 +104,7 @@ init(Context) ->
                     is_nullable=false
                 },
                 #column_def{
-                    name=connected_rsc_id,
+                    name=destination,
                     type="integer",
                     is_nullable=false
                 },
@@ -153,7 +153,7 @@ init(Context) ->
                         on update cascade on delete cascade", Context),
             % Delete row when connected page is deleted
             z_db:equery("alter table mod_scraper_cache add
-                        constraint fk_mod_scraper_connected_page_id foreign key (connected_rsc_id) references rsc(id)
+                        constraint fk_mod_scraper_connected_page_id foreign key (destination) references rsc(id)
                         on update cascade on delete cascade", Context),
             % Delete row when rule is deleted
             z_db:equery("alter table mod_scraper_cache add

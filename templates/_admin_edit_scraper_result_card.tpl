@@ -6,20 +6,20 @@ Params:
 #}
 {% with item|default:m.scraper[id].digests.data[index] as item %}
 {% with item.values,
-		item.connected_rsc_id,
+		item.destination,
 		#card.index,
 		#card.index ++ "-since"
 		as
 		values,
-		connected_rsc_id,
+		destination,
 		card_id,
 		time_since_id
 %}
 <div id="{{ card_id }}" class="panel panel-default{% if item.all_empty %} empty{% endif %}{% if item.all_equal %} equal{% endif %}{% if item.error %} error{% endif %}{% if item.warning %} warning{% endif %}{% if item.has_differences %} has_differences{% endif %}">
 	<div class="panel-heading">
-		{% if id != item.connected_rsc_id %}
+		{% if id != item.destination %}
 			<h4>
-				<a href="{% url admin_edit_rsc id=connected_rsc_id %}" target="_blank">{{ m.rsc[connected_rsc_id].title }}</a>
+				<a href="{% url admin_edit_rsc id=destination %}" target="_blank">{{ m.rsc[destination].title }}</a>
 			</h4>
 		{% endif %}
 		<div class="text-muted meta">
@@ -50,7 +50,7 @@ Params:
         {% for value in values %}
             {% with value.comparison as comparison %}
                 {% include "_admin_edit_scraper_result_card_item.tpl"
-                    connected_rsc_id=connected_rsc_id
+                    destination=destination
                     comparison=comparison
                     card_id=card_id
                 %}

@@ -82,25 +82,47 @@ datamodel() ->
             },
 
             % example pages
+
             % scrapers
+            % by default set "is_published" to false to prevent automatic running
+
+            % scraper bol.com
             {bol_com_scraper_detail_page, scraper, [
                 {title, <<"Bol.com scraper detail page">>},
                 {source, <<"page_prop">>},
-                {page_prop_source, <<"bol_scraper_target_detail_page">>},
+                {page_prop_source, <<"bol_com_scraper_target_detail_page">>},
                 {is_published, false}
             ]},
             {bol_com_scraper_search_results_page, scraper, [
                 {title, <<"Bol.com scraper search results page">>},
                 {source, <<"page_prop">>},
-                {page_prop_source, <<"bol_scraper_target_search_results_page">>},
+                {page_prop_source, <<"bol_com_scraper_target_search_results_page">>},
                 {is_published, false}
             ]},
             {bol_com_scraper, scraper, [
                 {title, <<"Bol.com scraper">>},
                 {source, <<"page_prop">>},
-                {page_prop_source, <<"bol_scraper_target_detail_page">>}
+                {page_prop_source, <<"fonq_scraper_target_detail_page">>},
+                {is_published, false}
             ]},
+
+            % scraper fonq.nl
+            {fonq_nl_scraper_detail_page, scraper, [
+                {title, <<"Fonq.nl scraper detail page">>},
+                {is_published, false}
+            ]},
+            {fonq_nl_scraper_search_results_page, scraper, [
+                {title, <<"Fonq.nl scraper search results page">>},
+                {is_published, false}
+            ]},
+            {fonq_nl_scraper, scraper, [
+                {title, <<"Fonq.nl scraper">>},
+                {is_published, false}
+            ]},
+
             % rules
+
+            % rules bol.com
             {bol_com_rule_no_price_found, automatic_scraper_rule, [
                 {title, <<"Bol.com rule: no price found">>},
                 {type, <<"no_match">>},
@@ -127,6 +149,56 @@ datamodel() ->
                 {chain_scraper, bol_com_scraper_detail_page},
                 {chain_result, <<"lowest_price">>}
             ]},
+
+            % rules fonq.nl
+            {fonq_nl_rule_no_price_found, automatic_scraper_rule, [
+                {title, <<"Fonq.nl rule: no price found">>},
+                {type, <<"no_match">>},
+                {rule, <<"string(//*[@itemprop='price'][1])">>},
+                {transform, "transform_true"},
+                {property, <<"no_price_found">>}
+            ]},
+            {fonq_nl_rule_description, scraper_rule, [
+                {title, <<"Fonq.nl rule: description">>},
+                {type, <<"text">>},
+                {rule, <<"string(.//*[@id='product-description'])">>},
+                {property, <<"summary">>}
+            ]},
+            {fonq_nl_rule_brand, scraper_rule, [
+                {title, <<"Fonq.nl rule: brand">>},
+                {type, <<"text">>},
+                {rule, <<"string(.//*[@id='product-brand']//h3[contains(@class, 'primary-heading-small')])">>},
+                {property, <<"brand">>}
+            ]},
+            {fonq_nl_rule_sold_out, scraper_rule, [
+                {title, <<"Fonq.nl rule: is sold out">>},
+                {type, <<"contains">>},
+                {rule, <<"string(.//*[@class='delivery'])">>},
+                {contains_value, <<"Uitverkocht">>},
+                {transform, "transform_true"},
+                {property, <<"is_unavailable">>}
+            ]},
+            {fonq_nl_rule_detail_pages, scraper_rule, [
+                {title, <<"Fonq.nl rule: detail pages">>},
+                {type, <<"match">>},
+                {rule, <<"//*[@itemtype='http://schema.org/Product']">>},
+                {chain_scraper, fonq_nl_scraper_detail_page}
+            ]},
+            {fonq_nl_rule_search_results_pages, scraper_rule, [
+                {title, <<"Fonq.nl rule: search results pages">>},
+                {type, <<"match">>},
+                {rule, <<".//div[@id='products__container']">>},
+                {chain_scraper, fonq_nl_scraper_search_results_page}
+            ]},
+            {fonq_nl_rule_handle_search_results_links, scraper_rule, [
+                {title, <<"Fonq.nl rule: handle search results links">>},
+                {type, <<"urls">>},
+                {rule, <<".//*[@class='product-title']//a//@href">>},
+                {chain_scraper, fonq_nl_scraper_detail_page},
+                {chain_result, <<"lowest_price">>}
+            ]},
+
+            % rules other
             {amazon_com_rule_title, automatic_scraper_rule, [
                 {title, <<"Amazon.com rule: product title">>},
                 {type, <<"text">>},
@@ -181,22 +253,24 @@ datamodel() ->
                 {transform, "transform_true"},
                 {property, <<"no_price_found">>}
             ]},
-            % target pages
+
+            % example target pages (bol.com only)
             {bol_scraper_target_search, query, [
                 {title, <<"Bol.com target search query">>},
                 {query, <<"cat='scraper_target'">>}
             ]},
-            {bol_scraper_target_detail_page, scraper_target, [
+            {bol_com_scraper_target_detail_page, scraper_target, [
                 {title, <<"Bol.com product page">>},
                 {url, <<"http://www.bol.com/nl/p/withings-smart-body-analyzer-weegschaal-zwart/9200000013728054/">>}
             ]},
-            {bol_scraper_target_search_results_page, scraper_target, [
+            {bol_com_scraper_target_search_results_page, scraper_target, [
                 {title, <<"Bol.com search results page">>},
                 {url, <<"http://www.bol.com/nl/l/speelgoed/spellen-actiespellen/N/20301/filter_N/4282429269+8069+4279522808+4279522614/filter_Nf/12194+BTWN+60+100/index.html?collapse=8047+19042+4842&limit=18884+19042+4842">>}
             ]}
         ]},
 
         {edges, [
+            % bol.com
             {bol_com_scraper_detail_page, hasscraperrule, rule_itemprop_name_visible_to_page_title},
             {bol_com_scraper_detail_page, hasscraperrule, rule_itemprop_price_attr},
             {bol_com_scraper_detail_page, hasscraperrule, rule_itemprop_price_currency_attr},
@@ -207,7 +281,21 @@ datamodel() ->
             {bol_com_scraper_search_results_page, hasscraperrule, bol_com_rule_handle_search_results_links},
 
             {bol_com_scraper, hasscraperrule, bol_com_rule_search_results_pages},
-            {bol_com_scraper, hasscraperrule, bol_com_rule_detail_pages}
+            {bol_com_scraper, hasscraperrule, bol_com_rule_detail_pages},
+
+            % fonq.nl
+            {fonq_nl_scraper_detail_page, hasscraperrule, rule_itemprop_name_visible_to_page_title},
+            {fonq_nl_scraper_detail_page, hasscraperrule, rule_itemprop_price_visible},
+            {fonq_nl_scraper_detail_page, hasscraperrule, rule_itemprop_price_currency_attr},
+            {fonq_nl_scraper_detail_page, hasscraperrule, fonq_nl_rule_description},
+            {fonq_nl_scraper_detail_page, hasscraperrule, fonq_nl_rule_brand},
+            {fonq_nl_scraper_detail_page, hasscraperrule, fonq_nl_rule_no_price_found},
+            {fonq_nl_scraper_detail_page, hasscraperrule, fonq_nl_rule_sold_out},
+
+            {fonq_nl_scraper_search_results_page, hasscraperrule, fonq_nl_rule_handle_search_results_links},
+
+            {fonq_nl_scraper, hasscraperrule, fonq_nl_rule_search_results_pages},
+            {fonq_nl_scraper, hasscraperrule, fonq_nl_rule_detail_pages}
         ]}
     ].
 
