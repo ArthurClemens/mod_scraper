@@ -105,7 +105,7 @@ datamodel() ->
                 {title, <<"Bol.com rule: no price found">>},
                 {type, <<"no_match">>},
                 {rule, <<"//*[@itemprop='price']//@content">>},
-                {transform, "1"},
+                {transform, "transform_true"},
                 {property, <<"no_price_found">>}
             ]},
             {bol_com_rule_detail_pages, scraper_rule, [
@@ -142,7 +142,7 @@ datamodel() ->
                 {title, <<"Amazon.com rule: no price found">>},
                 {type, <<"no_match">>},
                 {rule, <<"string(.//*[@id='priceblock_ourprice'])">>},
-                {transform, "1"},
+                {transform, "transform_true"},
                 {property, <<"no_price_found">>}
             ]},
             {amazon_de_rule_title, automatic_scraper_rule, [
@@ -160,7 +160,7 @@ datamodel() ->
                 {title, <<"Amazon.de rule: no price found">>},
                 {type, <<"no_match">>},
                 {rule, <<"string(.//*[@id='priceblock_ourprice'])">>},
-                {transform, "1"},
+                {transform, "transform_true"},
                 {property, <<"no_price_found">>}
             ]},
             {amazon_co_uk_rule_title, automatic_scraper_rule, [
@@ -178,7 +178,7 @@ datamodel() ->
                 {title, <<"Amazon.co.uk rule: no price found">>},
                 {type, <<"no_match">>},
                 {rule, <<"string(.//*[@id='priceblock_ourprice'])">>},
-                {transform, "1"},
+                {transform, "transform_true"},
                 {property, <<"no_price_found">>}
             ]},
             % target pages

@@ -94,9 +94,9 @@ How data should be processed. Supported types are:
 
   * **Text**: for titles, summaries, product info, and so on
   * **Price**: the price text will be parsed and written to extra fields: `price_text`, `price_currency`, `price_whole`, `price_fraction`
-  * **Match**: transform to `true`/`false`/`1`/`0` when a match is found
-  * **No match**: transform to `true`/`false`/`1`/`0` when no match is found
-  * **Contains**: transform to `true`/`false`/`1`/`0` when a specific text is found
+  * **Match**: transform to `true`/`false` when a match is found
+  * **No match**: transform to `true`/`false` when no match is found
+  * **Contains**: transform to `true`/`false` when a specific text is found
   * **URLs**: handle links on the page for further processing
 
 ##### Property mapping
