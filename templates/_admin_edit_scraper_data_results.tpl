@@ -7,8 +7,8 @@ Params:
 {% if digests and digests.data %}
 	<ul class="nav nav-tabs nav-justified">
 		<li><a href="#all">{_ All results _}</a></li>
-        <li class="{% if not digests.errors %}disabled{% endif %}"><a href="#errors">{_ Errors _}</a></li>
-        <li class="{% if not digests.warnings %}disabled{% endif %}"><a href="#warnings">{_ Warnings _}</a></li>
+        <li class="{% if not digests.errors and not digests.item_errors %}disabled{% endif %}"><a href="#errors">{_ Errors _}</a></li>
+        <li class="{% if not digests.warnings and not digests.item_warnings %}disabled{% endif %}"><a href="#warnings">{_ Warnings _}</a></li>
         <li class="{% if not digests.differences %}disabled{% endif %}"><a href="#differences">{_ Differences _}</a></li>
 	</ul>
 	<div class="result-views">

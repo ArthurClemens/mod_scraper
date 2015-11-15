@@ -31,32 +31,36 @@
     display: none;
 }
 
-.scraper-view-differences .result-views .card.equal,
-.scraper-view-differences .result-views .card.empty,
-.scraper-view-differences .result-views .card-item.equal,
-.scraper-view-differences .result-views .card-item.empty {
+.scraper-view-differences .card.equal,
+.scraper-view-differences .card.empty,
+.scraper-view-differences .card-item.equal,
+.scraper-view-differences .card-item.empty {
     display: none;
 }
 
-.scraper-view-all .result-views .panel {
+.scraper-view-all .panel {
     display: block;
 }
 
-.scraper-view-differences .result-views .panel.has_differences {
+.scraper-view-differences .panel.has_differences {
     display: block;
 }
 
-.scraper-view-errors .result-views .panel.error {
-    display: block;
-}
-
-.scraper-view-warnings .result-views .panel.warning {
-    display: block;
-}
-.scraper-view-warnings .result-views .card-item {
+.scraper-view-errors .card-item {
     display: none;
 }
-.scraper-view-warnings .result-views .card-item.empty {
+.scraper-view-errors .panel.error,
+.scraper-view-errors .card-item.error {
+    display: block;
+}
+
+.scraper-view-warnings .panel.warning {
+    display: block;
+}
+.scraper-view-warnings .card-item {
+    display: none;
+}
+.scraper-view-warnings .card-item.empty {
     display: block;
 }
 
@@ -132,9 +136,10 @@
 
 /* STATUS */
 
-.well .scraper-status {
-    margin: 0 0 1em 0;
+.well dl.scraper-status + button {
+    margin-top: 1em;
 }
+
 dl.scraper-status {
     margin: 0;
 }
@@ -200,7 +205,7 @@ dl.scraper-status dd .label svg {
 }
 
 .well .progress {
-    margin: 1em 0;
+    margin-bottom: 1em;
 }
 
 .updating .progress {

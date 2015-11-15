@@ -294,6 +294,7 @@ cleanup_value(ValueList) ->
             List = [V || V <- ValueList, V =/= <<>>],
             case List of
                 [] -> <<>>;
+                [Bin|_] when is_binary(Bin) -> z_string:trim(Bin);
                 [Bin] when is_binary(Bin) -> z_string:trim(Bin);
                 _ -> List
             end
@@ -390,9 +391,31 @@ digest(Result, Context) ->
                     end
             end
         end, 0, WithComparison),
+
         HasDifferences = (NotEmptyOrEqualCount > 0),
         Data4 = [{has_differences, HasDifferences}|Data3],
-        Data4
+
+        ErrorCount = lists:foldl(fun(WC, Acc) ->
+            Comparison = proplists:get_value(comparison, WC),
+            Error = proplists:get_value(error, Comparison),
+            case Error of
+                undefined -> Acc;
+                _ -> Acc + 1
+            end
+        end, 0, WithComparison),
+        Data5 = [{errors, ErrorCount}|Data4],
+
+        WarningCount = lists:foldl(fun(WC, Acc) ->
+            Comparison = proplists:get_value(comparison, WC),
+            Warning = proplists:get_value(warning, Comparison),
+            case Warning of
+                undefined -> Acc;
+                _ -> Acc + 1
+            end
+        end, 0, WithComparison),
+        Data6 = [{warnings, WarningCount}|Data5],
+
+        Data6
     end, MappedData),
 
     ErrorCount = lists:foldl(fun({_UrlAt, Data}, Acc) ->
@@ -429,9 +452,25 @@ digest(Result, Context) ->
         end
     end, 0, DataDigest),
 
+    ItemErrorCount = lists:foldl(fun(Data, Acc) ->
+        case proplists:get_value(errors, Data) of
+            undefined -> Acc;
+            Count -> Acc + Count
+        end
+    end, 0, DataDigest),
+
+    ItemWarningCount = lists:foldl(fun(Data, Acc) ->
+        case proplists:get_value(warnings, Data) of
+            undefined -> Acc;
+            Count -> Acc + Count
+        end
+    end, 0, DataDigest),
+
     [
         {data, DataDigest},
         {errors, ErrorCount},
+        {item_errors, ItemErrorCount},
+        {item_warnings, ItemWarningCount},
         {ok, OkCount},
         {warnings, WarningCount},
         {differences, DifferencesCount},
@@ -440,12 +479,6 @@ digest(Result, Context) ->
 
 
 comparison(UrlData, Context) ->
-    case proplists:get_value(error, UrlData) of
-        undefined -> comparison1(UrlData, Context);
-        _ -> []
-    end.
-
-comparison1(UrlData, Context) ->
     Id = proplists:get_value(destination, UrlData),
     Fetched = proplists:get_value(data, UrlData),
     % lift value out of list
@@ -477,12 +510,14 @@ comparison1(UrlData, Context) ->
     Type = z_convert:to_atom(m_rsc:p(RuleId, type, Context)),
     IsEqual = is_equal(Fetched2, Current, Type, RuleId, Context),
     IsEmpty = is_empty(Fetched2),
+    Error = proplists:get_value(error, UrlData),
     IsCurrentEmpty = is_empty(Current),
     [
         {fetched, Fetched2},
         {current, Current},
         {type, Type},
         {property, Property},
+        {error, Error},
         {is_mapped, IsMapped},
         {is_equal, IsEqual},
         {is_empty, IsEmpty},

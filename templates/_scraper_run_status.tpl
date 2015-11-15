@@ -60,16 +60,20 @@ as
         <dd class="labels">
             {% if is_scheduled or in_progress %}
                 <span class="label scraper-label-icon">{% include "_scraper_icon_time.tpl" %} {{ total_count }}</span>
-            {% else %}
+            {% elif total_count > 0 %}
                 <span class="label scraper-label-neutral">{{ total_count }}</span>
             {% endif %}
-            {% if error_count %}
-                <span class="label scraper-label-error">{{ error_count }}</span>
+            {% if total_count > 0 %}
+                {% if error_count %}
+                    <span class="label scraper-label-error">{{ error_count }}</span>
+                {% endif %}
+                {% if warning_count %}
+                    <span class="label scraper-label-warning">{{ warning_count }}</span>
+                {% endif %}
+                {% if ok_count > 0 %}
+                    <span class="label scraper-label-ok">{{ ok_count }}</span>
+                {% endif %}
             {% endif %}
-            {% if warning_count %}
-                <span class="label scraper-label-warning">{{ warning_count }}</span>
-            {% endif %}
-            <span class="label scraper-label-ok">{{ ok_count }}</span>
             {% if digests.data and not in_progress %}
                 <span class="label scraper-label-date" id="{{ time_since_id }}"></span>
             {% endif %}
@@ -77,7 +81,7 @@ as
                 <span class="label scraper-label-automatic">{_ automatic_}</span>
             {% endif %}
         </dd>
-    </dl>
+</dl>
     {% javascript %}
         modScraper.initTimeSince({
             id: "{{id}}",

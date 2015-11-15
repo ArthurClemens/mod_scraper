@@ -5,7 +5,6 @@ Params:
 - destination
 - row_id
 #}
-
 {% with card_id ++ "-" ++ comparison.property,
         comparison.fetched,
         comparison.current,
@@ -30,7 +29,7 @@ Params:
    		is_current_empty,
    		is_mapped
 %}
-<div class="card-item{% if is_equal %} equal{% endif %}{% if is_empty %} empty{% endif %}" id="{{ attr_id }}">
+<div class="card-item{% if is_equal %} equal{% endif %}{% if is_empty %} empty{% endif %}{% if error %} error{% endif %}" id="{{ attr_id }}">
 	<div class="card-row-meta">
 	    {% if property %}
 	        {% if is_mapped %}

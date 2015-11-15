@@ -58,10 +58,10 @@ get_last_run_status(ScraperId, Context) ->
     end.
 
 
-put(ScraperId, RuleId, ConnectedId, Url, Raw, Error, Warning, Date, Data, Property, Context) ->
+put(ScraperId, RuleId, DestinationId, Url, Raw, Error, Warning, Date, Data, Property, Context) ->
     ensure_db_exists(Context),
     % ensure that we are storing an integer
-    {ok, RId} = m_rsc:name_to_id(ConnectedId, Context),
+    {ok, RId} = m_rsc:name_to_id(DestinationId, Context),
     Columns = [
         {scraper_id, ScraperId},
         {rule_id, RuleId},

@@ -15,7 +15,7 @@ Params:
 		card_id,
 		time_since_id
 %}
-<div id="{{ card_id }}" class="panel panel-default{% if item.all_empty %} empty{% endif %}{% if item.all_equal %} equal{% endif %}{% if item.error %} error{% endif %}{% if item.warning %} warning{% endif %}{% if item.has_differences %} has_differences{% endif %}">
+<div id="{{ card_id }}" class="panel panel-default{% if item.all_empty %} empty{% endif %}{% if item.all_equal %} equal{% endif %}{% if item.error or item.errors %} error{% endif %}{% if item.warning or item.warnings %} warning{% endif %}{% if item.has_differences %} has_differences{% endif %}">
 	<div class="panel-heading">
 		{% if id != item.destination %}
 			<h4>
