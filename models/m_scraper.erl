@@ -161,7 +161,7 @@ urls(ScraperId, Context) ->
     end,
     % remove empty values
     lists:filter(fun(D) ->
-        proplists:get_value(url, D) =/= []
+        (D =/= []) and (proplists:get_value(url, D) =/= [])
     end, UrlData).
 
 
