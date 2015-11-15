@@ -1,5 +1,4 @@
 -module(mod_scraper_schema).
--author("Arthur Clemens <arthurclemens@gmail.com>").
 
 -include_lib("include/zotonic.hrl").
 
@@ -80,6 +79,14 @@ datamodel() ->
                 automatic_scraper_rule,
                 make_itemprop_attr_rule(<<"priceCurrency">>, <<"text">>, <<"price_currency">>)
             },
+            {rule_itemprop_availability_attr,
+                automatic_scraper_rule,
+                make_itemprop_attr_rule(<<"availability">>, <<"text">>, <<"availability">>)
+            },
+            {rule_itemprop_availability_visible,
+                automatic_scraper_rule,
+                make_itemprop_rule(<<"availability">>, <<"text">>, <<"availability">>)
+            },
 
             % example pages
 
@@ -117,6 +124,20 @@ datamodel() ->
             ]},
             {fonq_nl_scraper, scraper, [
                 {title, <<"Fonq.nl scraper">>},
+                {is_published, false}
+            ]},
+
+            % scraper bijenkorf.nl
+            {bijenkorf_nl_scraper_detail_page, scraper, [
+                {title, <<"Bijenkorf.nl scraper detail page">>},
+                {is_published, false}
+            ]},
+            {bijenkorf_nl_scraper_search_results_page, scraper, [
+                {title, <<"Bijenkorf.nl scraper search results page">>},
+                {is_published, false}
+            ]},
+            {bijenkorf_nl_scraper, scraper, [
+                {title, <<"Bijenkorf.nl scraper">>},
                 {is_published, false}
             ]},
 
@@ -195,6 +216,65 @@ datamodel() ->
                 {type, <<"urls">>},
                 {rule, <<".//*[@class='product-title']//a//@href">>},
                 {chain_scraper, fonq_nl_scraper_detail_page},
+                {chain_result, <<"lowest_price">>}
+            ]},
+
+            % rules bijenkorf.nl
+            {bijenkorf_nl_rule_title, scraper_rule, [
+                {title, <<"Bijenkorf.nl rule: title">>},
+                {type, <<"text">>},
+                {rule, <<".//*[@property='og:title']//@content">>},
+                {property, <<"page_title">>}
+            ]},
+            {bijenkorf_nl_rule_price, scraper_rule, [
+                {title, <<"Bijenkorf.nl rule: price">>},
+                {type, <<"price">>},
+                {rule, <<"string(//*[contains(@class, 'dbk-price_primary')]|//*[contains(@class, 'dbk-price_new')])">>}
+            ]},
+            {bijenkorf_nl_rule_no_price_found, scraper_rule, [
+                {title, <<"Bijenkorf.nl rule: no price found">>},
+                {type, <<"no_match">>},
+                {rule, <<"string(//*[contains(@class, 'dbk-price_primary')]|//*[contains(@class, 'dbk-price_new')])">>},
+                {transform, "transform_true"},
+                {property, <<"no_price_found">>}
+            ]},
+            {bijenkorf_nl_rule_description, scraper_rule, [
+                {title, <<"Bijenkorf.nl rule: description">>},
+                {type, <<"text">>},
+                {rule, <<"string(.//*[@id='product-description'])">>},
+                {property, <<"summary">>}
+            ]},
+            {bijenkorf_nl_rule_brand, scraper_rule, [
+                {title, <<"Bijenkorf.nl rule: brand">>},
+                {type, <<"text">>},
+                {rule, <<".//*[contains(@class, 'dbk-heading--brand')]/text()">>},
+                {property, <<"brand">>}
+            ]},
+            {bijenkorf_nl_rule_sold_out, automatic_scraper_rule, [
+                {title, <<"Bijenkorf.nl rule: is sold out">>},
+                {type, <<"contains">>},
+                {rule, <<"//*[@itemprop='availability'][1]//@content">>},
+                {contains_value, <<"OutOfStock">>},
+                {transform, "transform_true"},
+                {property, <<"is_unavailable">>}
+            ]},
+            {bijenkorf_nl_rule_detail_pages, scraper_rule, [
+                {title, <<"Bijenkorf.nl rule: detail pages">>},
+                {type, <<"match">>},
+                {rule, <<"//*[@class='dbk-product-summary']//*[contains(@class, 'dbk-heading_h1')]">>},
+                {chain_scraper, bijenkorf_nl_scraper_detail_page}
+            ]},
+            {bijenkorf_nl_rule_search_results_pages, scraper_rule, [
+                {title, <<"Bijenkorf.nl rule: search results pages">>},
+                {type, <<"match">>},
+                {rule, <<".//*[@id='content-area']//header/div[contains(@class, 'dbk-hgroup')]">>},
+                {chain_scraper, bijenkorf_nl_scraper_search_results_page}
+            ]},
+            {bijenkorf_nl_rule_handle_search_results_links, scraper_rule, [
+                {title, <<"Bijenkorf.nl rule: handle search results links">>},
+                {type, <<"urls">>},
+                {rule, <<".//*[@itemtype='http://schema.org/Product']//a[@itemprop='url']//@href">>},
+                {chain_scraper, bijenkorf_nl_scraper_detail_page},
                 {chain_result, <<"lowest_price">>}
             ]},
 
@@ -295,7 +375,21 @@ datamodel() ->
             {fonq_nl_scraper_search_results_page, hasscraperrule, fonq_nl_rule_handle_search_results_links},
 
             {fonq_nl_scraper, hasscraperrule, fonq_nl_rule_search_results_pages},
-            {fonq_nl_scraper, hasscraperrule, fonq_nl_rule_detail_pages}
+            {fonq_nl_scraper, hasscraperrule, fonq_nl_rule_detail_pages},
+
+            % bijenkorf.nl
+            {bijenkorf_nl_scraper_detail_page, hasscraperrule, bijenkorf_nl_rule_title},
+            {bijenkorf_nl_scraper_detail_page, hasscraperrule, bijenkorf_nl_rule_price},
+            {bijenkorf_nl_scraper_detail_page, hasscraperrule, rule_itemprop_price_currency_attr},
+            {bijenkorf_nl_scraper_detail_page, hasscraperrule, rule_itemprop_description_visible},
+            {bijenkorf_nl_scraper_detail_page, hasscraperrule, bijenkorf_nl_rule_brand},
+            {bijenkorf_nl_scraper_detail_page, hasscraperrule, bijenkorf_nl_rule_no_price_found},
+            {bijenkorf_nl_scraper_detail_page, hasscraperrule, bijenkorf_nl_rule_sold_out},
+
+            {bijenkorf_nl_scraper_search_results_page, hasscraperrule, bijenkorf_nl_rule_handle_search_results_links},
+
+            {bijenkorf_nl_scraper, hasscraperrule, bijenkorf_nl_rule_search_results_pages},
+            {bijenkorf_nl_scraper, hasscraperrule, bijenkorf_nl_rule_detail_pages}
         ]}
     ].
 
