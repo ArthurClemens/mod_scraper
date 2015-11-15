@@ -268,13 +268,11 @@ parse_price_data(Value) ->
     PriceData = parse_price:parse(Value),
     KeyMapping = [
         {currency, price_currency},
-        {whole, price_whole},
-        {fraction, price_fraction},
         {text, price_text}
     ],
-    PriceData1 = lists:foldl(fun({OldKey, NewKey}, Acc) ->
-        lists:keyreplace(OldKey, 1, Acc, {NewKey, proplists:get_value(OldKey, Acc)})
-    end, PriceData, KeyMapping),
+    PriceData1 = lists:map(fun({OldKey, NewKey}) ->
+        {NewKey, proplists:get_value(OldKey, PriceData)}
+    end, KeyMapping),
     lists:map(fun({P, V}) ->
         [{property, P}, {value, V}]
     end, PriceData1).
