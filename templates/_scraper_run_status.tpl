@@ -41,6 +41,9 @@ as
     total_count
 %}
     <dl class="scraper-status">
+        {% if not total_count and not in_progress and not is_scheduled %}
+            <dt class="text-muted">{_ Not run yet _}</dt>
+        {% endif %}
         {% if in_progress and not is_scheduled %}
             {% if status_info == "no_urls" %}
                 <dt class="form-field-error">{_ No data source _}</dt>
