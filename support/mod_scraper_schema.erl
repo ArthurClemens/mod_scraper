@@ -113,6 +113,12 @@ datamodel() ->
                 {is_published, false}
             ]},
 
+            % scraper bijzondermooi.nl
+            {bijzondermooi_nl_scraper_detail_page, scraper, [
+                {title, <<"BijzonderMOOI.nl scraper detail page">>},
+                {is_published, false}
+            ]},
+
             % scraper fonq.nl
             {fonq_nl_scraper_detail_page, scraper, [
                 {title, <<"Fonq.nl scraper detail page">>},
@@ -169,6 +175,40 @@ datamodel() ->
                 {rule, <<".//*[@class='product_line']//a[@class='product_name']//@href">>},
                 {chain_scraper, bol_com_scraper_detail_page},
                 {chain_result, <<"lowest_price">>}
+            ]},
+
+            % rules bijzondermooi.nl
+            {bijzondermooi_nl_rule_title, scraper_rule, [
+                {title, <<"BijzonderMOOI.nl rule: title">>},
+                {type, <<"text">>},
+                {rule, <<"string(.//*[@id='content']/form//h1)">>},
+                {property, <<"page_title">>}
+            ]},
+            {bijzondermooi_nl_rule_price, scraper_rule, [
+                {title, <<"BijzonderMOOI.nl rule: price">>},
+                {type, <<"price">>},
+                {rule, <<"string(.//*[@id='product_price'])">>},
+                {property, <<"price">>}
+            ]},
+            {bijzondermooi_nl_rule_no_price_found, scraper_rule, [
+                {title, <<"BijzonderMOOI.nl rule: no price found">>},
+                {type, <<"no_match">>},
+                {rule, <<".//*[@id='product_price']">>},
+                {transform, "transform_true"},
+                {property, <<"no_price_found">>}
+            ]},
+            {bijzondermooi_nl_description, scraper_rule, [
+                {title, <<"BijzonderMOOI.nl rule: description">>},
+                {type, <<"text">>},
+                {rule, <<"string(.//*[@id='content']/form/table/tbody/tr[1]/td[2]/table[1]/tbody)">>},
+                {property, <<"summary">>}
+            ]},
+
+            {bijzondermooi_nl_rule_brand, scraper_rule, [
+                {title, <<"BijzonderMOOI.nl rule: brand">>},
+                {type, <<"text">>},
+                {rule, <<".//*[@id='content']/form/table/tbody/tr[1]/td[2]/table[2]/tbody/tr/td[2]/a">>},
+                {property, <<"brand">>}
             ]},
 
             % rules fonq.nl
@@ -362,6 +402,13 @@ datamodel() ->
 
             {bol_com_scraper, hasscraperrule, bol_com_rule_search_results_pages},
             {bol_com_scraper, hasscraperrule, bol_com_rule_detail_pages},
+
+            % bijzondermooi.nl
+            {bijzondermooi_nl_scraper_detail_page, hasscraperrule, bijzondermooi_nl_rule_title},
+            {bijzondermooi_nl_scraper_detail_page, hasscraperrule, bijzondermooi_nl_rule_price},
+            {bijzondermooi_nl_scraper_detail_page, hasscraperrule, bijzondermooi_nl_rule_no_price_found},
+            {bijzondermooi_nl_scraper_detail_page, hasscraperrule, bijzondermooi_nl_description},
+            {bijzondermooi_nl_scraper_detail_page, hasscraperrule, bijzondermooi_nl_rule_brand},
 
             % fonq.nl
             {fonq_nl_scraper_detail_page, hasscraperrule, rule_itemprop_name_visible_to_page_title},
