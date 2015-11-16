@@ -332,7 +332,7 @@ msgid ""
 msgstr ""
 "Scrapers kunnen automatisch uitgevoerd worden. Scraper die \"automatische "
 "scraper regels\" bevatten zullen pagina's met een connectie updaten met de "
-"gevonden data.'"
+"gevonden data."
 
 #: user/modules/mod_scraper/templates/_admin_edit_scraper_source.tpl:35
 msgid "Search query that returns pages with a property 'url'"

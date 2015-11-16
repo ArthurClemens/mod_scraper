@@ -35,9 +35,6 @@ list_archives(Context) ->
     scraper_cache:list(Context).
 
 
--spec scraper_in_progress(ScraperId, Context) -> boolean() when
-    ScraperId:: integer(),
-    Context:: #context{}.
 scraper_in_progress(ScraperId, Context) ->
     gen_server:call(z_utils:name_for_host(?MODULE, z_context:site(Context)), {scraper_in_progress, ScraperId}).
 
@@ -212,7 +209,6 @@ handle_call({run_scraper, ScraperId, Context}, _From, State) ->
 handle_call({add_scraper_urls, UrlListData}, _From, State) ->
     add_scraper_urls(UrlListData, State);
 
-%% @doc Returns boolean
 handle_call({scraper_in_progress, ScraperId}, _From, State) ->
     CountStart = State#state.count_start,
     CountRemaining = State#state.count_remaining,
@@ -236,22 +232,23 @@ handle_call(Message, _From, State) ->
     {stop, {unknown_call, Message}, State}.
 
 handle_cast({#m_config_update{module="mod_scraper", key="interval", value=Interval}, _Ctx}, State) ->
-    IntervalNumber = z_convert:to_float(Interval),
-    CurrentInterval = State#state.periodic_scrape_timer_ref,
-    case CurrentInterval of
-        undefined -> undefined;
-        Ref ->
-            timer:cancel(Ref)
-    end,
-    TimerRef = case IntervalNumber of
-        0 -> undefined;
-        _ ->
-            {ok, TRef} = timer:send_interval(periodic_interval_to_ms(IntervalNumber), periodic_scrape),
-            TRef
-    end,
-	{noreply, State#state{
-	    periodic_scrape_timer_ref = TimerRef
-	}};
+    % IntervalNumber = z_convert:to_float(Interval),
+    % CurrentInterval = State#state.periodic_scrape_timer_ref,
+    % case CurrentInterval of
+    %     undefined -> undefined;
+    %     Ref ->
+    %         timer:cancel(Ref)
+    % end,
+    % TimerRef = case IntervalNumber of
+    %     0 -> undefined;
+    %     _ ->
+    %         {ok, TRef} = timer:send_interval(periodic_interval_to_ms(IntervalNumber), periodic_scrape),
+    %         TRef
+    % end,
+	% {noreply, State#state{
+	%     periodic_scrape_timer_ref = TimerRef
+	% }};
+    {noreply, State};
 
 handle_cast(Message, State) ->
     {stop, {unknown_cast, Message}, State}.

@@ -4,6 +4,7 @@
         <p>
             {_ Scrapers can be run automatically. Scrapers that contain "automatic scraper rules" will update connected pages with the scraped data. _}
         </p>
+        {#
         <label class="control-label">{_ Run scrapers _}</label>
         <div>
             {% for interval, interval_label in [
@@ -32,6 +33,7 @@
                 {% endwith %}
             {% endfor %}
         </div>
+        #}
     </div>
 </div>
 
