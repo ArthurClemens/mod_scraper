@@ -83,7 +83,7 @@ msgid ""
 "Chain scraper"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_scraper_settings.tpl:39 
+#: ./user/modules/mod_scraper/templates/_scraper_settings.tpl:41 
 msgid ""
 "Close"
 msgstr ""
@@ -118,7 +118,7 @@ msgid ""
 "Copy"
 msgstr ""
 
-#: ./user/modules/mod_scraper/mod_scraper.erl:564 
+#: ./user/modules/mod_scraper/mod_scraper.erl:561 
 msgid ""
 "Could not connect to URL. Does URL exist?"
 msgstr ""
@@ -263,7 +263,7 @@ msgid ""
 "No rules found."
 msgstr ""
 
-#: ./user/modules/mod_scraper/mod_scraper.erl:80 
+#: ./user/modules/mod_scraper/mod_scraper.erl:77 
 msgid ""
 "No rules to run. Add one or more rules."
 msgstr ""
@@ -271,11 +271,6 @@ msgstr ""
 #: ./user/modules/mod_scraper/templates/_overview_scrapers.tpl:34 
 msgid ""
 "No scrapers found."
-msgstr ""
-
-#: ./user/modules/mod_scraper/templates/_scraper_run_status.tpl:45 
-msgid ""
-"Not run yet"
 msgstr ""
 
 #: ./user/modules/mod_scraper/templates/_admin_edit_scraper_result_card_item.tpl:79 
@@ -338,11 +333,6 @@ msgid ""
 "Run all"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_scraper_settings.tpl:7 
-msgid ""
-"Run scrapers"
-msgstr ""
-
 #: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:4 
 msgid ""
 "Scrape Rule Properties"
@@ -358,7 +348,7 @@ msgid ""
 "Scraped"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/admin_scraper.tpl:3 ./user/modules/mod_scraper/templates/admin_scraper.tpl:11 ./user/modules/mod_scraper/mod_scraper.erl:69 
+#: ./user/modules/mod_scraper/templates/admin_scraper.tpl:3 ./user/modules/mod_scraper/templates/admin_scraper.tpl:11 ./user/modules/mod_scraper/mod_scraper.erl:66 
 msgid ""
 "Scraper"
 msgstr ""
@@ -409,7 +399,7 @@ msgid ""
 "Settings"
 msgstr ""
 
-#: ./user/modules/mod_scraper/mod_scraper.erl:569 
+#: ./user/modules/mod_scraper/mod_scraper.erl:566 
 msgid ""
 "Socket closed remotely"
 msgstr ""
@@ -460,7 +450,7 @@ msgid ""
 "This rule is not used by any scraper."
 msgstr ""
 
-#: ./user/modules/mod_scraper/mod_scraper.erl:567 
+#: ./user/modules/mod_scraper/mod_scraper.erl:564 
 msgid ""
 "Timeout: no data scraped"
 msgstr ""
@@ -540,39 +530,9 @@ msgid ""
 "edit"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_scraper_settings.tpl:14 
-msgid ""
-"every 12 hours"
-msgstr ""
-
-#: ./user/modules/mod_scraper/templates/_scraper_settings.tpl:15 
-msgid ""
-"every 24 hours"
-msgstr ""
-
-#: ./user/modules/mod_scraper/templates/_scraper_settings.tpl:12 
-msgid ""
-"every 3 hours"
-msgstr ""
-
-#: ./user/modules/mod_scraper/templates/_scraper_settings.tpl:13 
-msgid ""
-"every 6 hours"
-msgstr ""
-
-#: ./user/modules/mod_scraper/templates/_scraper_settings.tpl:11 
-msgid ""
-"every hour"
-msgstr ""
-
 #: ./user/modules/mod_scraper/templates/_admin_edit_scraper_result_card_item.tpl:36 
 msgid ""
 "mapped property:"
-msgstr ""
-
-#: ./user/modules/mod_scraper/templates/_scraper_settings.tpl:10 
-msgid ""
-"never"
 msgstr ""
 
 #: ./user/modules/mod_scraper/templates/_admin_edit_scraper_result_card_item.tpl:41 
