@@ -81,7 +81,9 @@ as
                 <span class="label scraper-label-date" id="{{ time_since_id }}"></span>
             {% endif %}
             {% if is_ready %}
-                <span class="label scraper-label-automatic">{_ automatic_}</span>
+                {% if m.config.mod_scraper.interval.value %}
+                    <span class="label scraper-label-automatic">{_ automatic_}</span>
+                {% endif %}
             {% endif %}
         </dd>
 </dl>
