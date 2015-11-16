@@ -15,7 +15,15 @@
                 center=0
             }
         %}
-        <input id="{{ #page_prop_source }}" type="text" class="form-control scraper-dialog-input" placeholder="{{ s.title|default:_"Select..." }}" />
+        <div class="input-group col-md-12">
+            <input id="{{ #page_prop_source }}" type="text" class="form-control scraper-dialog-input" placeholder="{{ s.title|default:_"Select..." }}" />
+            {% if id.page_prop_source %}
+                <span class="input-group-btn">
+                    <a class="btn btn-default" href="{% url admin_edit_rsc id=id.page_prop_source %}" target="_blank">{_ Go to page _}</a>
+                </span>
+            {% endif %}
+        </div>
+
     </div>
 </div>
 
