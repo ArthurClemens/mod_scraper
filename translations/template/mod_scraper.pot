@@ -33,7 +33,7 @@ msgid ""
 "(true when different prices are found)"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:31 
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:39 
 msgid ""
 "1 URL"
 msgstr ""
@@ -83,7 +83,7 @@ msgid ""
 "Chain scraper"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_scraper_settings.tpl:41 
+#: ./user/modules/mod_scraper/templates/_scraper_settings.tpl:39 
 msgid ""
 "Close"
 msgstr ""
@@ -118,7 +118,7 @@ msgid ""
 "Copy"
 msgstr ""
 
-#: ./user/modules/mod_scraper/mod_scraper.erl:561 
+#: ./user/modules/mod_scraper/mod_scraper.erl:560 
 msgid ""
 "Could not connect to URL. Does URL exist?"
 msgstr ""
@@ -178,7 +178,7 @@ msgid ""
 "Go to detail page for more options."
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source.tpl:21 
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source.tpl:21 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:22 
 msgid ""
 "Go to page"
 msgstr ""
@@ -333,6 +333,11 @@ msgid ""
 "Run all"
 msgstr ""
 
+#: ./user/modules/mod_scraper/templates/_scraper_settings.tpl:7 
+msgid ""
+"Run scrapers"
+msgstr ""
+
 #: ./user/modules/mod_scraper/templates/_admin_edit_scraper_rule.tpl:4 
 msgid ""
 "Scrape Rule Properties"
@@ -389,7 +394,7 @@ msgid ""
 "Select page with lowest price"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source.tpl:18 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:18 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_query_source.tpl:19 
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source.tpl:18 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:19 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_query_source.tpl:19 
 msgid ""
 "Select..."
 msgstr ""
@@ -399,7 +404,7 @@ msgid ""
 "Settings"
 msgstr ""
 
-#: ./user/modules/mod_scraper/mod_scraper.erl:566 
+#: ./user/modules/mod_scraper/mod_scraper.erl:565 
 msgid ""
 "Socket closed remotely"
 msgstr ""
@@ -440,7 +445,7 @@ msgid ""
 "update the linked page."
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:44 
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:52 
 msgid ""
 "This page does not contain a value for the property 'url'"
 msgstr ""
@@ -450,7 +455,7 @@ msgid ""
 "This rule is not used by any scraper."
 msgstr ""
 
-#: ./user/modules/mod_scraper/mod_scraper.erl:564 
+#: ./user/modules/mod_scraper/mod_scraper.erl:563 
 msgid ""
 "Timeout: no data scraped"
 msgstr ""
@@ -465,7 +470,7 @@ msgid ""
 "True"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_content.scraper_target.tpl:13 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details.tpl:3 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:24 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_urls.tpl:9 
+#: ./user/modules/mod_scraper/templates/_admin_edit_content.scraper_target.tpl:13 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details.tpl:3 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:32 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_urls.tpl:9 
 msgid ""
 "URL"
 msgstr ""
@@ -485,7 +490,7 @@ msgid ""
 "URL text"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source_urls.tpl:6 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source_urls.tpl:19 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:37 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_query_source.tpl:25 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_query_source.tpl:38 ./user/modules/mod_scraper/templates/_scraper_rule_settings.tpl:63 
+#: ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source_urls.tpl:6 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source_urls.tpl:19 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:45 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_query_source.tpl:25 ./user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_query_source.tpl:38 ./user/modules/mod_scraper/templates/_scraper_rule_settings.tpl:63 
 msgid ""
 "URLs"
 msgstr ""
@@ -510,7 +515,7 @@ msgid ""
 "XPath rule"
 msgstr ""
 
-#: ./user/modules/mod_scraper/templates/_rsc_edge_item.scraper_rule.tpl:3 ./user/modules/mod_scraper/templates/_scraper_run_status.tpl:84 
+#: ./user/modules/mod_scraper/templates/_rsc_edge_item.scraper_rule.tpl:3 ./user/modules/mod_scraper/templates/_scraper_run_status.tpl:85 
 msgid ""
 "automatic"
 msgstr ""
@@ -530,9 +535,39 @@ msgid ""
 "edit"
 msgstr ""
 
+#: ./user/modules/mod_scraper/templates/_scraper_settings.tpl:14 
+msgid ""
+"every 12 hours"
+msgstr ""
+
+#: ./user/modules/mod_scraper/templates/_scraper_settings.tpl:15 
+msgid ""
+"every 24 hours"
+msgstr ""
+
+#: ./user/modules/mod_scraper/templates/_scraper_settings.tpl:12 
+msgid ""
+"every 3 hours"
+msgstr ""
+
+#: ./user/modules/mod_scraper/templates/_scraper_settings.tpl:13 
+msgid ""
+"every 6 hours"
+msgstr ""
+
+#: ./user/modules/mod_scraper/templates/_scraper_settings.tpl:11 
+msgid ""
+"every hour"
+msgstr ""
+
 #: ./user/modules/mod_scraper/templates/_admin_edit_scraper_result_card_item.tpl:36 
 msgid ""
 "mapped property:"
+msgstr ""
+
+#: ./user/modules/mod_scraper/templates/_scraper_settings.tpl:10 
+msgid ""
+"never"
 msgstr ""
 
 #: ./user/modules/mod_scraper/templates/_admin_edit_scraper_result_card_item.tpl:41 

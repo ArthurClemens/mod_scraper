@@ -269,7 +269,7 @@ datamodel() ->
             {bijenkorf_nl_rule_price, scraper_rule, [
                 {title, <<"Bijenkorf.nl rule: price">>},
                 {type, <<"price">>},
-                {rule, <<"string(//*[contains(@class, 'dbk-price_primary')]|//*[contains(@class, 'dbk-price_new')])">>}
+                {rule, <<"//meta[@name='twitter:data2']/@content">>}
             ]},
             {bijenkorf_nl_rule_no_price_found, scraper_rule, [
                 {title, <<"Bijenkorf.nl rule: no price found">>},

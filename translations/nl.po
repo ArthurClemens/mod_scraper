@@ -30,9 +30,9 @@ msgstr "(niet gepubliceerd)"
 
 #: user/modules/mod_scraper/templates/_scraper_rule_settings_chaining_results_lowest_price.tpl:15
 msgid "(true when different prices are found)"
-msgstr ""
+msgstr "('true' wanneer meerdere prijzen worden gevonden)"
 
-#: user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:31
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:39
 msgid "1 URL"
 msgstr "1 URL"
 
@@ -67,7 +67,7 @@ msgstr "Merk"
 
 #: user/modules/mod_scraper/templates/_overview_rules.tpl:14
 msgid "Category"
-msgstr ""
+msgstr "Categorie"
 
 #: user/modules/mod_scraper/templates/_scraper_rule_settings_chaining.tpl:7
 msgid "Chain scraper"
@@ -103,7 +103,7 @@ msgstr "Bevat tekst"
 msgid "Copy"
 msgstr "Kopieer"
 
-#: user/modules/mod_scraper/mod_scraper.erl:564
+#: user/modules/mod_scraper/mod_scraper.erl:560
 msgid "Could not connect to URL. Does URL exist?"
 msgstr "Kon niet verbinden met URL. Bestaat de URL?"
 
@@ -154,6 +154,7 @@ msgid "Go to detail page for more options."
 msgstr "Ga naar de volledige pagina voor meer opties."
 
 #: user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source.tpl:21
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:22
 msgid "Go to page"
 msgstr "Ga naar pagina"
 
@@ -224,7 +225,7 @@ msgstr "Geen regels"
 msgid "No rules found."
 msgstr ""
 
-#: user/modules/mod_scraper/mod_scraper.erl:80
+#: user/modules/mod_scraper/mod_scraper.erl:77
 msgid "No rules to run. Add one or more rules."
 msgstr "Geen regels om te doorlopen. Voeg een of meer regels toe."
 
@@ -301,7 +302,7 @@ msgstr "Uitgevoerd:"
 
 #: user/modules/mod_scraper/templates/admin_scraper.tpl:3
 #: user/modules/mod_scraper/templates/admin_scraper.tpl:11
-#: user/modules/mod_scraper/mod_scraper.erl:69
+#: user/modules/mod_scraper/mod_scraper.erl:66
 msgid "Scraper"
 msgstr "Scraper"
 
@@ -339,7 +340,7 @@ msgid "Select page with lowest price"
 msgstr "Kies pagina met de laagste prijs"
 
 #: user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source.tpl:18
-#: user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:18
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:19
 #: user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_query_source.tpl:19
 msgid "Select..."
 msgstr "Kies..."
@@ -348,7 +349,7 @@ msgstr "Kies..."
 msgid "Settings"
 msgstr "Instellingen"
 
-#: user/modules/mod_scraper/mod_scraper.erl:569
+#: user/modules/mod_scraper/mod_scraper.erl:565
 msgid "Socket closed remotely"
 msgstr "Verbinding werd verbroken"
 
@@ -374,7 +375,7 @@ msgstr "Deze aanvullende eigenschappen zullen op de pagina worden opgeslagen:"
 
 #: user/modules/mod_scraper/templates/_scraper_rule_settings_chaining_results_lowest_price.tpl:11
 msgid "This additional page property will be written:"
-msgstr ""
+msgstr "Deze aanvullende eigenschap zal op de pagina worden opgeslagen:"
 
 #: user/modules/mod_scraper/templates/_scraper_rule_settings.tpl:6
 msgid ""
@@ -384,7 +385,7 @@ msgstr ""
 "Dit is een automatische regel: de gevonden waarde zal worden gebruikt om de "
 "gelinkte pagina direct te updaten."
 
-#: user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:44
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:52
 msgid "This page does not contain a value for the property 'url'"
 msgstr "Deze pagina bevat geen waarde voor de eigenschap 'url'"
 
@@ -392,7 +393,7 @@ msgstr "Deze pagina bevat geen waarde voor de eigenschap 'url'"
 msgid "This rule is not used by any scraper."
 msgstr "Deze regel wordt door geen scaper gebruikt."
 
-#: user/modules/mod_scraper/mod_scraper.erl:567
+#: user/modules/mod_scraper/mod_scraper.erl:563
 msgid "Timeout: no data scraped"
 msgstr "Timeout: geen data gescraped"
 
@@ -409,7 +410,7 @@ msgstr "True"
 
 #: user/modules/mod_scraper/templates/_admin_edit_content.scraper_target.tpl:13
 #: user/modules/mod_scraper/templates/_admin_edit_scraper_source_details.tpl:3
-#: user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:24
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:32
 #: user/modules/mod_scraper/templates/_admin_edit_scraper_source_urls.tpl:9
 msgid "URL"
 msgstr "URL"
@@ -428,7 +429,7 @@ msgstr "URL tekst"
 
 #: user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source_urls.tpl:6
 #: user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_connections_source_urls.tpl:19
-#: user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:37
+#: user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_page_prop_source.tpl:45
 #: user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_query_source.tpl:25
 #: user/modules/mod_scraper/templates/_admin_edit_scraper_source_details_query_source.tpl:38
 #: user/modules/mod_scraper/templates/_scraper_rule_settings.tpl:63
@@ -452,7 +453,7 @@ msgid "XPath rule"
 msgstr "XPath regel"
 
 #: user/modules/mod_scraper/templates/_rsc_edge_item.scraper_rule.tpl:3
-#: user/modules/mod_scraper/templates/_scraper_run_status.tpl:84
+#: user/modules/mod_scraper/templates/_scraper_run_status.tpl:85
 msgid "automatic"
 msgstr "automatisch"
 
@@ -515,9 +516,3 @@ msgstr "eigenschap:"
 #: user/modules/mod_scraper/templates/_rsc_edge_item.scraper_rule.tpl:10
 msgid "type="
 msgstr "type="
-
-#~ msgid "In progress"
-#~ msgstr "Bezig"
-
-#~ msgid "Scheduled"
-#~ msgstr "Ingepland"
